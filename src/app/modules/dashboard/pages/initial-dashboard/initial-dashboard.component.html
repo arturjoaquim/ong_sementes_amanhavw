@@ -1,0 +1,63 @@
+<div class="p-8">
+  <!-- {/* Page Header */} -->
+  <div class="mb-8">
+    <h1 class="text-gray-900">Dashboard Overview</h1>
+    <p class="text-gray-600 mt-2">
+      Welcome back! Here's what's happening with your organization today.
+    </p>
+  </div>
+
+  <!-- {/* Stats Grid */} -->
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+    <app-stat-card
+      title="Total Students"
+      value="1,247"
+      change="+12.5%"
+      changeType="positive"
+      [icon]="UsersIcon"
+      iconColor="text-green-600"
+      iconBg="bg-green-50"
+    />
+    <app-stat-card
+      title="Active Workshops"
+      value="24"
+      change="+3"
+      changeType="positive"
+      [icon]="CalendarIcon"
+      iconColor="text-orange-600"
+      iconBg="bg-orange-50"
+    />
+    <app-stat-card
+      title="Employees"
+      value="86"
+      change="+5.2%"
+      changeType="positive"
+      [icon]="TrendingUpIcon"
+      iconColor="text-blue-600"
+      iconBg="bg-blue-50"
+    />
+    <app-stat-card
+      title="Inventory Items"
+      value="342"
+      change="-2"
+      changeType="negative"
+      [icon]="PackageIcon"
+      iconColor="text-purple-600"
+      iconBg="bg-purple-50"
+    />
+  </div>
+
+  <!-- {/* Main Content Grid */} -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- {/* Left Column - Workshops and Activities */} -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- <UpcomingWorkshops /> -->
+      <!-- <RecentActivities /> -->
+    </div>
+
+    <!-- {/* Right Column - Inventory */} -->
+    <div class="lg:col-span-1">
+      <!-- <InventoryStatus /> -->
+    </div>
+  </div>
+</div>
