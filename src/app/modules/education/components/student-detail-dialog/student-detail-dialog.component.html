@@ -1,0 +1,929 @@
+<app-dialog contentClass="max-w-4xl max-h-[90vh] overflow-y-auto">
+  <app-dialog-header>
+    <app-dialog-title>Detalhes estudante</app-dialog-title>
+    <app-dialog-description>
+      View comprehensive student information including basic data, guardian details, and attendance records.
+    </app-dialog-description>
+  </app-dialog-header>
+
+  <!-- {/* Student Header */} -->
+  <div class="flex items-start gap-6 pb-6 border-b border-gray-200">
+    <app-avatar class="h-20 w-20">
+      <img class="app-avatar-image" src={student.avatar} />
+      <app-avatar-fallback>{student.name.split(' ').map(n => n[0]).join('')}</app-avatar-fallback>
+    </app-avatar>
+
+    <div class="flex-1">
+      <div class="flex items-start justify-between">
+        <div>
+          <h3 class="text-gray-900">{student.name}</h3>
+          <p class="text-gray-600 mt-1">ID: {student.id}</p>
+        </div>
+        <app-badge
+          [ngClass]="{'bg-green-100 text-green-700': student.status === 'active', 'bg-gray-100 text-gray-700': student.status === 'inactive'}"
+        >
+          {student.status}
+        </app-badge>
+      </div>
+
+      <div class="grid grid-cols-3 gap-4 mt-4">
+        <div>
+          <p class="text-xs text-gray-500">Grade Level</p>
+          <p class="text-sm text-gray-900 mt-1">{student.grade}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Age</p>
+          <p class="text-sm text-gray-900 mt-1">{student.age} years</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Attendance Rate</p>
+          <p
+            class="text-sm mt-1"
+            [ngClass]="{'text-green-600': student.attendance >= 90, 'text-orange-600': student.attendance >= 75, 'text-red-600': student.attendance < 75}"
+          >
+            {student.attendance}%
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- {/* Tabs */} -->
+  <Tabs defaultValue="basic" class="mt-6">
+    <TabsList class="grid w-full grid-cols-6">
+      <TabsTrigger value="basic">Basic Info</TabsTrigger>
+      <TabsTrigger value="guardian">Guardian</TabsTrigger>
+      <TabsTrigger value="family">Family</TabsTrigger>
+      <TabsTrigger value="health">Health</TabsTrigger>
+      <TabsTrigger value="attendance">Attendance</TabsTrigger>
+      <TabsTrigger value="notes">Notes</TabsTrigger>
+    </TabsList>
+
+    <!-- {/* Basic Information Tab */} -->
+    <TabsContent value="basic" class="space-y-4 mt-6">
+      <app-card class="p-6">
+        <h4 class="text-gray-900 mb-4">Personal Information</h4>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="flex items-start gap-3">
+            <div class="bg-green-50 p-2 rounded-lg">
+              <User size={18} class="text-green-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Full Name</p>
+              <p class="text-sm text-gray-900 mt-1">{student.name}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-orange-50 p-2 rounded-lg">
+              <Calendar size={18} class="text-orange-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Date of Birth</p>
+              <p class="text-sm text-gray-900 mt-1">Jan 15, {2025 - student.age}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-blue-50 p-2 rounded-lg">
+              <MapPin size={18} class="text-blue-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Address</p>
+              <p class="text-sm text-gray-900 mt-1">123 Community Street, District 5</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-purple-50 p-2 rounded-lg">
+              <Calendar size={18} class="text-purple-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Enrollment Date</p>
+              <p class="text-sm text-gray-900 mt-1">{student.enrollmentDate}</p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+
+      <app-card contentClass="p-6">
+        <h4 class="text-gray-900 mb-4">Identification Details</h4>
+        <div class="grid grid-cols-2 gap-6">
+          {student.cpf && (
+            <div class="flex items-start gap-3">
+              <div class="bg-blue-50 p-2 rounded-lg">
+                <FileText size={18} class="text-blue-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">CPF</p>
+                <p class="text-sm text-gray-900 mt-1">{student.cpf}</p>
+              </div>
+            </div>
+          )}
+
+          {student.race && (
+            <div class="flex items-start gap-3">
+              <div class="bg-purple-50 p-2 rounded-lg">
+                <User size={18} class="text-purple-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Race/Ethnicity</p>
+                <p class="text-sm text-gray-900 mt-1 capitalize">{student.race}</p>
+              </div>
+            </div>
+          )}
+
+          {student.placeOfBirth && (
+            <div class="flex items-start gap-3">
+              <div class="bg-green-50 p-2 rounded-lg">
+                <MapPin size={18} class="text-green-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Place of Birth</p>
+                <p class="text-sm text-gray-900 mt-1">{student.placeOfBirth}</p>
+              </div>
+            </div>
+          )}
+
+          {student.motherName && (
+            <div class="flex items-start gap-3">
+              <div class="bg-pink-50 p-2 rounded-lg">
+                <UserCircle size={18} class="text-pink-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Mother's Name</p>
+                <p class="text-sm text-gray-900 mt-1">{student.motherName}</p>
+              </div>
+            </div>
+          )}
+
+          {student.fatherName && (
+            <div class="flex items-start gap-3">
+              <div class="bg-indigo-50 p-2 rounded-lg">
+                <UserCircle size={18} class="text-indigo-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Father's Name</p>
+                <p class="text-sm text-gray-900 mt-1">{student.fatherName}</p>
+              </div>
+            </div>
+          )}
+
+          {student.enrollmentOrigin && (
+            <div class="flex items-start gap-3">
+              <div class="bg-orange-50 p-2 rounded-lg">
+                <FileText size={18} class="text-orange-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Enrollment Origin</p>
+                <p class="text-sm text-gray-900 mt-1 capitalize">{student.enrollmentOrigin.replace('_', ' ')}</p>
+              </div>
+            </div>
+          )}
+
+          {student.accompaniedStatus && (
+            <div class="flex items-start gap-3">
+              <div class="bg-teal-50 p-2 rounded-lg">
+                <Users size={18} class="text-teal-600" />
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Accompanied Status</p>
+                <p class="text-sm text-gray-900 mt-1 capitalize">{student.accompaniedStatus}</p>
+              </div>
+            </div>
+          )}
+        </div>
+      </app-card>
+
+      <app-card class="p-6">
+        <h4 class="text-gray-900 mb-4">Academic Information</h4>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="flex items-start gap-3">
+            <div class="bg-green-50 p-2 rounded-lg">
+              <Briefcase size={18} class="text-green-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Current Grade</p>
+              <p class="text-sm text-gray-900 mt-1">{student.grade}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-orange-50 p-2 rounded-lg">
+              <CheckCircle2 size={18} class="text-orange-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Workshops Enrolled</p>
+              <p class="text-sm text-gray-900 mt-1">6 Active</p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </TabsContent>
+
+    <!-- {/* Guardian Details Tab */} -->
+    <TabsContent value="guardian" class="space-y-4 mt-6">
+      <app-card class="p-6">
+        <h4 class="text-gray-900 mb-4">Primary Guardian</h4>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="flex items-start gap-3">
+            <div class="bg-green-50 p-2 rounded-lg">
+              <UserCircle size={18} class="text-green-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Guardian Name</p>
+              <p class="text-sm text-gray-900 mt-1">{student.guardian}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-orange-50 p-2 rounded-lg">
+              <User size={18} class="text-orange-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Relationship</p>
+              <p class="text-sm text-gray-900 mt-1">Parent</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-blue-50 p-2 rounded-lg">
+              <Phone size={18} class="text-blue-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Phone Number</p>
+              <p class="text-sm text-gray-900 mt-1">{student.guardianPhone}</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-purple-50 p-2 rounded-lg">
+              <Mail size={18} class="text-purple-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Email</p>
+              <p class="text-sm text-gray-900 mt-1">{student.guardian.toLowerCase().replace(' ', '.')}@email.com</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-green-50 p-2 rounded-lg">
+              <Home size={18} class="text-green-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Home Address</p>
+              <p class="text-sm text-gray-900 mt-1">123 Community Street, District 5</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-orange-50 p-2 rounded-lg">
+              <Briefcase size={18} class="text-orange-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Occupation</p>
+              <p class="text-sm text-gray-900 mt-1">Teacher</p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+
+      <app-card class="p-6">
+        <h4 class="text-gray-900 mb-4">Emergency Contact</h4>
+        <div class="grid grid-cols-2 gap-6">
+          <div class="flex items-start gap-3">
+            <div class="bg-red-50 p-2 rounded-lg">
+              <UserCircle size={18} class="text-red-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Contact Name</p>
+              <p class="text-sm text-gray-900 mt-1">Emergency Contact Person</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-red-50 p-2 rounded-lg">
+              <Phone size={18} class="text-red-600" />
+            </div>
+            <div>
+              <p class="text-xs text-gray-500">Phone Number</p>
+              <p class="text-sm text-gray-900 mt-1">+1 (555) 000-0000</p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </TabsContent>
+
+    <!-- {/* Family Information Tab */} -->
+    <TabsContent value="family" class="space-y-4 mt-6">
+      {student.familyData ? (
+        <>
+          {/* Family Composition */}
+          <app-card class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <Users size={20} class="text-purple-600" />
+              <h4 class="text-gray-900">Family Composition</h4>
+            </div>
+
+            {student.familyData.members.length > 0 ? (
+              <div class="space-y-3">
+                {student.familyData.members.map((member) => (
+                  <div key={member.id} class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="grid grid-cols-4 gap-4">
+                      <div>
+                        <p class="text-xs text-gray-500 mb-1">Name</p>
+                        <p class="text-sm text-gray-900">{member.name}</p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-gray-500 mb-1">Relationship</p>
+                        <p class="text-sm text-gray-900">{member.relationship}</p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-gray-500 mb-1">Profession</p>
+                        <p class="text-sm text-gray-900">{member.profession || "Not specified"}</p>
+                      </div>
+                      <div>
+                        <p class="text-xs text-gray-500 mb-1">Income</p>
+                        <p class="text-sm text-gray-900">{member.income ? `R$ ${member.income}` : "Not specified"}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p class="text-sm text-gray-600">No family members registered</p>
+            )}
+          </app-card>
+
+          <!-- {/* Parental Status */} -->
+          <app-card class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <UserCircle size={20} class="text-blue-600" />
+              <h4 class="text-gray-900">Parental Status</h4>
+            </div>
+
+            <div class="grid grid-cols-2 gap-6">
+              <div class="flex items-start gap-3">
+                <div class="bg-blue-50 p-2 rounded-lg">
+                  <Heart size={18} class="text-blue-600" />
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500">Marital Status</p>
+                  <p class="text-sm text-gray-900 mt-1 capitalize">{student.familyData.maritalStatus}</p>
+                </div>
+              </div>
+
+              {student.familyData.separated && (
+                <>
+                  <div class="flex items-start gap-3">
+                    <div class="bg-purple-50 p-2 rounded-lg">
+                      <UserCircle size={18} class="text-purple-600" />
+                    </div>
+                    <div>
+                      <p class="text-xs text-gray-500">Contact with Separated Spouse</p>
+                      <p class="text-sm text-gray-900 mt-1 capitalize">{student.familyData.contactWithSeparatedSpouse}</p>
+                    </div>
+                  </div>
+
+                  {student.familyData.contactWithSeparatedSpouse === "yes" && student.familyData.contactFrequency && (
+                    <div class="flex items-start gap-3">
+                      <div class="bg-green-50 p-2 rounded-lg">
+                        <Clock size={18} class="text-green-600" />
+                      </div>
+                      <div>
+                        <p class="text-xs text-gray-500">Contact Frequency</p>
+                        <p class="text-sm text-gray-900 mt-1 capitalize">{student.familyData.contactFrequency}</p>
+                      </div>
+                    </div>
+                  )}
+                </>
+              )}
+            </div>
+          </app-card>
+
+          <!-- {/* Housing and Benefits */} -->
+          <app-card class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <Home size={20} class="text-green-600" />
+              <h4 class="text-gray-900">Housing & Benefits</h4>
+            </div>
+
+            <div class="space-y-4">
+              <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+                <div class="bg-green-100 p-2 rounded-lg">
+                  <Home size={18} class="text-green-600" />
+                </div>
+                <div>
+                  <p class="text-xs text-gray-500 mb-1">Housing Type</p>
+                  <p class="text-sm text-gray-900 capitalize">{student.familyData.housingType}</p>
+                </div>
+              </div>
+
+              <div>
+                <p class="text-sm text-gray-700 mb-3">Government Benefits</p>
+                <div class="flex flex-wrap gap-2">
+                  {student.familyData.benefits.bolsaFamilia && (
+                    <app-badge class="bg-blue-100 text-blue-700">Bolsa Família</app-badge>
+                  )}
+                  {student.familyData.benefits.rendaCidada && (
+                    <app-badge class="bg-green-100 text-green-700">Renda Cidadã</app-badge>
+                  )}
+                  {student.familyData.benefits.bpc && (
+                    <app-badge class="bg-purple-100 text-purple-700">BPC</app-badge>
+                  )}
+                  {student.familyData.benefits.other && (
+                    <app-badge class="bg-orange-100 text-orange-700">{student.familyData.benefits.other}</app-badge>
+                  )}
+                  {!student.familyData.benefits.bolsaFamilia &&
+                    !student.familyData.benefits.rendaCidada &&
+                    !student.familyData.benefits.bpc &&
+                    !student.familyData.benefits.other && (
+                    <span class="text-sm text-gray-600">No benefits registered</span>
+                  )}
+                </div>
+              </div>
+            </div>
+          </app-card>
+
+          {/* Family Assessment */}
+          {student.familyData.familyAssessment && (
+            <app-card class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <FileText size={20} class="text-orange-600" />
+                <h4 class="text-gray-900">Family Assessment</h4>
+              </div>
+              <p class="text-sm text-gray-900 whitespace-pre-wrap">{student.familyData.familyAssessment}</p>
+            </app-card>
+          )}
+
+          {/* Activities */}
+          <app-card class="p-6">
+            <div class="flex items-center gap-2 mb-4">
+              <Calendar size={20} class="text-blue-600" />
+              <h4 class="text-gray-900">Extracurricular Activities</h4>
+            </div>
+
+            {student.familyData.activities && student.familyData.activities.length > 0 ? (
+              <div class="space-y-3">
+                {student.familyData.activities.map((activity) => (
+                  <div key={activity.id} class="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                    <div class="flex items-start gap-3">
+                      <div class={`p-2 rounded-lg ${
+                        activity.category === "sports" ? "bg-green-100" :
+                        activity.category === "culture" ? "bg-purple-100" :
+                        activity.category === "socio-educational" ? "bg-blue-100" :
+                        activity.category === "ngo" ? "bg-orange-100" :
+                        "bg-gray-100"
+                      }`}>
+                        <Calendar size={18} class={
+                          activity.category === "sports" ? "text-green-600" :
+                          activity.category === "culture" ? "text-purple-600" :
+                          activity.category === "socio-educational" ? "text-blue-600" :
+                          activity.category === "ngo" ? "text-orange-600" :
+                          "text-gray-600"
+                        } />
+                      </div>
+                      <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                          <p class="text-sm text-gray-900">{activity.name}</p>
+                          <app-badge class={
+                            activity.category === "sports" ? "bg-green-100 text-green-700" :
+                            activity.category === "culture" ? "bg-purple-100 text-purple-700" :
+                            activity.category === "socio-educational" ? "bg-blue-100 text-blue-700" :
+                            activity.category === "ngo" ? "bg-orange-100 text-orange-700" :
+                            "bg-gray-100 text-gray-700"
+                          }>
+                            {activity.category === "socio-educational" ? "Socio-Educational" :
+                              activity.category.charAt(0).toUpperCase() + activity.category.slice(1)}
+                          </app-badge>
+                        </div>
+                        {activity.organization && (
+                          <p class="text-xs text-gray-600 mb-2">
+                            <strong>Organization:</strong> {activity.organization}
+                          </p>
+                        )}
+                        <div class="flex flex-wrap gap-1">
+                          {activity.days.map((day) => (
+                            <app-badge key={day} variant="outline" class="text-xs">
+                              {day}
+                            </app-badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p class="text-sm text-gray-600">No activities registered</p>
+            )}
+          </app-card>
+
+          {/* Social Risk Assessment */}
+          {student.familyData.socialRisk && (
+            <app-card class="p-6">
+              <div class="flex items-center gap-2 mb-4">
+                <AlertTriangle size={20} class="text-red-600" />
+                <h4 class="text-gray-900">Social Risk Assessment</h4>
+              </div>
+
+              <div class="space-y-4">
+                <div>
+                  <p class="text-sm text-gray-700 mb-3">Services Received (Recent Months)</p>
+                  <div class="flex flex-wrap gap-2">
+                    {student.familyData.socialRisk.childProtectiveServices && (
+                      <app-badge class="bg-red-100 text-red-700">Child Protective Services</app-badge>
+                    )}
+                    {student.familyData.socialRisk.prisonSystem && (
+                      <app-badge class="bg-orange-100 text-orange-700">Prison System</app-badge>
+                    )}
+                    {student.familyData.socialRisk.policeStation && (
+                      <app-badge class="bg-yellow-100 text-yellow-700">Police Station</app-badge>
+                    )}
+                    {student.familyData.socialRisk.emergencyRoom && (
+                      <app-badge class="bg-blue-100 text-blue-700">Emergency Room</app-badge>
+                    )}
+                    {student.familyData.socialRisk.rehabilitationCenter && (
+                      <app-badge class="bg-purple-100 text-purple-700">Rehabilitation Center</app-badge>
+                    )}
+                    {student.familyData.socialRisk.womensPoliceStation && (
+                      <app-badge class="bg-pink-100 text-pink-700">Women's Police Station</app-badge>
+                    )}
+                    {student.familyData.socialRisk.otherServices && (
+                      <app-badge class="bg-gray-100 text-gray-700">{student.familyData.socialRisk.otherServices}</app-badge>
+                    )}
+                    {!student.familyData.socialRisk.childProtectiveServices &&
+                      !student.familyData.socialRisk.prisonSystem &&
+                      !student.familyData.socialRisk.policeStation &&
+                      !student.familyData.socialRisk.emergencyRoom &&
+                      !student.familyData.socialRisk.rehabilitationCenter &&
+                      !student.familyData.socialRisk.womensPoliceStation &&
+                      !student.familyData.socialRisk.otherServices && (
+                      <span class="text-sm text-gray-600">No services reported</span>
+                    )}
+                  </div>
+                </div>
+
+                {student.familyData.socialRisk.hasPrioritySituation && (
+                  <div class="p-3 bg-red-50 border border-red-200 rounded-lg">
+                    <div class="flex items-center gap-2 mb-2">
+                      <AlertTriangle size={16} class="text-red-600" />
+                      <p class="text-sm text-red-900">Priority Situation</p>
+                    </div>
+                    {student.familyData.socialRisk.situationCode && (
+                      <p class="text-sm text-red-800">
+                        <strong>Code:</strong> {student.familyData.socialRisk.situationCode}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {student.familyData.socialRisk.observations && (
+                  <div>
+                    <p class="text-sm text-gray-700 mb-2">Observations</p>
+                    <p class="text-sm text-gray-900 whitespace-pre-wrap p-3 bg-gray-50 rounded-lg border border-gray-200">
+                      {student.familyData.socialRisk.observations}
+                    </p>
+                  </div>
+                )}
+              </div>
+            </app-card>
+          )}
+        </>
+      ) : (
+        <app-card class="p-6">
+          <p class="text-sm text-gray-600 text-center">No family information available</p>
+        </app-card>
+      )}
+    </TabsContent>
+
+    {/* Health Information Tab */}
+    <TabsContent value="health" class="space-y-4 mt-6">
+      {/* Medical Data app-card */}
+      {student.medicalData && (
+        <app-card class="p-6">
+          <h4 class="text-gray-900 mb-4">Medical Information</h4>
+
+          <div class="space-y-4">
+            {/* Physical Activity Restrictions */}
+            <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="bg-blue-100 p-2 rounded-lg">
+                <Activity size={18} class="text-blue-600" />
+              </div>
+              <div class="flex-1">
+                <p class="text-xs text-gray-500 mb-1">Physical Activity Restrictions</p>
+                <p class="text-sm text-gray-900">
+                  {student.medicalData.physicalActivityRestrictions || "None reported"}
+                </p>
+              </div>
+            </div>
+
+            {/* Dietary Restrictions */}
+            <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="bg-orange-100 p-2 rounded-lg">
+                <Utensils size={18} class="text-orange-600" />
+              </div>
+              <div class="flex-1">
+                <p class="text-xs text-gray-500 mb-1">Dietary Restrictions</p>
+                <p class="text-sm text-gray-900">
+                  {student.medicalData.dietaryRestrictions || "None reported"}
+                </p>
+              </div>
+            </div>
+
+            {/* Disabilities */}
+            <div class="flex items-start gap-3 p-3 bg-gray-50 rounded-lg">
+              <div class="bg-purple-100 p-2 rounded-lg">
+                <Accessibility size={18} class="text-purple-600" />
+              </div>
+              <div class="flex-1">
+                <p class="text-xs text-gray-500 mb-1">Disabilities / Special Needs</p>
+                <p class="text-sm text-gray-900">
+                  {student.medicalData.disabilities || "None reported"}
+                </p>
+              </div>
+            </div>
+
+            {/* Allergies */}
+            <div class="flex items-start gap-3 p-3 bg-red-50 rounded-lg border border-red-200">
+              <div class="bg-red-100 p-2 rounded-lg">
+                <AlertTriangle size={18} class="text-red-600" />
+              </div>
+              <div class="flex-1">
+                <p class="text-xs text-gray-500 mb-1">Allergies</p>
+                <p class="text-sm text-gray-900">
+                  {student.medicalData.allergies || "None reported"}
+                </p>
+              </div>
+            </div>
+
+            {/* Care Services */}
+            <div class="grid grid-cols-2 gap-4 pt-4 border-t border-gray-200">
+              <div class="flex items-center gap-3">
+                <CheckCircle2 size={18} class={student.medicalData.dentalCare ? "text-green-600" : "text-gray-400"} />
+                <div>
+                  <p class="text-xs text-gray-500">Dental Care</p>
+                  <p class="text-sm text-gray-900">{student.medicalData.dentalCare ? "Yes" : "No"}</p>
+                </div>
+              </div>
+              <div class="flex items-center gap-3">
+                <Eye size={18} class={student.medicalData.ophthalmologicalCare ? "text-green-600" : "text-gray-400"} />
+                <div>
+                  <p class="text-xs text-gray-500">Eye Care</p>
+                  <p class="text-sm text-gray-900">{student.medicalData.ophthalmologicalCare ? "Yes" : "No"}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </app-card>
+      )}
+
+      <app-card class="p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-gray-900">Health Observations</h4>
+          <app-badge class="bg-blue-100 text-blue-700">
+            {healthObservations.length} conditions
+          </app-badge>
+        </div>
+        <p class="text-sm text-gray-600 mb-6">
+          Click on any observation to view detailed emergency procedures and medications.
+        </p>
+
+        <div class="space-y-3">
+          {healthObservations.map((observation) => (
+            <button
+              key={observation.id}
+              onClick={() => handleHealthObservationClick(observation)}
+              class="w-full text-left p-4 border-2 rounded-lg hover:bg-gray-50 transition-colors"
+            >
+              <div class="flex items-start justify-between">
+                <div class="flex items-start gap-3 flex-1">
+                  <div class={`p-2 rounded-lg ${
+                    observation.severity === "high" ? "bg-red-50" :
+                    observation.severity === "medium" ? "bg-orange-50" :
+                    "bg-green-50"
+                  }`}>
+                    <Heart size={18} class={
+                      observation.severity === "high" ? "text-red-600" :
+                      observation.severity === "medium" ? "text-orange-600" :
+                      "text-green-600"
+                    } />
+                  </div>
+
+                  <div class="flex-1">
+                    <div class="flex items-center gap-2 mb-1">
+                      <p class="text-sm text-gray-900">{observation.condition}</p>
+                      <app-badge class={getSeverityColor(observation.severity)}>
+                        {observation.severity}
+                      </app-badge>
+                    </div>
+                    <p class="text-xs text-gray-600 line-clamp-2">
+                      {observation.description}
+                    </p>
+                    <p class="text-xs text-gray-500 mt-2">
+                      Updated: {observation.lastUpdated}
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight size={18} class="text-gray-400 mt-1" />
+              </div>
+            </button>
+          ))}
+        </div>
+      </app-card>
+
+      {/* Health Summary */}
+      <app-card class="p-6 bg-orange-50 border-orange-200">
+        <div class="flex items-start gap-3">
+          <AlertTriangle size={20} class="text-orange-600 mt-0.5" />
+          <div>
+            <p class="text-sm text-orange-900">Important Notice</p>
+            <p class="text-xs text-orange-700 mt-1">
+              All staff members should be aware of these health conditions. In case of emergency, follow the outlined procedures and contact the school nurse immediately.
+            </p>
+          </div>
+        </div>
+      </app-card>
+    </TabsContent>
+
+    {/* Attendance Tab */}
+    <TabsContent value="attendance" class="space-y-4 mt-6">
+      <app-card class="p-6">
+        <h4 class="text-gray-900 mb-4">Attendance History</h4>
+        <div class="space-y-3">
+          {attendanceData.map((record) => (
+            <div
+              key={record.id}
+              class="flex items-center justify-between p-4 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors"
+            >
+              <div class="flex items-center gap-4">
+                {getStatusIcon(record.status)}
+                <div>
+                  <p class="text-sm text-gray-900">{record.workshop}</p>
+                  <p class="text-xs text-gray-600 mt-1">{record.date} • {record.duration}</p>
+                </div>
+              </div>
+              <app-badge class={getStatusColor(record.status)}>
+                {record.status}
+              </app-badge>
+            </div>
+          ))}
+        </div>
+      </app-card>
+
+      <app-card class="p-6">
+        <h4 class="text-gray-900 mb-4">Attendance Summary</h4>
+        <div class="grid grid-cols-3 gap-6">
+          <div class="text-center">
+            <div class="bg-green-50 p-4 rounded-lg">
+              <p class="text-2xl text-green-600">6</p>
+              <p class="text-sm text-gray-600 mt-1">Present</p>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="bg-orange-50 p-4 rounded-lg">
+              <p class="text-2xl text-orange-600">1</p>
+              <p class="text-sm text-gray-600 mt-1">Late</p>
+            </div>
+          </div>
+          <div class="text-center">
+            <div class="bg-red-50 p-4 rounded-lg">
+              <p class="text-2xl text-red-600">1</p>
+              <p class="text-sm text-gray-600 mt-1">Absent</p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+    </TabsContent>
+
+    {/* Notes History Tab */}
+    <TabsContent value="notes" class="space-y-4 mt-6">
+      <app-card class="p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-gray-900">Notes History</h4>
+          <div class="flex gap-2">
+            <app-badge class="bg-green-100 text-green-700">
+              {studentNotes.filter(n => n.type === "compliment").length} Compliments
+            </app-badge>
+            <app-badge class="bg-orange-100 text-orange-700">
+              {studentNotes.filter(n => n.type === "complaint").length} Complaints
+            </app-badge>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          {studentNotes.map((note) => (
+            <div
+              key={note.id}
+              class={`p-4 rounded-lg border-2 ${
+                note.type === "compliment"
+                  ? "bg-green-50 border-green-200"
+                  : "bg-orange-50 border-orange-200"
+              }`}
+            >
+              <div class="flex items-start gap-3">
+                <div class={`p-2 rounded-lg ${
+                  note.type === "compliment" ? "bg-green-100" : "bg-orange-100"
+                }`}>
+                  {note.type === "compliment" ? (
+                    <ThumbsUp size={18} class="text-green-600" />
+                  ) : (
+                    <ThumbsDown size={18} class="text-orange-600" />
+                  )}
+                </div>
+
+                <div class="flex-1">
+                  <div class="flex items-start justify-between mb-2">
+                    <div>
+                      <p class="text-sm text-gray-900">{note.title}</p>
+                      <p class="text-xs text-gray-600 mt-1">{note.description}</p>
+                    </div>
+                  </div>
+                  <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-200">
+                    <p class="text-xs text-gray-600">By {note.author}</p>
+                    <p class="text-xs text-gray-500">{note.date}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </app-card>
+    </TabsContent>
+  </Tabs>
+</DialogContent>
+</Dialog>
+
+{/* Health Detail Dialog */}
+<Dialog open={healthDetailOpen} onOpenChange={setHealthDetailOpen}>
+<DialogContent class="max-w-2xl max-h-[90vh] overflow-y-auto">
+  <app-dialog-header>
+    <app-dialog-title>Health Observation Details</app-dialog-title>
+    <app-dialog-description>
+      Emergency procedures and medication information for {selectedHealthObservation?.condition}
+    </app-dialog-description>
+  </app-dialog-header>
+
+  {selectedHealthObservation && (
+    <div class="space-y-6">
+      {/* Condition Header */}
+      <div class="flex items-start gap-4 p-4 bg-gray-50 rounded-lg">
+        <div class={`p-3 rounded-lg ${
+          selectedHealthObservation.severity === "high" ? "bg-red-100" :
+          selectedHealthObservation.severity === "medium" ? "bg-orange-100" :
+          "bg-green-100"
+        }`}>
+          <Heart size={24} class={
+            selectedHealthObservation.severity === "high" ? "text-red-600" :
+            selectedHealthObservation.severity === "medium" ? "text-orange-600" :
+            "text-green-600"
+          } />
+        </div>
+        <div class="flex-1">
+          <div class="flex items-center gap-2 mb-2">
+            <h3 class="text-gray-900">{selectedHealthObservation.condition}</h3>
+            <app-badge class={getSeverityColor(selectedHealthObservation.severity)}>
+              {selectedHealthObservation.severity} severity
+            </app-badge>
+          </div>
+          <p class="text-sm text-gray-600">{selectedHealthObservation.description}</p>
+        </div>
+      </div>
+
+      {/* Emergency Procedure */}
+      <app-card class="p-6 border-2 border-red-200 bg-red-50">
+        <div class="flex items-start gap-3 mb-4">
+          <AlertTriangle size={20} class="text-red-600 mt-0.5" />
+          <h4 class="text-red-900">Emergency Procedure</h4>
+        </div>
+        <div class="bg-white rounded-lg p-4">
+          <pre class="text-sm text-gray-900 whitespace-pre-wrap font-sans">
+            {selectedHealthObservation.emergencyProcedure}
+          </pre>
+        </div>
+      </app-card>
+
+      {/* Medications */}
+      <app-card class="p-6">
+        <div class="flex items-start gap-3 mb-4">
+          <Pill size={20} class="text-blue-600" />
+          <h4 class="text-gray-900">Medications</h4>
+        </div>
+        <div class="space-y-2">
+          {selectedHealthObservation.medications.map((medication, index) => (
+            <div key={index} class="flex items-start gap-2 p-3 bg-blue-50 rounded-lg">
+              <CheckCircle2 size={16} class="text-blue-600 mt-0.5" />
+              <p class="text-sm text-gray-900">{medication}</p>
+            </div>
+          ))}
+        </div>
+      </app-card>
+
+      {/* Last Updated */}
+      <div class="flex items-center gap-2 text-sm text-gray-600">
+        <Calendar size={16} />
+        <span>Last updated: {selectedHealthObservation.lastUpdated}</span>
+      </div>
+    </div>
+  )}
+</app-dialog>

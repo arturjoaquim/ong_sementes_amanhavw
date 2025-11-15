@@ -189,3 +189,97 @@
 html {
   font-size: var(--font-size);
 }
+
+@layer components {
+  /* CONTÊINER PRINCIPAL */
+  .app-select .ng-select-container {
+    @apply flex items-center min-h-10 w-full
+           /*border border-gray-300*/ rounded-md
+           bg-input-background px-3 py-2 text-sm
+           /*shadow-sm*/ transition-colors
+           focus-within:border-primary focus-within:ring-2
+           focus-within:ring-primary/50;
+  }
+
+  /* PLACEHOLDER */
+  .app-select .ng-placeholder {
+    @apply text-gray-400;
+  }
+
+  /* TEXTO DO ITEM SELECIONADO */
+  .app-select .ng-value {
+    @apply text-gray-900 /*font-medium*/;
+  }
+
+  /* BOTÃO CLEAR (x) */
+  .app-select .ng-clear-wrapper {
+    @apply text-gray-400 hover:text-gray-600;
+  }
+
+  /* DROPDOWN PANEL */
+  .ng-dropdown-panel {
+    @apply mt-1 rounded-md border border-gray-200
+           bg-white shadow-lg py-1;
+  }
+
+  /* OPÇÃO NORMAL */
+  .ng-option {
+    @apply px-3 py-2 text-sm text-gray-700 cursor-pointer;
+  }
+
+  /* OPÇÃO HOVER */
+  .ng-option:hover {
+    @apply bg-gray-100;
+  }
+
+  /* OPÇÃO SELECIONADA */
+  .ng-option-selected {
+    @apply bg-primary/10 text-primary font-semibold;
+  }
+
+  /* OPÇÃO FOCADA VIA TECLADO */
+  .ng-option-marked {
+    @apply bg-primary/20 text-primary;
+  }
+
+  table {
+    @apply w-full caption-bottom text-sm;
+  }
+
+  tbody {
+    @apply [&_tr:last-child]:border-0;
+  }
+
+  thead {
+    @apply [&_tr]:border-b;
+  }
+
+  tr {
+    @apply border-b transition-colors;
+  }
+
+  th {
+    @apply h-10 px-2 text-left align-middle font-medium text-foreground whitespace-nowrap;
+  }
+
+  td {
+    @apply p-2 align-middle;
+  }
+
+  /* Estilos para input e textarea usando a diretiva appInput */
+  .app-input {
+    @apply file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-primary-foreground dark:bg-input/30 border-input flex h-9 w-full min-w-0 rounded-md border px-3 py-1 text-base bg-input-background transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive;
+  }
+
+  /* Estilos para label usando a diretiva appLabel */
+  .app-label {
+    @apply flex items-center gap-2 text-sm leading-none font-medium select-none group-data-[disabled=true]:pointer-events-none group-data-[disabled=true]:opacity-50 peer-disabled:cursor-not-allowed peer-disabled:opacity-50;
+  }
+
+  .app-avatar-image {
+    @apply aspect-square size-full;
+  }
+}
+
+/* html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; } */

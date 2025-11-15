@@ -1,1 +1,32 @@
-<h1>Hello student</h1>
+<div class="p-8">
+  <!-- {/* Page Header */} -->
+  <div class="mb-8">
+    <div class="flex items-center gap-3 mb-2">
+      <div class="bg-green-100 p-2 rounded-lg">
+        <lucide-icon [img]="icons.users" size="24" class="text-green-600" />
+      </div>
+      <h1 class="text-gray-900">Gerenciar estudantes</h1>
+    </div>
+    <p class="text-gray-600">Pesquise, visualize e gerencie registros de estudantes.</p>
+  </div>
+
+  <!-- {/* Search Section */} -->
+  <app-student-search (searchCompleted)="showListResult($event)" />
+
+  <!-- {/* Student List */} -->
+  <app-student-list [students]="students" (viewStudentDetail)="showStudentDetails($event)" />
+
+  <!-- {/* Student Details Dialog */} -->
+  <!-- <StudentDetailsDialog
+    student="{selectedStudent}"
+    open="{detailsDialogOpen}"
+    onOpenChange="{setDetailsDialogOpen}"
+  /> -->
+
+  <!-- {/* Add Student Dialog */} -->
+  <!-- <AddStudentDialog
+    open="{addDialogOpen}"
+    onOpenChange="{setAddDialogOpen}"
+    onAddStudent="{handleAddStudent}"
+  /> -->
+</div>

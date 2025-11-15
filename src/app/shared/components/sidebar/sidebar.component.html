@@ -19,7 +19,11 @@
         [routerLink]="menuItem.route"
         key="menuItem.id"
         (click)="onClickMenuItem(menuItem.id)"
-        [class]="getMenuItemClass(menuItem.id)"
+        [ngClass]="{
+          'w-full flex items-center gap-3 px-4 py-3 rounded-lg transition-all': true,
+          'bg-green-50 text-green-700': menuItem.id === this.activePageId(),
+          'text-gray-600 hover:bg-gray-50 hover:text-gray-900': menuItem.id !== this.activePageId(),
+        }"
       >
         <lucide-icon [img]="menuItem.icon" size="20" strokeWidth="1.5" />
         <span>{{ menuItem.label }}</span>

@@ -1,0 +1,90 @@
+<div class="relative w-full overflow-x-auto">
+  <div>
+    <table class="w-full caption-bottom text-sm">
+      <thead class="[&_tr]:border-b">
+        <tr class="hover:bg-muted/50 data-[state=selected]:bg-muted">
+          <th>Student</th>
+          <th>ID</th>
+          <th>Age</th>
+          <th>Grade</th>
+          <th>Guardian</th>
+          <th>Contact</th>
+          <th>Attendance</th>
+          <th>Status</th>
+          <th class="text-right">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (students.length === 0) {
+          <tr class="hover:bg-muted/50 data-[state=selected]:bg-muted">
+            <td colSpan="9" class="text-center py-8 text-gray-500">
+              Nenhum estudante corresponde aos filtros.
+            </td>
+          </tr>
+        } @else {
+          @for (student of students; track student.id) {
+            <tr key="{student.id}" class="hover:bg-gray-50">
+              <td class="whitespace-nowrap">
+                <div class="flex items-center gap-3">
+                  <app-avatar>
+                    <img
+                      class="app-avatar-iimage"
+                      src="{{ student.avatar }}"
+                      alt="{{ student.name }}"
+                    />
+                    <app-avatar-fallback>{{ student.name }}</app-avatar-fallback>
+                  </app-avatar>
+                  <span className="text-gray-900">{{ student.name }}</span>
+                </div>
+              </td>
+              <td class="whitespace-nowrap text-gray-600">{{ student.id }}</td>
+              <td class="whitespace-nowrap text-gray-600">{{ student.age }}</td>
+              <td class="whitespace-nowrap text-gray-600">{{ student.grade }}</td>
+              <td class="whitespace-nowrap text-gray-600">{{ student.guardian }}</td>
+              <td class="whitespace-nowrap">
+                <div class="flex items-center gap-2 text-sm text-gray-600">
+                  <lucide-icon [img]="icons.phone" size="14" />
+                  <span>{{ student.guardianPhone }}</span>
+                </div>
+              </td>
+              <td class="whitespace-nowrap">
+                <span [class]="getAttendanceColor(student.attendance)">
+                  {{ student.attendance }}%
+                </span>
+              </td>
+              <td class="whitespace-nowrap">
+                <app-badge [contentClass]="getStatusColor(student.status)">{{
+                  student.status
+                }}</app-badge>
+              </td>
+              <td class="whitespace-nowrap text-right">
+                <app-button
+                  variant="ghost"
+                  size="sm"
+                  (click)="viewDetails(student)"
+                  class="text-green-600 hover:text-green-700 hover:bg-green-50"
+                >
+                  <lucide-icon [img]="icons.eye" size="16" class="mr-1" />
+                  View
+                </app-button>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <!-- {/* Pagination */} -->
+  <!-- @if (filteredStudents.length > 0) {
+    <div class="border-t border-gray-200 px-6 py-4 flex items-center justify-between">
+      <div class="text-sm text-gray-600">
+        Showing {{ filteredStudents.length }} of {{ students.length }} students
+      </div>
+      <div class="flex gap-2">
+        <Button variant="outline" size="sm" disabled> Previous </Button>
+        <Button variant="outline" size="sm"> Next </Button>
+      </div>
+    </div>
+  } -->
+</div>

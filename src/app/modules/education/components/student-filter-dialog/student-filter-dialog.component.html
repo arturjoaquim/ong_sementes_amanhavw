@@ -1,0 +1,125 @@
+<app-dialog contentClass="max-w-md">
+  <app-dialog-header>
+    <app-dialog-title>Filtro de Alunos</app-dialog-title>
+    <app-dialog-description>
+      Aplique filtros avançados para buscar por alunos.
+    </app-dialog-description>
+  </app-dialog-header>
+  <form [formGroup]="studentFilters" (ngSubmit)="onSubmit()">
+    <div class="space-y-6 mt-4">
+      <!-- {/* Guardian Name Search */} -->
+      <div>
+        <label htmlFor="nameSearch" class="app-label text-sm text-gray-900 mb-2 block">
+          Nome do Aluno
+        </label>
+        <input
+          id="nameSearch"
+          type="text"
+          formControlName="nameSearch"
+          placeholder="Buscar pelo nome..."
+          class="app-input mt-1"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="guardianSearch" class="app-label text-sm text-gray-900 mb-2 block">
+          Nome do Responsável
+        </label>
+        <input
+          id="guardianSearch"
+          type="text"
+          formControlName="guardianSearch"
+          placeholder="Buscar pelo nome do responsável..."
+          class="app-input mt-1"
+        />
+      </div>
+
+      <!-- {/* Grade Level Filter */} -->
+      <label for="gradeLevel" class="app-label text-sm text-gray-900 mb-2 block"> Série </label>
+      <ng-select
+        class="app-select"
+        #agreeSelect
+        labelForId="gradeLevel"
+        formControlName="gradeLevel"
+        bindLabel="name"
+        bindValue="id"
+        [searchable]="false"
+        [clearable]="false"
+      >
+        <ng-option value="all">Todas as Séries</ng-option>
+        <ng-option value="1-3">1º ao 3º ano</ng-option>
+        <ng-option value="4-6">4º ao 6º ano</ng-option>
+        <ng-option value="7-9">7º ao 9º ano</ng-option>
+        <ng-option value="10-12">Ensino Médio</ng-option>
+      </ng-select>
+
+      <!-- {/* Status Filter */} -->
+      <label for="status" class="app-label text-sm text-gray-900 mb-2 block">
+        Status do Aluno
+      </label>
+      <ng-select
+        labelForId="status"
+        class="app-select"
+        formControlName="status"
+        bindLabel="name"
+        bindValue="id"
+        [searchable]="false"
+        [clearable]="false"
+      >
+        <ng-option value="all">Todos os Status</ng-option>
+        <ng-option value="active">Ativo</ng-option>
+        <ng-option value="inactive">Inativo</ng-option>
+        <ng-option value="graduated">Graduado</ng-option>
+      </ng-select>
+
+      <!-- {/* Age Range Filter */} -->
+      <div>
+        <label class="app-label text-sm text-gray-900 mb-3 block">Age Range</label>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label htmlFor="ageMin" class="app-label text-xs text-gray-600">Minimum Age</label>
+            <input
+              id="ageMin"
+              type="number"
+              min="1"
+              max="100"
+              formControlName="ageMin"
+              placeholder="Min"
+              class="app-input mt-1"
+            />
+          </div>
+          <div>
+            <label htmlFor="ageMax" class="app-label text-xs text-gray-600">Maximum Age</label>
+            <input
+              id="ageMax"
+              type="number"
+              min="1"
+              max="100"
+              formControlName="ageMax"
+              placeholder="Max"
+              class="app-input mt-1"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex gap-3 mt-6">
+      <app-button
+        variant="outline"
+        (click)="resetFilters()"
+        class="flex-1 w-full"
+        contentClass="w-full"
+      >
+        Reset All
+      </app-button>
+      <app-button
+        type="submit"
+        contentClass="bg-green-600 hover:bg-green-700 w-full"
+        class="flex-1 w-full"
+      >
+        Apply Filters
+      </app-button>
+    </div>
+  </form>
+</app-dialog>

@@ -6,7 +6,6 @@ import { SidebarComponent } from './shared/components/sidebar/sidebar.component'
   selector: 'app-root',
   imports: [RouterOutlet, SidebarComponent],
   templateUrl: './app.html',
-  styleUrl: './app.css',
 })
 export class App {
   protected readonly title = signal('ong-sementes-amanha');
