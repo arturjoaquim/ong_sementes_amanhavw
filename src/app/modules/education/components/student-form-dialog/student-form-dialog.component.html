@@ -1,0 +1,150 @@
+
+<app-dialog contentClass="max-w-3xl max-h-[90vh] overflow-y-auto">
+  <app-dialog-header>
+    <app-dialog-title>{{ isEditMode ? 'Editar Estudante' : 'Novo Estudante' }}</app-dialog-title>
+    <app-dialog-description>
+      {{ isEditMode ? 'Atualize as informações do estudante' : 'Preencha os dados do novo estudante' }}
+    </app-dialog-description>
+  </app-dialog-header>
+
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="space-y-6 mt-4">
+    <!-- Basic Information -->
+    <div class="space-y-4">
+      <h4 class="text-sm font-semibold text-gray-900">Informações Básicas</h4>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Nome Completo</mat-label>
+          <input matInput formControlName="name" required />
+          <mat-error *ngIf="studentForm.get('name')?.hasError('required')">
+            Nome é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Idade</mat-label>
+          <input matInput type="number" formControlName="age" required />
+          <mat-error *ngIf="studentForm.get('age')?.hasError('required')">
+            Idade é obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>CPF</mat-label>
+          <input matInput formControlName="cpf" />
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Raça/Etnia</mat-label>
+          <mat-select formControlName="race">
+            <mat-option value="">Selecione</mat-option>
+            <mat-option value="branca">Branca</mat-option>
+            <mat-option value="preta">Preta</mat-option>
+            <mat-option value="parda">Parda</mat-option>
+            <mat-option value="amarela">Amarela</mat-option>
+            <mat-option value="indigena">Indígena</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full col-span-2">
+          <mat-label>Local de Nascimento</mat-label>
+          <input matInput formControlName="placeOfBirth" placeholder="Cidade, Estado" />
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Nome do Pai</mat-label>
+          <input matInput formControlName="fatherName" />
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Nome da Mãe</mat-label>
+          <input matInput formControlName="motherName" />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Academic Information -->
+    <div class="space-y-4">
+      <h4 class="text-sm font-semibold text-gray-900">Informações Acadêmicas</h4>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Série/Ano</mat-label>
+          <input matInput formControlName="grade" required />
+          <mat-error *ngIf="studentForm.get('grade')?.hasError('required')">
+            Série/Ano é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Data de Matrícula</mat-label>
+          <input matInput type="date" formControlName="enrollmentDate" required />
+          <mat-error *ngIf="studentForm.get('enrollmentDate')?.hasError('required')">
+            Data de matrícula é obrigatória
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Origem da Matrícula</mat-label>
+          <mat-select formControlName="enrollmentOrigin">
+            <mat-option value="">Selecione</mat-option>
+            <mat-option value="community">Comunidade</mat-option>
+            <mat-option value="school">Escola</mat-option>
+            <mat-option value="social_services">Serviços Sociais</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Status</mat-label>
+          <mat-select formControlName="status" required>
+            <mat-option value="active">Ativo</mat-option>
+            <mat-option value="inactive">Inativo</mat-option>
+            <mat-option value="graduated">Graduado</mat-option>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="w-full col-span-2">
+          <mat-label>Status de Acompanhamento</mat-label>
+          <mat-select formControlName="accompaniedStatus">
+            <mat-option value="">Selecione</mat-option>
+            <mat-option value="accompanied">Acompanhado</mat-option>
+            <mat-option value="not_accompanied">Não Acompanhado</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Guardian Information -->
+    <div class="space-y-4">
+      <h4 class="text-sm font-semibold text-gray-900">Informações do Responsável</h4>
+      
+      <div class="grid grid-cols-2 gap-4">
+        <mat-form-field class="w-full">
+          <mat-label>Nome do Responsável</mat-label>
+          <input matInput formControlName="guardian" required />
+          <mat-error *ngIf="studentForm.get('guardian')?.hasError('required')">
+            Nome do responsável é obrigatório
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="w-full">
+          <mat-label>Telefone do Responsável</mat-label>
+          <input matInput formControlName="guardianPhone" required />
+          <mat-error *ngIf="studentForm.get('guardianPhone')?.hasError('required')">
+            Telefone é obrigatório
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="flex justify-end gap-3 pt-4 border-t">
+      <app-button type="button" variant="outline" (click)="cancel()">
+        Cancelar
+      </app-button>
+      <app-button type="submit" [disabled]="!studentForm.valid">
+        {{ isEditMode ? 'Atualizar' : 'Criar' }}
+      </app-button>
+    </div>
+  </form>
+</app-dialog>

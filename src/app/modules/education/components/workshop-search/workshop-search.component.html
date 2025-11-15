@@ -1,6 +1,7 @@
+
 <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
   <div class="flex flex-col md:flex-row gap-4">
-    <!-- {/* Search input */} -->
+    <!-- Search input -->
     <div class="flex-1 flex gap-3">
       <div class="flex-1 relative">
         <lucide-icon
@@ -10,18 +11,18 @@
         />
         <input
           type="text"
-          placeholder="Buscar estudante por nome..."
+          placeholder="Buscar oficina por nome..."
           [formControl]="nameSearchFilter"
           class="app-input pl-10"
         />
       </div>
-      <app-button (click)="searchByName()" contentClass="bg-green-600 hover:bg-green-700">
+      <app-button (click)="searchByName()" contentClass="bg-blue-600 hover:bg-blue-700">
         <lucide-icon [img]="icons.search" size="18" class="mr-2" />
         Buscar
       </app-button>
     </div>
 
-    <!-- {/* Action app-buttons */} -->
+    <!-- Action buttons -->
     <div class="flex gap-3">
       <app-button variant="outline" (click)="openDialog()" contentClass="relative">
         <lucide-icon [img]="icons.filter" size="18" class="mr-2" />
@@ -33,36 +34,30 @@
         }
       </app-button>
 
-      <app-button (click)="onAddStudent()" contentClass="bg-green-600 hover:bg-green-700">
-        <lucide-icon [img]="icons.userPlus" size="18" class="mr-2" />
-        Adicionar Estudante
+      <app-button (click)="onAddWorkshop()" contentClass="bg-blue-600 hover:bg-blue-700">
+        <lucide-icon [img]="icons.plus" size="18" class="mr-2" />
+        Adicionar Oficina
       </app-button>
     </div>
   </div>
 
-  <!-- {/* Active Filters Display */} -->
+  <!-- Active Filters Display -->
   @if (nameSearch || activeFilterCount > 0) {
     <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200">
-      <span class="text-sm text-gray-600">Active filters:</span>
+      <span class="text-sm text-gray-600">Filtros ativos:</span>
       @if (nameSearch) {
         <app-badge variant="secondary" contentClass="gap-1"> Nome: {{ nameSearch }} </app-badge>
       }
-      @if (guardianSearch) {
+      @if (educatorSearch) {
         <app-badge variant="secondary" contentClass="gap-1">
-          Responsável: {{ guardianSearch }}
+          Educador: {{ educatorSearch }}
         </app-badge>
       }
-      @if (gradeLevel && gradeLevel !== 'all') {
-        <app-badge variant="secondary" contentClass="gap-1"> Série: {{ gradeLevel }} </app-badge>
+      @if (type && type !== 'all') {
+        <app-badge variant="secondary" contentClass="gap-1"> Tipo: {{ type }} </app-badge>
       }
       @if (status && status !== 'all') {
         <app-badge variant="secondary" contentClass="gap-1"> Status: {{ status }} </app-badge>
-      }
-      @if (ageMin) {
-        <app-badge variant="secondary" contentClass="gap-1"> Idade mínima: {{ ageMin }} </app-badge>
-      }
-      @if (ageMax) {
-        <app-badge variant="secondary" contentClass="gap-1"> Idade máxima: {{ ageMax }} </app-badge>
       }
       <app-button
         variant="ghost"

@@ -1,4 +1,75 @@
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { Student } from '../types/student.type';
+
+@Injectable({
+  providedIn: 'root',
+})
+export class StudentService {
+  private studentsSubject = new BehaviorSubject<Student[]>(initialStudents);
+  public students$ = this.studentsSubject.asObservable();
+
+  getStudents(): Observable<Student[]> {
+    return this.students$;
+  }
+
+  getStudentById(id: string): Student | undefined {
+    return this.studentsSubject.value.find((s) => s.id === id);
+  }
+
+  createStudent(student: Student): void {
+    const students = this.studentsSubject.value;
+    this.studentsSubject.next([...students, student]);
+  }
+
+  updateStudent(student: Student): void {
+    const students = this.studentsSubject.value;
+    const index = students.findIndex((s) => s.id === student.id);
+    if (index !== -1) {
+      students[index] = student;
+      this.studentsSubject.next([...students]);
+    }
+  }
+
+  deleteStudent(id: string): void {
+    const students = this.studentsSubject.value.filter((s) => s.id !== id);
+    this.studentsSubject.next(students);
+  }
+
+  searchStudents(filters: any): Student[] {
+    let students = this.studentsSubject.value;
+
+    if (filters.nameSearch) {
+      students = students.filter((s) =>
+        s.name.toLowerCase().includes(filters.nameSearch.toLowerCase())
+      );
+    }
+
+    if (filters.guardianSearch) {
+      students = students.filter((s) =>
+        s.guardian.toLowerCase().includes(filters.guardianSearch.toLowerCase())
+      );
+    }
+
+    if (filters.status && filters.status !== 'all') {
+      students = students.filter((s) => s.status === filters.status);
+    }
+
+    if (filters.gradeLevel && filters.gradeLevel !== 'all') {
+      students = students.filter((s) => s.grade === filters.gradeLevel);
+    }
+
+    if (filters.ageMin) {
+      students = students.filter((s) => s.age >= parseInt(filters.ageMin));
+    }
+
+    if (filters.ageMax) {
+      students = students.filter((s) => s.age <= parseInt(filters.ageMax));
+    }
+
+    return students;
+  }
+}
 
 export const initialStudents: Student[] = [
   {

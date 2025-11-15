@@ -11,7 +11,10 @@
   </div>
 
   <!-- {/* Search Section */} -->
-  <app-student-search (searchCompleted)="showListResult($event)" />
+  <app-student-search 
+    (searchCompleted)="showListResult($event)" 
+    (createStudent)="handleCreateStudent(undefined)" 
+  />
 
   <!-- {/* Student List */} -->
   <app-student-list [students]="students" (viewStudentDetail)="showStudentDetails($event)" />

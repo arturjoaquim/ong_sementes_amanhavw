@@ -24,12 +24,17 @@ import { initialStudents } from '../../services/student.service';
 })
 export class StudentSearchComponent {
   @Output() searchCompleted = new EventEmitter<Student[]>();
+  @Output() createStudent = new EventEmitter<void>();
 
   icons = {
     search: Search,
     userPlus: UserPlus,
     filter: Filter,
   };
+
+  onAddStudent() {
+    this.createStudent.emit();
+  }
   dialog = inject(Dialog);
   nameSearchFilter = new FormControl('');
 
@@ -66,13 +71,46 @@ export class StudentSearchComponent {
       ageMax: '',
       nameSearch: this.nameSearchFilter.value || '',
     }));
-    // TODO: fazer serviço para buscar estudantes
     this.search(this.filters());
   }
 
   private search(filters: StudentFilters) {
-    console.log(filters);
-    this.searchCompleted.emit(initialStudents);
+    const filteredStudents = this.searchStudents(filters);
+    this.searchCompleted.emit(filteredStudents);
+  }
+
+  private searchStudents(filters: StudentFilters): Student[] {
+    let students = initialStudents;
+
+    if (filters.nameSearch) {
+      students = students.filter((s) =>
+        s.name.toLowerCase().includes(filters.nameSearch.toLowerCase())
+      );
+    }
+
+    if (filters.guardianSearch) {
+      students = students.filter((s) =>
+        s.guardian.toLowerCase().includes(filters.guardianSearch.toLowerCase())
+      );
+    }
+
+    if (filters.status && filters.status !== 'all') {
+      students = students.filter((s) => s.status === filters.status);
+    }
+
+    if (filters.gradeLevel && filters.gradeLevel !== 'all') {
+      students = students.filter((s) => s.grade === filters.gradeLevel);
+    }
+
+    if (filters.ageMin) {
+      students = students.filter((s) => s.age >= parseInt(filters.ageMin));
+    }
+
+    if (filters.ageMax) {
+      students = students.filter((s) => s.age <= parseInt(filters.ageMax));
+    }
+
+    return students;
   }
 
   resetFilters() {
