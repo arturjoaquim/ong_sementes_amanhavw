@@ -1,4 +1,3 @@
-
 import { Component, inject, OnInit } from '@angular/core';
 import {
   DialogComponent,
@@ -8,13 +7,20 @@ import {
 } from '../../../../shared/components/dialog/dialog.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { Student } from '../../types/student.type';
 import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-student-form-dialog',
@@ -32,6 +38,7 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatSelectModule,
+    NgSelectModule,
   ],
   providers: [
     {
@@ -76,10 +83,12 @@ export class StudentFormDialogComponent implements OnInit {
       const student: Partial<Student> = {
         ...formValue,
         id: this.data?.student?.id || `STU-${Date.now()}`,
-        avatar: this.data?.student?.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${formValue.name}`,
+        avatar:
+          this.data?.student?.avatar ||
+          `https://api.dicebear.com/7.x/avataaars/svg?seed=${formValue.name}`,
         attendance: this.data?.student?.attendance || 0,
       } as Partial<Student>;
-      
+
       this.dialogRef.close(student as Student);
     }
   }

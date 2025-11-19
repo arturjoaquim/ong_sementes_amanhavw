@@ -41,6 +41,7 @@ export class ButtonComponent implements VariantProps<typeof buttonVariants> {
   @Input() size: VariantProps<typeof buttonVariants>['size'] = 'default';
   @Input() type = 'button';
   @Input() contentClass = '';
+  @Input() disabled = false;
 
   get computedClass() {
     return cn(buttonVariants({ variant: this.variant, size: this.size }), this.contentClass);

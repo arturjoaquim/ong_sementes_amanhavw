@@ -6,7 +6,7 @@ import {
   AvatarComponent,
   AvatarFallbackComponent,
 } from '../../../../shared/components/avatar/avatar.component';
-import { Student } from '../../types/student.type';
+import { StudentPreviewData } from '../../types/preview-student';
 
 @Component({
   selector: 'app-student-list',
@@ -26,10 +26,10 @@ export class StudentListComponent {
     eye: Eye,
   };
 
-  @Input() students: Student[] = [];
-  @Output() viewStudentDetail = new EventEmitter<Student>();
+  @Input() students: StudentPreviewData[] = [];
+  @Output() viewStudentDetail = new EventEmitter<StudentPreviewData>();
 
-  viewDetails(student: Student) {
+  viewDetails(student: StudentPreviewData) {
     this.viewStudentDetail.emit(student);
   }
 

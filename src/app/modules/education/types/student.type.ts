@@ -1,77 +1,106 @@
-export interface MedicalData {
-  physicalActivityRestrictions: string;
-  dietaryRestrictions: string;
-  disabilities: string;
-  dentalCare: boolean;
-  ophthalmologicalCare: boolean;
-  allergies: string;
+import { IndividualPerson } from '../../../shared/types/person.type';
+import { Guardian } from './guardian.type';
+import { StudentFamily } from './student-family.type';
+
+export interface StudentHealth {
+  studentHealthId: number;
+  studentId: number;
+  ubsName: string;
+  flagUseGlasses: string;
+  dataExpirationDate: Date;
+  medicalNotes: StudentMedicalNote[];
+  medicalTreatments: StudentMedicalTreatment[];
 }
 
-export interface FamilyMember {
-  id: string;
+interface StudentMedicalNote {
+  studentMedicalNoteId: number;
+  studentHealthId: number;
+  medicalNoteTypeId: number;
+  descriptionEmergencyProcedure: string;
+  summaryNote: string;
+  description: string;
+  noteDate: Date;
+  medicalLocationId: number;
+}
+
+interface StudentMedicalTreatment {
+  studentMedicalTreatmentId: number;
+  studentHealthId: number;
+  medicalTreatmentTypeId: number;
+  treatmentDescription: string;
+}
+
+interface StudentSocialInteraction {
+  id: number;
+  interactionLevelId: number;
+  socialGroupId: number;
+  studentId: number;
+  socialInteractionPlace: SocialInteractionPlace[];
+}
+
+interface SocialInteractionPlace {
+  id: number;
+  socialInteractionId: number;
+  placeId: number;
+}
+
+interface SocialActivity {
+  id: number;
   name: string;
-  relationship: string;
-  profession: string;
-  income: string;
+  socialActivityTypeId: number;
+  description: string;
 }
 
-export interface Activity {
-  id: string;
-  name: string;
-  category: string;
-  days: string[];
-  organization?: string;
+export interface StudentDwellingCondition {
+  id: number;
+  studentId: number;
+  parentsMaritalStatusId: number;
+  hasSeparatedParentContact: boolean;
+  staysHomeAlone: boolean;
+  familyId: number;
+  family: StudentFamily;
 }
 
-export interface SocialRiskData {
-  childProtectiveServices: boolean;
-  prisonSystem: boolean;
-  policeStation: boolean;
-  emergencyRoom: boolean;
-  rehabilitationCenter: boolean;
-  womensPoliceStation: boolean;
-  otherServices: string;
-  hasPrioritySituation: boolean;
-  situationCode: string;
-  observations: string;
+interface StudentGuardianRelashionship {
+  idRelashionship: number;
+  idStudent: number;
+  idGuardian: number;
+  guardian: Guardian;
 }
 
-export interface FamilyData {
-  members: FamilyMember[];
-  maritalStatus: string;
-  separated: boolean;
-  contactWithSeparatedSpouse: string;
-  contactFrequency: string;
-  housingType: string;
-  benefits: {
-    bolsaFamilia: boolean;
-    rendaCidada: boolean;
-    bpc: boolean;
-    other: string;
-  };
-  familyAssessment: string;
-  activities: Activity[];
-  socialRisk?: SocialRiskData;
+interface StudentEmergencyContact {
+  emergencyContactId: number;
+  emergencyContactName: string;
+  studentId: number;
+  contactTypeId: number;
+  contactValue: string;
+}
+
+interface StudentNote {
+  studentNoteId: number;
+  studentId: number;
+  summaryNote: string;
+  descrition: string;
+  noteDate: Date;
+  creatorUserId: number;
 }
 
 export interface Student {
-  id: string;
-  name: string;
+  id: number;
+  personData: IndividualPerson;
   avatar: string;
-  age: number;
-  grade: string;
-  guardian: string;
-  guardianPhone: string;
-  enrollmentDate: string;
-  status: 'active' | 'inactive' | 'graduated';
+  enrollmentDate: Date;
+  status: 'active' | 'inactive';
   attendance: number;
-  cpf?: string;
-  race?: string;
-  placeOfBirth?: string;
-  fatherName?: string;
-  motherName?: string;
-  enrollmentOrigin?: string;
-  accompaniedStatus?: string;
-  medicalData?: MedicalData;
-  familyData?: FamilyData;
+  periodId: number;
+  enrollmentOrigin: string;
+  accompaniedStatus?: boolean;
+  transportGuardianName?: string;
+  emergencyContact: StudentEmergencyContact;
+  notes: StudentNote[];
+  healthData: StudentHealth;
+  dwellingCondition: StudentDwellingCondition;
+  socialInteractions: StudentSocialInteraction[];
+  guardianRelashionship: StudentGuardianRelashionship[];
+  socialActivities: SocialActivity[];
 }

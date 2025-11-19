@@ -32,11 +32,7 @@
           </app-badge>
         }
       </app-button>
-
-      <app-button (click)="onAddStudent()" contentClass="bg-green-600 hover:bg-green-700">
-        <lucide-icon [img]="icons.userPlus" size="18" class="mr-2" />
-        Adicionar Estudante
-      </app-button>
+      <ng-content></ng-content>
     </div>
   </div>
 

@@ -1,13 +1,13 @@
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
-import { Filter, LucideAngularModule, Search, UserPlus } from 'lucide-angular';
+import { Filter, LucideAngularModule, Search } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { StudentFilters } from '../../types/student-filters.type';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { StudentFilterDialog } from '../student-filter-dialog/student-filter-dialog.component';
-import { Student } from '../../types/student.type';
-import { initialStudents } from '../../services/student.service';
+import { previewStudents } from '../../services/student.service';
+import { StudentPreviewData } from '../../types/preview-student';
 
 @Component({
   selector: 'app-student-search',
@@ -23,18 +23,13 @@ import { initialStudents } from '../../services/student.service';
   standalone: true,
 })
 export class StudentSearchComponent {
-  @Output() searchCompleted = new EventEmitter<Student[]>();
-  @Output() createStudent = new EventEmitter<void>();
+  @Output() searchCompleted = new EventEmitter<StudentPreviewData[]>();
 
   icons = {
     search: Search,
-    userPlus: UserPlus,
     filter: Filter,
   };
 
-  onAddStudent() {
-    this.createStudent.emit();
-  }
   dialog = inject(Dialog);
   nameSearchFilter = new FormControl('');
 
@@ -79,18 +74,18 @@ export class StudentSearchComponent {
     this.searchCompleted.emit(filteredStudents);
   }
 
-  private searchStudents(filters: StudentFilters): Student[] {
-    let students = initialStudents;
+  private searchStudents(filters: StudentFilters): StudentPreviewData[] {
+    let students = previewStudents;
 
     if (filters.nameSearch) {
       students = students.filter((s) =>
-        s.name.toLowerCase().includes(filters.nameSearch.toLowerCase())
+        s.name.toLowerCase().includes(filters.nameSearch.toLowerCase()),
       );
     }
 
     if (filters.guardianSearch) {
       students = students.filter((s) =>
-        s.guardian.toLowerCase().includes(filters.guardianSearch.toLowerCase())
+        s.guardian.toLowerCase().includes(filters.guardianSearch.toLowerCase()),
       );
     }
 

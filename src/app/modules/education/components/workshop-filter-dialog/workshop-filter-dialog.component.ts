@@ -1,4 +1,3 @@
-
 import { Component, inject, OnInit } from '@angular/core';
 import {
   DialogComponent,
@@ -9,12 +8,9 @@ import {
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatSelectModule } from '@angular/material/select';
-import { MatInputModule } from '@angular/material/input';
-import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { WorkshopFilters } from '../../types/workshop-filters.type';
 import { CommonModule } from '@angular/common';
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({
   selector: 'app-workshop-filter-dialog',
@@ -29,15 +25,7 @@ import { CommonModule } from '@angular/common';
     ButtonComponent,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatSelectModule,
-    MatInputModule,
-  ],
-  providers: [
-    {
-      provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline', density: 'dense' },
-    },
+    NgSelectModule,
   ],
 })
 export class WorkshopFilterDialogComponent implements OnInit {
@@ -51,7 +39,15 @@ export class WorkshopFilterDialogComponent implements OnInit {
     status: new FormControl('all'),
   });
 
-  workshopTypes = ['Artes', 'Música', 'Teatro', 'Tecnologia', 'Esportes', 'Literatura', 'Gastronomia'];
+  workshopTypes = [
+    'Artes',
+    'Música',
+    'Teatro',
+    'Tecnologia',
+    'Esportes',
+    'Literatura',
+    'Gastronomia',
+  ];
 
   ngOnInit(): void {
     this.updateFilters(this.data.filters);

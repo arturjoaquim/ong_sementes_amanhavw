@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { DialogRef } from '@angular/cdk/dialog';
 
@@ -9,10 +9,15 @@ import { DialogRef } from '@angular/cdk/dialog';
   standalone: true,
   imports: [CommonModule, LucideAngularModule],
 })
-export class DialogComponent {
+export class DialogComponent implements AfterViewInit {
   @Input() contentClass = '';
   xIcon = X;
   dialogRef = inject(DialogRef);
+  @ViewChild('dialogContent', { read: ElementRef }) dialogContent!: ElementRef;
+
+  ngAfterViewInit(): void {
+    setTimeout(() => (this.dialogContent.nativeElement.scrollTop = 0), 0);
+  }
 
   closeDialog() {
     this.dialogRef.close();

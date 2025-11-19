@@ -1,52 +1,49 @@
-
 <app-dialog contentClass="max-w-2xl">
   <app-dialog-header>
     <app-dialog-title>Filtrar Oficinas</app-dialog-title>
-    <app-dialog-description>
-      Refine sua busca usando os filtros abaixo
-    </app-dialog-description>
+    <app-dialog-description> Refine sua busca usando os filtros abaixo </app-dialog-description>
   </app-dialog-header>
 
-  <form [formGroup]="workshopFilters" (ngSubmit)="onSubmit()" class="space-y-4 mt-4">
-    <div class="grid grid-cols-2 gap-4">
-      <mat-form-field class="w-full col-span-2">
-        <mat-label>Nome da Oficina</mat-label>
-        <input matInput formControlName="nameSearch" placeholder="Digite o nome..." />
-      </mat-form-field>
+  <form [formGroup]="workshopFilters" (ngSubmit)="onSubmit()">
+    <div class="space-y-4 mt-4">
+      <label class="app-label text-sm text-gray-900 mb-2 block" for="workshop-name"
+        >Nome da Oficina</label
+      >
+      <input
+        formControlName="nameSearch"
+        class="app-input"
+        placeholder="Digite o nome..."
+        id="workshop-name"
+      />
 
-      <mat-form-field class="w-full col-span-2">
-        <mat-label>Educador</mat-label>
-        <input matInput formControlName="educatorSearch" placeholder="Digite o nome do educador..." />
-      </mat-form-field>
+      <label class="app-label text-sm text-gray-900 mb-2 block" for="educator-name">Educador</label>
+      <input
+        formControlName="educatorSearch"
+        id="educator-name"
+        class="app-input"
+        placeholder="Digite o nome do educador..."
+      />
 
-      <mat-form-field class="w-full">
-        <mat-label>Tipo</mat-label>
-        <mat-select formControlName="type">
-          <mat-option value="all">Todos</mat-option>
-          <mat-option *ngFor="let type of workshopTypes" [value]="type">
-            {{ type }}
-          </mat-option>
-        </mat-select>
-      </mat-form-field>
+      <label class="app-label text-sm text-gray-900 mb-2 block" for="type-input">Tipo</label>
+      <ng-select class="app-select" formControlName="type" labelForId="type-input">
+        <ng-option value="all">Todos</ng-option>
+        @for (type of workshopTypes; track type) {
+          <ng-option [value]="type">{{ type }}</ng-option>
+        }
+      </ng-select>
 
-      <mat-form-field class="w-full">
-        <mat-label>Status</mat-label>
-        <mat-select formControlName="status">
-          <mat-option value="all">Todos</mat-option>
-          <mat-option value="active">Ativa</mat-option>
-          <mat-option value="inactive">Inativa</mat-option>
-          <mat-option value="completed">Concluída</mat-option>
-        </mat-select>
-      </mat-form-field>
+      <label class="app-label text-sm text-gray-900 mb-2 block" for="status-input">Status</label>
+      <ng-select class="app-select" formControlName="status" labelForId="status-input">
+        <ng-option value="all">Todos</ng-option>
+        <ng-option value="active">Ativa</ng-option>
+        <ng-option value="inactive">Inativa</ng-option>
+        <ng-option value="finished">Concluída</ng-option>
+      </ng-select>
     </div>
 
     <div class="flex justify-end gap-3 pt-4 border-t">
-      <app-button type="button" variant="outline" (click)="resetFilters()">
-        Limpar
-      </app-button>
-      <app-button type="submit">
-        Aplicar Filtros
-      </app-button>
+      <app-button type="button" variant="outline" (click)="resetFilters()"> Limpar </app-button>
+      <app-button type="submit"> Aplicar Filtros </app-button>
     </div>
   </form>
 </app-dialog>

@@ -36,7 +36,7 @@ import { CommonModule } from '@angular/common';
   providers: [
     {
       provide: MAT_FORM_FIELD_DEFAULT_OPTIONS,
-      useValue: { appearance: 'outline', density: 'comfortable' },
+      useValue: { appearance: 'fill', density: 'comfortable' },
     },
   ],
 })
@@ -77,7 +77,7 @@ export class WorkshopFormDialogComponent implements OnInit {
         participants: this.data?.workshop?.participants || [],
         schedule: this.data?.workshop?.schedule || [],
       } as Partial<Workshop>;
-      
+
       this.dialogRef.close(workshop as Workshop);
     }
   }
