@@ -1,5 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Dialog } from '@angular/cdk/dialog';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { Student } from '../../types/student.type';
 import {
@@ -10,6 +11,11 @@ import {
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { DetailFieldComponent } from './detail-field.component';
 import { Calendar, Glasses, House } from 'lucide-angular';
+import { SectionHeaderComponent } from './section-header.component';
+import {
+  DynamicFormDialogComponent,
+  DynamicFormDialogData,
+} from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
 
 @Component({
   selector: 'app-student-health-detail',
@@ -22,11 +28,13 @@ import { Calendar, Glasses, House } from 'lucide-angular';
     AccordionBodyComponent,
     BadgeComponent,
     DetailFieldComponent,
+    SectionHeaderComponent,
   ],
   templateUrl: './student-health-detail.component.html',
 })
 export class StudentHealthDetailComponent {
   @Input({ required: true }) student!: Student;
+  private dialog = inject(Dialog);
   icons = {
     house: House,
     glasses: Glasses,
@@ -41,6 +49,40 @@ export class StudentHealthDetailComponent {
 
   toggleMedicalTreatment(index: number) {
     this.openMedicalTreatmentIndex = this.openMedicalTreatmentIndex === index ? null : index;
+  }
+
+  editData(section: string): void {
+    const editFormDataCatalog: Record<string, DynamicFormDialogData> = {
+      healthData: {
+        title: 'Editar Dados de Saúde',
+        initialData: this.student.healthData,
+        formConfig: [
+          { name: 'ubsName', label: 'UBS de Referência', type: 'text' },
+          {
+            name: 'flagUseGlasses',
+            label: 'Utiliza óculos',
+            type: 'select',
+            options: [
+              { value: 'Sim', viewValue: 'Sim' },
+              { value: 'Não', viewValue: 'Não' },
+            ],
+          },
+          { name: 'dataExpirationDate', label: 'Vencimento das Informações', type: 'date' },
+        ],
+      },
+    };
+
+    if (editFormDataCatalog[section]) {
+      const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+        data: editFormDataCatalog[section],
+      });
+
+      dialogRef.closed.subscribe((result) => {
+        if (result) {
+          console.log(`Dados salvos para a seção ${section}:`, result);
+        }
+      });
+    }
   }
 
   getMedicalNoteBadgeColor(medicalNoteType: string) {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
   Calendar,
   FileText,
@@ -13,6 +13,11 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 import { DetailFieldComponent } from './detail-field.component';
 import { Student } from '../../types/student.type';
 import { SectionHeaderComponent } from './section-header.component';
+import { Dialog } from '@angular/cdk/dialog';
+import {
+  DynamicFormDialogComponent,
+  DynamicFormDialogData,
+} from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
 
 @Component({
   selector: 'app-student-general-detail',
@@ -22,6 +27,7 @@ import { SectionHeaderComponent } from './section-header.component';
 })
 export class StudentGeneralDetailComponent {
   @Input({ required: true }) student!: Student;
+  private dialog = inject(Dialog);
 
   icons: Record<string, LucideIconData> = {
     graduationCap: GraduationCap,
@@ -31,6 +37,84 @@ export class StudentGeneralDetailComponent {
     userCircle: UserCircle,
     fileText: FileText,
   };
+
+  editData(section: string): void {
+    const editFormDataCatalog: Record<string, DynamicFormDialogData> = {
+      personal: {
+        title: 'Editar Dados Pessoais',
+        initialData: this.student.personData,
+        formConfig: [
+          { name: 'name', label: 'Nome Completo', type: 'text', required: true },
+          { name: 'birthDate', label: 'Data de Nascimento', type: 'date', required: true },
+          {
+            name: 'sexId',
+            label: 'Gênero',
+            type: 'select',
+            options: [
+              { value: 1, viewValue: 'Masculino' },
+              { value: 2, viewValue: 'Feminino' },
+            ],
+            required: true,
+          },
+        ],
+      },
+      enrollment: {
+        title: 'Editar Dados da Matrícula',
+        initialData: this.student,
+        formConfig: [
+          {
+            name: 'periodId',
+            label: 'Período',
+            type: 'select',
+            options: [
+              { value: 1, viewValue: 'Manhã' },
+              { value: 2, viewValue: 'Tarde' },
+            ],
+            required: true,
+          },
+          { name: 'enrollmentOrigin', label: 'Origem da Inscrição', type: 'text' },
+          { name: 'enrollmentDate', label: 'Data da Inscrição', type: 'date', required: true },
+          {
+            name: 'accompaniedStatus',
+            label: 'Vem Acompanhado?',
+            type: 'select',
+            options: [
+              { value: true, viewValue: 'Sim' },
+              { value: false, viewValue: 'Não' },
+            ],
+          },
+          { name: 'transportGuardianName', label: 'Nome do Acompanhante', type: 'text' },
+        ],
+      },
+      address: {
+        title: 'Editar Endereço',
+        initialData: this.student.personData.personAddress,
+        formConfig: [
+          { name: 'street', label: 'Rua', type: 'text', required: true },
+          { name: 'number', label: 'Número', type: 'text', required: true },
+          { name: 'complement', label: 'Complemento', type: 'text' },
+          { name: 'neighborhood', label: 'Bairro', type: 'text', required: true },
+          { name: 'city', label: 'Cidade', type: 'text', required: true },
+          { name: 'state', label: 'Estado', type: 'text', required: true },
+          { name: 'zipCode', label: 'CEP', type: 'text', required: true },
+        ],
+      },
+    };
+
+    if (editFormDataCatalog[section]) {
+      const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+        data: editFormDataCatalog[section],
+      });
+
+      dialogRef.closed.subscribe((result) => {
+        if (result) {
+          console.log(`Dados salvos para a seção ${section}:`, result);
+          // Aqui você chamaria o serviço para atualizar os dados no backend
+          // Ex: this.studentService.updateStudent({...})
+        }
+      });
+    }
+  }
 
   // --- Getters para Dados da Matrícula ---
   get period(): string {
@@ -151,10 +235,5 @@ export class StudentGeneralDetailComponent {
 
   get zipCode(): string {
     return this.student.personData.personAddress?.zipCode || 'Não informado';
-  }
-
-  editData(section: string): void {
-    // Lógica para edição. Ex: abrir um modal específico.
-    console.log(`Editar seção: ${section}`);
   }
 }

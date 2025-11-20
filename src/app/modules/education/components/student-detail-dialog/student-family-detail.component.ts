@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, inject } from '@angular/core';
 import {
   ChevronDown,
   FileText,
@@ -23,6 +23,11 @@ import {
   AccordionHeaderComponent,
 } from '../../../../shared/components/accordion/accordion-item.component';
 import { SectionHeaderComponent } from './section-header.component';
+import { Dialog } from '@angular/cdk/dialog';
+import {
+  DynamicFormDialogComponent,
+  DynamicFormDialogData,
+} from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
 
 @Component({
   selector: 'app-student-family-detail',
@@ -41,6 +46,7 @@ import { SectionHeaderComponent } from './section-header.component';
 })
 export class StudentFamilyDetailComponent {
   @Input({ required: true }) student!: Student;
+  private dialog = inject(Dialog);
 
   public openGuardianIndex: number | null = 0;
   public openVisitIndex: number | null = null;
@@ -55,6 +61,65 @@ export class StudentFamilyDetailComponent {
     home: Home,
     clipboard: Clipboard,
   };
+
+  editData(section: string): void {
+    const editFormDataCatalog: Record<string, DynamicFormDialogData> = {
+      family: {
+        title: 'Editar Dados da Família',
+        initialData: this.family,
+        formConfig: [
+          {
+            name: 'typeDwellingId',
+            label: 'Tipo de Domicílio',
+            type: 'select',
+            options: [
+              { value: 1, viewValue: 'Alugada' },
+              { value: 2, viewValue: 'Própria' },
+              { value: 3, viewValue: 'Cedida' },
+            ],
+          },
+          { name: 'crasName', label: 'CRAS', type: 'text' },
+          { name: 'informationExpirationDate', label: 'Vencimento', type: 'date' },
+        ],
+      },
+      dwelling: {
+        title: 'Editar Situação Domiciliar',
+        initialData: this.dwelling,
+        formConfig: [
+          {
+            name: 'parentsMaritalStatusId',
+            label: 'Estado Civil dos Pais',
+            type: 'select',
+            options: [
+              { value: 1, viewValue: 'Casados' },
+              { value: 2, viewValue: 'Separados' },
+              { value: 3, viewValue: 'Divorciados' },
+              { value: 4, viewValue: 'Viúvo(a)' },
+            ],
+          },
+          {
+            name: 'staysHomeAlone',
+            label: 'Permanece Sozinho em Casa',
+            type: 'select',
+            options: [{ value: true, viewValue: 'Sim' }, { value: false, viewValue: 'Não' }],
+          },
+          // O campo 'hasSeparatedParentContact' depende de outra seleção e precisa de lógica customizada.
+        ],
+      },
+    };
+
+    if (editFormDataCatalog[section]) {
+      const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+        data: editFormDataCatalog[section],
+      });
+
+      dialogRef.closed.subscribe((result) => {
+        if (result) {
+          console.log(`Dados salvos para a seção ${section}:`, result);
+        }
+      });
+    }
+  }
 
   get guardians(): Guardian[] {
     return this.student.guardianRelashionship.map((rel) => rel.guardian);
@@ -136,10 +201,5 @@ export class StudentFamilyDetailComponent {
 
   toggleVisit(index: number): void {
     this.openVisitIndex = this.openVisitIndex === index ? null : index;
-  }
-
-  editData(section: string): void {
-    // Lógica para edição. Ex: abrir um modal específico.
-    console.log(`Editar seção: ${section}`);
   }
 }

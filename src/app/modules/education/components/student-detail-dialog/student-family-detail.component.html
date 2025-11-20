@@ -76,7 +76,8 @@
 
   <!-- Responsável Legal -->
   <app-card contentClass="p-6">
-    <app-section-header (edit)="editData('guardians')" [showEditButton]="guardians.length > 0">
+    <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
+    <app-section-header (edit)="editData('guardians')" [showEditButton]="false">
       Responsável Legal
     </app-section-header>
     <div class="space-y-2">
@@ -127,10 +128,8 @@
   <!-- Membros da Familia -->
   @if (family) {
     <app-card contentClass="p-6">
-      <app-section-header
-        (edit)="editData('familyMembers')"
-        [showEditButton]="family.familyMembers.length > 0"
-      >
+      <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
+      <app-section-header (edit)="editData('familyMembers')" [showEditButton]="false">
         Membros da Família
       </app-section-header>
       @if (family.familyMembers && family.familyMembers.length > 0) {
@@ -170,6 +169,7 @@
 
   <!-- Histórico de Visitas Domiciliares -->
   @if (visits.length > 0) {
+    <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
     <app-card contentClass="p-6">
       <app-section-header (edit)="editData('visits')" [showEditButton]="false">
         Histórico de Visitas Domiciliares

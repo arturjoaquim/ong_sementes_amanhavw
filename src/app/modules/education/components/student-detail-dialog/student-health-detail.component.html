@@ -1,7 +1,7 @@
 <div class="flex flex-col space-y-4">
   @if (student.healthData) {
     <app-card contentClass="p-6">
-      <h4 class="text-base font-semibold text-gray-900 mb-4">Dados de Saúde</h4>
+      <app-section-header (edit)="editData('healthData')">Dados de Saúde</app-section-header>
       <div class="grid grid-cols-3 gap-6">
         <app-detail-field
           label="UBS de Referência"
@@ -28,7 +28,10 @@
     </app-card>
 
     <app-card contentClass="p-6">
-      <h4 class="text-base font-semibold text-gray-900 mb-4">Apontamentos Médicos</h4>
+      <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
+      <app-section-header (edit)="editData('medicalNotes')" [showEditButton]="false">
+        Apontamentos Médicos
+      </app-section-header>
       <div class="space-y-4">
         @if (student.healthData.medicalNotes.length > 0) {
           @for (note of student.healthData.medicalNotes; track note.studentMedicalNoteId) {
@@ -81,7 +84,10 @@
     </app-card>
 
     <app-card contentClass="p-6">
-      <h4 class="text-base font-semibold text-gray-900 mb-4">Tratamentos Médicos</h4>
+      <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
+      <app-section-header (edit)="editData('medicalTreatments')" [showEditButton]="false">
+        Tratamentos Médicos
+      </app-section-header>
       <div class="space-y-4">
         @if (student.healthData.medicalTreatments.length > 0) {
           @for (
