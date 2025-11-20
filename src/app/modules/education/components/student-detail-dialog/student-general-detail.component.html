@@ -1,0 +1,186 @@
+<div class="flex flex-col space-y-4">
+  <!-- Dados da Matrícula -->
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('enrollment')">Dados da Matrícula</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      <app-detail-field
+        label="Período"
+        [value]="period"
+        [icon]="icons['graduationCap']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+      <app-detail-field
+        label="Origem da Inscrição"
+        [value]="student.enrollmentOrigin"
+        [icon]="icons['mapPin']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+      <app-detail-field
+        label="Data da Inscrição"
+        [value]="student.enrollmentDate | date: 'dd/MM/yyyy'"
+        [icon]="icons['calendar']"
+        iconBgColor="bg-orange-50"
+        iconColor="text-orange-600"
+      />
+      <app-detail-field
+        label="Vem Acompanhado?"
+        [value]="student.accompaniedStatus ? 'Sim' : 'Não'"
+        [icon]="icons['users']"
+        iconBgColor="bg-yellow-50"
+        iconColor="text-yellow-600"
+      />
+      @if (student.accompaniedStatus) {
+        <app-detail-field
+          label="Nome do Acompanhante"
+          [value]="student.transportGuardianName || 'Não informado'"
+          [icon]="icons['userCircle']"
+          iconBgColor="bg-green-50"
+          iconColor="text-green-600"
+        />
+      }
+    </div>
+  </app-card>
+
+  <!-- Dados Pessoais -->
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('personal')">Dados Pessoais</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      <app-detail-field
+        label="Nome Completo"
+        [value]="student.personData.name"
+        [icon]="icons['userCircle']"
+        iconBgColor="bg-green-50"
+        iconColor="text-green-600"
+      />
+      <app-detail-field
+        label="Data de Nascimento"
+        [value]="birthDate | date: 'dd/MM/yyyy'"
+        [icon]="icons['calendar']"
+        iconBgColor="bg-orange-50"
+        iconColor="text-orange-600"
+      />
+      <app-detail-field
+        label="Gênero"
+        [value]="gender"
+        [icon]="icons['users']"
+        iconBgColor="bg-yellow-50"
+        iconColor="text-yellow-600"
+      />
+      <app-detail-field
+        label="Raça/Cor"
+        [value]="race"
+        [icon]="icons['users']"
+        iconBgColor="bg-indigo-50"
+        iconColor="text-indigo-600"
+      />
+      <app-detail-field
+        label="Naturalidade"
+        [value]="naturalness"
+        [icon]="icons['mapPin']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+      <app-detail-field
+        label="Nome da Mãe"
+        [value]="motherName"
+        [icon]="icons['userCircle']"
+        iconBgColor="bg-gray-50"
+        iconColor="text-gray-600"
+      />
+      <app-detail-field
+        label="Nome do Pai"
+        [value]="fatherName"
+        [icon]="icons['userCircle']"
+        iconBgColor="bg-gray-50"
+        iconColor="text-gray-600"
+      />
+    </div>
+  </app-card>
+
+  <!-- Documentos Civis -->
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('documents')">Documentos Civis</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      @if (cpf) {
+        <app-detail-field
+          label="CPF"
+          [value]="cpf"
+          [icon]="icons['fileText']"
+          iconBgColor="bg-blue-50"
+          iconColor="text-blue-600"
+        />
+      }
+      <app-detail-field
+        label="NIS"
+        [value]="nisNumber"
+        [icon]="icons['fileText']"
+        iconBgColor="bg-pink-50"
+        iconColor="text-pink-600"
+      />
+      @if (rg) {
+        <app-detail-field
+          label="RG"
+          [value]="rg"
+          [icon]="icons['fileText']"
+          iconBgColor="bg-purple-50"
+          iconColor="text-purple-600"
+        />
+      }
+      @if (birthCertificate) {
+        <app-detail-field
+          label="Certidão de Nascimento"
+          [value]="birthCertificate.number"
+          [icon]="icons['fileText']"
+          iconBgColor="bg-gray-50"
+          iconColor="text-gray-600"
+        />
+      }
+    </div>
+  </app-card>
+
+  <!-- Endereço -->
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('address')">Endereço</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      <div class="col-span-2">
+        <app-detail-field
+          label="Rua, Número e Complemento"
+          [value]="fullStreet"
+          [icon]="icons['mapPin']"
+          iconBgColor="bg-teal-50"
+          iconColor="text-teal-600"
+        />
+      </div>
+      <app-detail-field
+        label="Bairro"
+        [value]="neighborhood"
+        [icon]="icons['mapPin']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+      <app-detail-field
+        label="Cidade"
+        [value]="city"
+        [icon]="icons['mapPin']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+      <app-detail-field
+        label="Estado"
+        [value]="state"
+        [icon]="icons['mapPin']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+      <app-detail-field
+        label="CEP"
+        [value]="zipCode"
+        [icon]="icons['mapPin']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+    </div>
+  </app-card>
+</div>

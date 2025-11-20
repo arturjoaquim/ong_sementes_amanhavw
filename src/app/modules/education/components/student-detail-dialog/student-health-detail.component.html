@@ -1,0 +1,109 @@
+<div class="flex flex-col space-y-4">
+  @if (student.healthData) {
+    <app-card contentClass="p-6">
+      <h4 class="text-base font-semibold text-gray-900 mb-4">Dados de Saúde</h4>
+      <div class="grid grid-cols-3 gap-6">
+        <app-detail-field
+          label="UBS de Referência"
+          [value]="student.healthData.ubsName"
+          [icon]="icons['house']"
+          iconBgColor="bg-blue-50"
+          iconColor="text-blue-600"
+        />
+        <app-detail-field
+          label="Utiliza óculos"
+          [value]="student.healthData.flagUseGlasses"
+          [icon]="icons['glasses']"
+          iconBgColor="bg-yellow-50"
+          iconColor="text-yellow-600"
+        />
+        <app-detail-field
+          label="Data Vencimento das Informações"
+          [value]="student.healthData.dataExpirationDate | date: 'dd/MM/yyyy'"
+          [icon]="icons['calendar']"
+          iconBgColor="bg-orange-50"
+          iconColor="text-orange-600"
+        />
+      </div>
+    </app-card>
+
+    <app-card contentClass="p-6">
+      <h4 class="text-base font-semibold text-gray-900 mb-4">Apontamentos Médicos</h4>
+      <div class="space-y-4">
+        @if (student.healthData.medicalNotes.length > 0) {
+          @for (note of student.healthData.medicalNotes; track note.studentMedicalNoteId) {
+            <app-accordion-item
+              [isOpen]="openMedicalNoteIndex === $index"
+              (toggled)="toggleMedicalNote($index)"
+            >
+              <app-accordion-header>
+                {{ note.summaryNote }}
+                <app-badge
+                  [contentClass]="
+                    getMedicalNoteBadgeColor(getMedicalNoteTypeName(note.medicalNoteTypeId))
+                  "
+                  >{{ getMedicalNoteTypeName(note.medicalNoteTypeId) }}</app-badge
+                >
+              </app-accordion-header>
+              <app-accordion-body>
+                <div class="grid grid-cols-2 gap-3 mb-5">
+                  @if (note.medicalLocationId) {
+                    <app-detail-field
+                      label="Local de Acompanhamento"
+                      [value]="getMedicalLocationName(note.medicalLocationId)"
+                      [icon]="icons['house']"
+                      iconBgColor="bg-blue-50"
+                      iconColor="text-blue-600"
+                    />
+                  }
+                  <app-detail-field
+                    label="Data do Apontamento"
+                    [value]="note.noteDate | date: 'dd/MM/yyyy'"
+                    [icon]="icons['calendar']"
+                    iconBgColor="bg-orange-50"
+                    iconColor="text-orange-600"
+                  />
+                </div>
+                <p class="text-sm text-gray-900">{{ note.description }}</p>
+                @if (note.descriptionEmergencyProcedure) {
+                  <p class="text-sm text-red-600 mt-1">
+                    <strong>Procedimento de Emergência:</strong>
+                    {{ note.descriptionEmergencyProcedure }}
+                  </p>
+                }
+              </app-accordion-body>
+            </app-accordion-item>
+          }
+        } @else {
+          <p class="text-sm text-gray-600">Nenhum apontamento médico.</p>
+        }
+      </div>
+    </app-card>
+
+    <app-card contentClass="p-6">
+      <h4 class="text-base font-semibold text-gray-900 mb-4">Tratamentos Médicos</h4>
+      <div class="space-y-4">
+        @if (student.healthData.medicalTreatments.length > 0) {
+          @for (
+            medicalTreatment of student.healthData.medicalTreatments;
+            track medicalTreatment.id
+          ) {
+            <app-accordion-item
+              [isOpen]="openMedicalTreatmentIndex === $index"
+              (toggled)="toggleMedicalTreatment($index)"
+            >
+              <app-accordion-header>
+                {{ getMedicalTreatmentName(medicalTreatment.medicalTreatmentTypeId) }}
+              </app-accordion-header>
+              <app-accordion-body>
+                <p class="text-sm text-gray-900">{{ medicalTreatment.description }}</p>
+              </app-accordion-body>
+            </app-accordion-item>
+          }
+        } @else {
+          <p class="text-sm text-gray-600">Nenhum apontamento médico.</p>
+        }
+      </div>
+    </app-card>
+  }
+</div>

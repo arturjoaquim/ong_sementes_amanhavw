@@ -155,7 +155,7 @@ export const initialStudents: Student[] = [
         {
           studentMedicalNoteId: 1,
           studentHealthId: 1,
-          medicalNoteTypeId: 1, // Ex: 'Allergy'
+          medicalNoteTypeId: 4, // Ex: 'Allergy'
           descriptionEmergencyProcedure: 'Administer EpiPen if signs of anaphylaxis.',
           summaryNote: 'Alergia a amendoim',
           description: 'Severe peanut allergy.',
@@ -163,7 +163,15 @@ export const initialStudents: Student[] = [
           medicalLocationId: 1,
         },
       ],
-      medicalTreatments: [],
+      medicalTreatments: [
+        {
+          id: 1,
+          studentHealthId: 1,
+          medicalTreatmentTypeId: 3, // Fisioterapia
+          description:
+            'Sessões semanais de fisioterapia para fortalecimento muscular devido a uma lesão leve no joelho.',
+        },
+      ],
     },
     dwellingCondition: {
       id: 1,
@@ -398,8 +406,26 @@ export const initialStudents: Student[] = [
       ubsName: 'UBS Itapuã',
       flagUseGlasses: 'Sim',
       dataExpirationDate: new Date('2025-01-01'),
-      medicalNotes: [],
-      medicalTreatments: [],
+      medicalNotes: [
+        {
+          studentMedicalNoteId: 2,
+          studentHealthId: 2,
+          medicalNoteTypeId: 1, // Restrição Alimentar
+          descriptionEmergencyProcedure: 'Nenhum procedimento de emergência específico.',
+          summaryNote: 'Intolerância à lactose',
+          description: 'Apresenta desconforto gástrico ao consumir laticínios.',
+          noteDate: new Date('2023-05-10'),
+          medicalLocationId: 2,
+        },
+      ],
+      medicalTreatments: [
+        {
+          id: 2,
+          studentHealthId: 2,
+          medicalTreatmentTypeId: 1, // Oftalmológico
+          description: 'Acompanhamento anual com oftalmologista para ajuste de grau.',
+        },
+      ],
     },
     dwellingCondition: {
       id: 2,
@@ -614,13 +640,31 @@ export const initialStudents: Student[] = [
       ubsName: 'UBS Santa Felicidade',
       flagUseGlasses: 'Não',
       dataExpirationDate: new Date('2025-01-01'),
-      medicalNotes: [],
-      medicalTreatments: [],
+      medicalNotes: [
+        {
+          studentMedicalNoteId: 3,
+          studentHealthId: 3,
+          medicalNoteTypeId: 2, // Doença Crônica
+          descriptionEmergencyProcedure: 'Utilizar bombinha de Salbutamol em caso de crise.',
+          summaryNote: 'Asma leve',
+          description: 'Asma controlada, com crises esporádicas induzidas por esforço físico.',
+          noteDate: new Date('2022-11-20'),
+          medicalLocationId: 3,
+        },
+      ],
+      medicalTreatments: [
+        {
+          id: 3,
+          studentHealthId: 3,
+          medicalTreatmentTypeId: 2, // Odontológico
+          description: 'Manutenção de aparelho ortodôntico a cada 3 meses.',
+        },
+      ],
     },
     dwellingCondition: {
       id: 3,
       studentId: 3,
-      parentsMaritalStatusId: 1,
+      parentsMaritalStatusId: 2,
       hasSeparatedParentContact: false,
       staysHomeAlone: false,
       familyId: 3,

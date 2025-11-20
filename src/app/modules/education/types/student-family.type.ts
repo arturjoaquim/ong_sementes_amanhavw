@@ -22,7 +22,7 @@ interface FamilyMember {
   familyId: number;
 }
 
-interface DwellingVisit {
+export interface DwellingVisit {
   id: number;
   date: Date;
   summary: string;

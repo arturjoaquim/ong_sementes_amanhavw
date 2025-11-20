@@ -24,10 +24,10 @@ interface StudentMedicalNote {
 }
 
 interface StudentMedicalTreatment {
-  studentMedicalTreatmentId: number;
+  id: number;
   studentHealthId: number;
   medicalTreatmentTypeId: number;
-  treatmentDescription: string;
+  description: string;
 }
 
 interface StudentSocialInteraction {
