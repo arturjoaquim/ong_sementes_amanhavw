@@ -12,7 +12,7 @@ interface FamilyBenefit {
   familyId: number;
 }
 
-interface FamilyMember {
+export interface FamilyMember {
   id: string;
   name: string;
   relationship: string;

@@ -4,6 +4,7 @@ import { Component, ViewChild, inject } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
 import { FormField } from '../types/form-field.type';
 import { DynamicFormComponent } from './dynamic-form.component';
+import { ButtonDirective } from '../directives/button.directive';
 
 export interface DynamicFormDialogData {
   title: string;
@@ -14,7 +15,7 @@ export interface DynamicFormDialogData {
 @Component({
   selector: 'app-dynamic-form-dialog',
   standalone: true,
-  imports: [CommonModule, LucideAngularModule, DynamicFormComponent],
+  imports: [CommonModule, LucideAngularModule, DynamicFormComponent, ButtonDirective],
   template: `
     <div class="bg-white rounded-lg shadow-xl p-6 w-[600px]">
       <h3 class="text-lg font-semibold text-gray-900 mb-4">{{ data.title }}</h3>
@@ -27,13 +28,8 @@ export interface DynamicFormDialogData {
       ></app-dynamic-form>
 
       <div class="flex justify-end gap-3 mt-6">
-        <button type="button" (click)="close()" class="btn btn-secondary">Cancelar</button>
-        <button
-          type="submit"
-          form="dynamic-form"
-          class="btn btn-primary"
-          [disabled]="dynamicForm.form!.invalid"
-        >
+        <button appButton variant="outline" type="button" (click)="close()">Cancelar</button>
+        <button appButton type="submit" form="dynamic-form" [disabled]="dynamicForm.form!.invalid">
           Salvar
         </button>
       </div>

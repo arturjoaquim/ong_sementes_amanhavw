@@ -1,0 +1,520 @@
+<app-dialog contentClass="sm:max-w-3xl max-w-3xl max-h-[90vh] overflow-y-auto">
+  <app-dialog-header>
+    <app-dialog-title>Novo Estudante</app-dialog-title>
+    <app-dialog-description>
+      Preencha os dados do novo estudante por etapas.
+    </app-dialog-description>
+  </app-dialog-header>
+
+  <app-tabs
+    class="overflow-x-auto"
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabChange)="onTabChange($event)"
+  ></app-tabs>
+
+  <form [formGroup]="studentForm" (ngSubmit)="onSubmit()" class="mt-6">
+    <div formGroupName="personData" class="space-y-4">
+      <!-- Tab: Dados Pessoais -->
+      @if (activeTab === 'personal') {
+        <h4 class="font-semibold text-gray-900">Dados Pessoais</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="w-full mb-2 col-span-2">
+            <label class="app-label pb-1" for="name-input">Nome Completo</label>
+            <input class="app-input" id="name-input" formControlName="name" required />
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="birthDate-input">Data de Nascimento</label>
+            <input
+              class="app-input"
+              type="date"
+              id="birthDate-input"
+              formControlName="birthDate"
+              required
+            />
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="sexId-select">Gênero</label>
+            <ng-select
+              class="app-select"
+              formControlName="sexId"
+              labelForId="sexId-select"
+              [items]="[{id: 1, descricao: 'Masculino'}, {id: 2, descricao: 'Feminino'}]"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="raceId">Raça/Etnia</label>
+            <ng-select
+              class="app-select"
+              formControlName="raceId"
+              labelForId="raceId"
+              [items]="raceTypeOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="fatherName-input">Nome do Pai</label>
+            <input class="app-input" id="fatherName-input" formControlName="fatherName" />
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="motherName-input">Nome da Mãe</label>
+            <input class="app-input" id="motherName-input" formControlName="motherName" />
+          </div>
+        </div>
+
+        <div formArrayName="documents" class="grid grid-cols-2 gap-4">
+          @for (
+            doc of $any(studentForm.get('personData.documents')).controls || [];
+            track $index
+          ) {
+            <div [formGroupName]="$index">
+              <div class="w-full mb-2">
+                <label class="app-label pb-1" for="documentNumber-input-{{ $index }}">{{
+                  getDocumentTypeName(doc.value.documentTypeId)
+                }}</label>
+                <input
+                  class="app-input"
+                  id="documentNumber-input-{{ $index }}"
+                  formControlName="documentNumber"
+                />
+              </div>
+            </div>
+          }
+        </div>
+
+        <h4 class="font-semibold text-gray-900 mt-5">Endereço</h4>
+        <div formGroupName="address">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="zipCode-input">CEP</label>
+              <input class="app-input" id="zipCode-input" formControlName="zipCode" />
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="street-input">Rua</label>
+              <input class="app-input" id="street-input" formControlName="street" />
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="number-input">Número</label>
+              <input class="app-input" id="number-input" formControlName="number" />
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="complement-input">Complemento</label>
+              <input class="app-input" id="complement-input" formControlName="complement" />
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="neighborhood-input">Bairro</label>
+              <input class="app-input" id="neighborhood-input" formControlName="neighborhood" />
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="city-input">Cidade</label>
+              <input class="app-input" id="city-input" formControlName="city" />
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="state-input">Estado</label>
+              <input class="app-input" id="state-input" formControlName="state" />
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Tab educação -->
+      @if (activeTab === 'academic') {
+        <div formGroupName="education" class="grid grid-cols-2 gap-4 col-span-2">
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="institutionName-input">Nome da Instituição</label>
+            <input class="app-input" id="institutionName-input" formControlName="institutionName" />
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="studyLevelId-select">Ano letivo</label>
+            <ng-select
+              class="app-select"
+              formControlName="studyLevelId"
+              labelForId="studyLevelId-select"
+              [items]="studyLevelOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="academicPeriodId-select">Período</label>
+            <ng-select
+              class="app-select"
+              formControlName="academicPeriodId"
+              labelForId="academicPeriodId-select"
+              [items]="periodOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="educationStatusId-select">Status do Ensino</label>
+            <ng-select
+              class="app-select"
+              formControlName="educationStatusId"
+              labelForId="educationStatusId-select"
+              [items]="educationStatusOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+        </div>
+      }
+    </div>
+
+    <!-- Tab dados de inscrição -->
+    @if (activeTab === 'subscribe') {
+      <div formGroupName="enrollmentData" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="enrollmentDate-input">Data de Matrícula</label>
+            <input
+              class="app-input"
+              type="date"
+              id="enrollmentDate-input"
+              formControlName="enrollmentDate"
+              required
+            />
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="enrollmentOrigin-select">Origem da Inscrição</label>
+            <ng-select
+              class="app-select"
+              formControlName="enrollmentOrigin"
+              labelForId="enrollmentOrigin-select"
+              [items]="enrollmentOriginOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="periodId-select">Período</label>
+            <ng-select
+              class="app-select"
+              formControlName="periodId"
+              labelForId="periodId-select"
+              [items]="periodOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2 flex items-center gap-2 pt-6">
+            <input
+              class="app-checkbox"
+              type="checkbox"
+              id="accompaniedStatus-input"
+              formControlName="accompaniedStatus"
+            />
+            <label class="app-label pb-1 !mb-0" for="accompaniedStatus-input"
+              >Vem acompanhado?</label
+            >
+          </div>
+
+          @if (studentForm.get('enrollmentData.accompaniedStatus')?.value) {
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="transportGuardianName-input"
+                >Nome do Acompanhante</label
+              >
+              <input
+                class="app-input"
+                id="transportGuardianName-input"
+                formControlName="transportGuardianName"
+              />
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Dados de Saúde -->
+    @if (activeTab === 'health') {
+      <div formGroupName="healthData" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="ubsName-input">UBS de Referência</label>
+            <input class="app-input" id="ubsName-input" formControlName="ubsName" />
+          </div>
+
+          <div class="w-full mb-2 flex items-center gap-2 pt-6">
+            <input
+              class="app-checkbox"
+              type="checkbox"
+              id="flagUseGlasses-input"
+              formControlName="flagUseGlasses"
+            />
+            <label class="app-label pb-1 !mb-0" for="flagUseGlasses-input">Utiliza Óculos?</label>
+          </div>
+        </div>
+
+        <!-- Apontamentos Médicos -->
+        <div class="col-span-2 mt-6 border-t pt-4">
+          <h4 class="font-semibold text-gray-900 mb-4">Apontamentos Médicos</h4>
+          <div class="flex justify-end mb-4">
+            <button appButton type="button" variant="outline" (click)="addMedicalNote()">
+              Adicionar Apontamento
+            </button>
+          </div>
+          @if (medicalNotes.controls.length > 0) {
+            <div class="space-y-3">
+              @for (noteControl of medicalNotes.controls; track $index) {
+                <div
+                  class="flex items-center justify-between p-3 border rounded-md bg-gray-50"
+                  [formGroup]="$any(noteControl)"
+                >
+                  <div>
+                    <p class="font-medium text-gray-800">{{ noteControl.value.summaryNote }}</p>
+                    <p class="text-sm text-gray-600">
+                      Tipo: {{ noteControl.value.medicalNoteTypeId }} <br />
+                      Descrição: {{ noteControl.value.description }} <br />
+                      Procedimento Emergencial:
+                      {{ noteControl.value.descriptionEmergencyProcedure }}
+                    </p>
+                  </div>
+                  <button
+                    appButton
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    (click)="removeMedicalNote($index)"
+                  >
+                    Remover
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-sm text-center text-gray-500 py-4">
+              Nenhum apontamento médico adicionado.
+            </p>
+          }
+        </div>
+
+        <!-- Tratamentos e Medicamentos -->
+        <div class="col-span-2 mt-6 border-t pt-4">
+          <h4 class="font-semibold text-gray-900 mb-4">Tratamentos e Medicamentos</h4>
+          <div class="flex justify-end mb-4">
+            <button appButton type="button" variant="outline" (click)="addMedicalTreatment()">
+              Adicionar Tratamento
+            </button>
+          </div>
+          @if (medicalTreatments.controls.length > 0) {
+            <div class="space-y-3">
+              @for (treatmentControl of medicalTreatments.controls; track $index) {
+                <div
+                  class="flex items-center justify-between p-3 border rounded-md bg-gray-50"
+                  [formGroup]="$any(treatmentControl)"
+                >
+                  <div>
+                    <p class="font-medium text-gray-800">
+                      {{ treatmentControl.value.description }}
+                    </p>
+                  </div>
+                  <button
+                    appButton
+                    type="button"
+                    variant="destructive"
+                    size="sm"
+                    (click)="removeMedicalTreatment($index)"
+                  >
+                    Remover
+                  </button>
+                </div>
+              }
+            </div>
+          } @else {
+            <p class="text-sm text-center text-gray-500 py-4">
+              Nenhum tratamento ou medicamento adicionado.
+            </p>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Família e Moradia -->
+    @if (activeTab === 'family') {
+      <div formGroupName="dwellingCondition" class="space-y-4">
+        <h4 class="font-semibold text-gray-900">Cotidiano Domiciliar</h4>
+        <div class="grid grid-cols-2 gap-4">
+          <div class="w-full mb-2">
+            <label class="app-label pb-1" for="parentsMaritalStatusId-select"
+              >Estado Civil dos Pais</label
+            >
+            <ng-select
+              class="app-select"
+              formControlName="parentsMaritalStatusId"
+              labelForId="parentsMaritalStatusId-select"
+              [items]="maritalStatusOptions"
+              bindLabel="descricao"
+              bindValue="id"
+            >
+            </ng-select>
+          </div>
+
+          <div class="w-full mb-2 flex items-center gap-6 pt-6">
+            <div class="flex items-center gap-2">
+              <input
+                class="app-checkbox"
+                type="checkbox"
+                id="staysHomeAlone-input"
+                formControlName="staysHomeAlone"
+              />
+              <label class="app-label pb-1 !mb-0" for="staysHomeAlone-input"
+                >Fica sozinho em casa?</label
+              >
+            </div>
+            <div class="flex items-center gap-2">
+              <input
+                class="app-checkbox"
+                type="checkbox"
+                id="hasSeparatedParentContact-input"
+                formControlName="hasSeparatedParentContact"
+              />
+              <label class="app-label pb-1 !mb-0" for="hasSeparatedParentContact-input"
+                >Tem contato com pais separados?</label
+              >
+            </div>
+          </div>
+          <div class="col-span-2">
+            <label class="app-label pb-1" for="dwelling-description-input"
+              >Observações cotidiano domiciliar do aluno</label
+            >
+            <textarea
+              class="app-input min-h-25"
+              id="dwelling-description-input"
+              formControlName="description"
+              rows="3"
+            ></textarea>
+          </div>
+        </div>
+
+        <div formGroupName="family" class="mt-6 border-t pt-4">
+          <h4 class="font-semibold text-gray-900 mb-4">Dados da Família</h4>
+          <div class="grid grid-cols-2 gap-4">
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="typeDwellingId-select">Tipo de Moradia</label>
+              <ng-select
+                class="app-select"
+                formControlName="typeDwellingId"
+                labelForId="typeDwellingId-select"
+                [items]="dwellingTypeOptions"
+                bindLabel="descricao"
+                bindValue="id"
+              >
+              </ng-select>
+            </div>
+            <div class="w-full mb-2">
+              <label class="app-label pb-1" for="crasName-input">CRAS de Referência</label>
+              <input class="app-input" id="crasName-input" formControlName="crasName" />
+            </div>
+          </div>
+
+          <div class="mt-6 border-t pt-4">
+            <h4 class="font-semibold text-gray-900 mb-4">Responsável Legal</h4>
+            <div class="flex justify-end">
+              <button appButton type="button" variant="outline" (click)="addGuardian()">
+                Adicionar Responsável
+              </button>
+            </div>
+            @if (guardians.controls.length > 0) {
+              <div class="space-y-3">
+                @for (guardianControl of guardians.controls; track $index) {
+                  <div
+                    class="flex items-center justify-between p-3 border rounded-md bg-gray-50"
+                    [formGroup]="$any(guardianControl)"
+                  >
+                    <div>
+                      <p class="font-medium text-gray-800">{{ guardianControl.value.name }}</p>
+                      <p class="text-sm text-gray-600">
+                        Parentesco: {{ getKinshipName(guardianControl.value.kinshipDegreeId) }} <br />
+                        CPF: {{ guardianControl.value.cpf }} <br />
+                        Telefone: {{ guardianControl.value.phone }}
+                      </p>
+                    </div>
+                    <button
+                      appButton
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      (click)="removeGuardian($index)"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-sm text-center text-gray-500 py-4">Nenhum responsável adicionado.</p>
+            }
+          </div>
+
+          <!-- Membros da Família -->
+          <div class="mt-6 border-t pt-4">
+            <h4 class="font-semibold text-gray-900 mb-4">Membros da Família</h4>
+            <div class="flex justify-end mb-4">
+              <button appButton type="button" variant="outline" (click)="addFamilyMember()">
+                Adicionar Membro
+              </button>
+            </div>
+            @if (familyMembers.controls.length > 0) {
+              <div class="space-y-3">
+                @for (memberControl of familyMembers.controls; track $index) {
+                  <div
+                    class="flex items-center justify-between p-3 border rounded-md bg-gray-50"
+                    [formGroup]="$any(memberControl)"
+                  >
+                    <div>
+                      <p class="font-medium text-gray-800">{{ memberControl.value.name }}</p>
+                      <p class="text-sm text-gray-600">
+                        Parentesco: {{ getKinshipName(memberControl.value.kinshipDegreeId) }} <br />
+                        Profissão: {{memberControl.value.profession }} <br />
+                        Renda: {{ memberControl.value.income }}
+                      </p>
+                    </div>
+                    <button
+                      appButton
+                      type="button"
+                      variant="destructive"
+                      size="sm"
+                      (click)="removeFamilyMember($index)"
+                    >
+                      Remover
+                    </button>
+                  </div>
+                }
+              </div>
+            } @else {
+              <p class="text-sm text-center text-gray-500 py-4">
+                Nenhum membro da família adicionado.
+              </p>
+            }
+          </div>
+        </div>
+      </div>
+    }
+
+    <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
+      <button appButton type="button" variant="outline" (click)="cancel()">Cancelar</button>
+      <button appButton type="submit" [disabled]="!studentForm.valid">Criar Estudante</button>
+    </div>
+  </form>
+</app-dialog>

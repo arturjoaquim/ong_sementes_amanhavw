@@ -1,115 +1,127 @@
 <div class="flex flex-col space-y-4">
-  @if (student.healthData) {
-    <app-card contentClass="p-6">
-      <app-section-header (edit)="editData('healthData')">Dados de Saúde</app-section-header>
-      <div class="grid grid-cols-3 gap-6">
-        <app-detail-field
-          label="UBS de Referência"
-          [value]="student.healthData.ubsName"
-          [icon]="icons['house']"
-          iconBgColor="bg-blue-50"
-          iconColor="text-blue-600"
-        />
-        <app-detail-field
-          label="Utiliza óculos"
-          [value]="student.healthData.flagUseGlasses"
-          [icon]="icons['glasses']"
-          iconBgColor="bg-yellow-50"
-          iconColor="text-yellow-600"
-        />
-        <app-detail-field
-          label="Data Vencimento das Informações"
-          [value]="student.healthData.dataExpirationDate | date: 'dd/MM/yyyy'"
-          [icon]="icons['calendar']"
-          iconBgColor="bg-orange-50"
-          iconColor="text-orange-600"
-        />
-      </div>
-    </app-card>
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('healthData')">Dados de Saúde</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      <app-detail-field
+        label="UBS de Referência"
+        [value]="student().healthData?.ubsReference || 'Não informado'"
+        [icon]="icons['house']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+      <app-detail-field
+        label="Utiliza óculos"
+        [value]="student().healthData?.wearsGlasses ? 'Sim' : 'Não'"
+        [icon]="icons['glasses']"
+        iconBgColor="bg-yellow-50"
+        iconColor="text-yellow-600"
+      />
+      <app-detail-field
+        label="Data Vencimento das Informações"
+        [value]="(student().healthData?.infoExpirationDate | date: 'dd/MM/yyyy') || 'Não informado'"
+        [icon]="icons['calendar']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+    </div>
+  </app-card>
 
-    <app-card contentClass="p-6">
-      <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
-      <app-section-header (edit)="editData('medicalNotes')" [showEditButton]="false">
-        Apontamentos Médicos
-      </app-section-header>
-      <div class="space-y-4">
-        @if (student.healthData.medicalNotes.length > 0) {
-          @for (note of student.healthData.medicalNotes; track note.studentMedicalNoteId) {
-            <app-accordion-item
-              [isOpen]="openMedicalNoteIndex === $index"
-              (toggled)="toggleMedicalNote($index)"
-            >
-              <app-accordion-header>
-                {{ note.summaryNote }}
-                <app-badge
-                  [contentClass]="
-                    getMedicalNoteBadgeColor(getMedicalNoteTypeName(note.medicalNoteTypeId))
-                  "
-                  >{{ getMedicalNoteTypeName(note.medicalNoteTypeId) }}</app-badge
-                >
-              </app-accordion-header>
-              <app-accordion-body>
-                <div class="grid grid-cols-2 gap-3 mb-5">
-                  @if (note.medicalLocationId) {
-                    <app-detail-field
-                      label="Local de Acompanhamento"
-                      [value]="getMedicalLocationName(note.medicalLocationId)"
-                      [icon]="icons['house']"
-                      iconBgColor="bg-blue-50"
-                      iconColor="text-blue-600"
-                    />
-                  }
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('medications')" [showEditButton]="false">
+      Medicamentos
+    </app-section-header>
+    <div class="space-y-4">
+      @if (student().healthData?.medications?.length) {
+        @for (medication of student().healthData!.medications; track medication.id) {
+          <app-accordion-item
+            [isOpen]="openMedicationIndex === $index"
+            (toggled)="toggleMedication($index)"
+            [showEditButton]="true"
+            [showRemoveButton]="true"
+            (edit)="editMedication(medication)"
+            (remove)="removeMedication(medication.id)"
+          >
+            <app-accordion-header>
+              <div class="flex justify-between">
+                <p>{{ medication.medicationName }}</p>
+              </div>
+            </app-accordion-header>
+            <app-accordion-body>
+              <div class="grid grid-cols-2 gap-3 mb-5">
+                <app-detail-field
+                  label="Frequência"
+                  [value]="medication.frequency"
+                  [icon]="icons['calendar']"
+                  iconBgColor="bg-blue-50"
+                  iconColor="text-blue-600"
+                />
+                <app-detail-field
+                  label="Dosagem"
+                  [value]="medication.dosage"
+                  [icon]="icons['clipboard']"
+                  iconBgColor="bg-green-50"
+                  iconColor="text-green-600"
+                />
+              </div>
+            </app-accordion-body>
+          </app-accordion-item>
+        }
+      } @else {
+        <p class="text-sm text-gray-600">Nenhum medicamento registrado.</p>
+      }
+    </div>
+    <div class="flex justify-end">
+      <button appButton (click)="addMedication()" class="cursor-pointer" variant="outline">
+        Adicionar Medicamento
+      </button>
+    </div>
+  </app-card>
+
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('treatments')" [showEditButton]="false">
+      Tratamentos Médicos
+    </app-section-header>
+    <div class="space-y-4">
+      @if (student().healthData?.treatments?.length) {
+        @for (
+          treatment of student().healthData!.treatments;
+          track treatment.id
+        ) {
+          <app-accordion-item
+            [isOpen]="openTreatmentIndex === $index"
+            (toggled)="toggleTreatment($index)"
+            [showEditButton]="true"
+            [showRemoveButton]="true"
+            (edit)="editTreatment(treatment)"
+            (remove)="removeTreatment(treatment.id)"
+          >
+            <app-accordion-header>
+              {{ treatment.treatmentDescription }}
+            </app-accordion-header>
+            <app-accordion-body>
+              <div class="grid grid-cols-1 gap-3 mb-3">
+                 @if (treatment.monitoringLocationId) {
                   <app-detail-field
-                    label="Data do Apontamento"
-                    [value]="note.noteDate | date: 'dd/MM/yyyy'"
-                    [icon]="icons['calendar']"
-                    iconBgColor="bg-orange-50"
-                    iconColor="text-orange-600"
+                    label="Local de Acompanhamento"
+                    [value]="getMedicalLocationName(treatment.monitoringLocationId)"
+                    [icon]="icons['house']"
+                    iconBgColor="bg-blue-50"
+                    iconColor="text-blue-600"
                   />
-                </div>
-                <p class="text-sm text-gray-900">{{ note.description }}</p>
-                @if (note.descriptionEmergencyProcedure) {
-                  <p class="text-sm text-red-600 mt-1">
-                    <strong>Procedimento de Emergência:</strong>
-                    {{ note.descriptionEmergencyProcedure }}
-                  </p>
                 }
-              </app-accordion-body>
-            </app-accordion-item>
-          }
-        } @else {
-          <p class="text-sm text-gray-600">Nenhum apontamento médico.</p>
+              </div>
+              <p class="text-sm text-gray-900"><strong>Observações:</strong> {{ treatment.observations }}</p>
+            </app-accordion-body>
+          </app-accordion-item>
         }
-      </div>
-    </app-card>
-
-    <app-card contentClass="p-6">
-      <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
-      <app-section-header (edit)="editData('medicalTreatments')" [showEditButton]="false">
-        Tratamentos Médicos
-      </app-section-header>
-      <div class="space-y-4">
-        @if (student.healthData.medicalTreatments.length > 0) {
-          @for (
-            medicalTreatment of student.healthData.medicalTreatments;
-            track medicalTreatment.id
-          ) {
-            <app-accordion-item
-              [isOpen]="openMedicalTreatmentIndex === $index"
-              (toggled)="toggleMedicalTreatment($index)"
-            >
-              <app-accordion-header>
-                {{ getMedicalTreatmentName(medicalTreatment.medicalTreatmentTypeId) }}
-              </app-accordion-header>
-              <app-accordion-body>
-                <p class="text-sm text-gray-900">{{ medicalTreatment.description }}</p>
-              </app-accordion-body>
-            </app-accordion-item>
-          }
-        } @else {
-          <p class="text-sm text-gray-600">Nenhum apontamento médico.</p>
-        }
-      </div>
-    </app-card>
-  }
+      } @else {
+        <p class="text-sm text-gray-600">Nenhum tratamento médico registrado.</p>
+      }
+    </div>
+    <div class="flex justify-end">
+      <button appButton (click)="addTreatment()" class="cursor-pointer" variant="outline">
+        Adicionar Tratamento Médico
+      </button>
+    </div>
+  </app-card>
 </div>

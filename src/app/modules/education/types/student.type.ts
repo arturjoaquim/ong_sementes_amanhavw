@@ -3,31 +3,27 @@ import { Guardian } from './guardian.type';
 import { StudentFamily } from './student-family.type';
 
 export interface StudentHealth {
-  studentHealthId: number;
-  studentId: number;
-  ubsName: string;
-  flagUseGlasses: string;
-  dataExpirationDate: Date;
-  medicalNotes: StudentMedicalNote[];
-  medicalTreatments: StudentMedicalTreatment[];
-}
-
-interface StudentMedicalNote {
-  studentMedicalNoteId: number;
-  studentHealthId: number;
-  medicalNoteTypeId: number;
-  descriptionEmergencyProcedure: string;
-  summaryNote: string;
-  description: string;
-  noteDate: Date;
-  medicalLocationId: number;
-}
-
-interface StudentMedicalTreatment {
   id: number;
-  studentHealthId: number;
-  medicalTreatmentTypeId: number;
-  description: string;
+  studentId: number;
+  ubsReference: string;
+  wearsGlasses: boolean;
+  infoExpirationDate: Date;
+  medications: StudentMedication[];
+  treatments: StudentMedicalTreatment[];
+}
+
+export interface StudentMedication {
+  id: number;
+  medicationName: string;
+  frequency: string;
+  dosage: string;
+}
+
+export interface StudentMedicalTreatment {
+  id: number;
+  treatmentDescription: string;
+  observations: string;
+  monitoringLocationId: number;
 }
 
 interface StudentSocialInteraction {
@@ -38,7 +34,7 @@ interface StudentSocialInteraction {
   socialInteractionPlace: SocialInteractionPlace[];
 }
 
-interface SocialInteractionPlace {
+export interface SocialInteractionPlace {
   id: number;
   socialInteractionId: number;
   placeId: number;
@@ -57,32 +53,33 @@ export interface StudentDwellingCondition {
   parentsMaritalStatusId: number;
   hasSeparatedParentContact: boolean;
   staysHomeAlone: boolean;
+  description: string;
   familyId: number;
   family: StudentFamily;
 }
 
 interface StudentGuardianRelashionship {
-  idRelashionship: number;
-  idStudent: number;
-  idGuardian: number;
+  studentId: number;
+  guardianId: number;
+  kinshipId: number;
   guardian: Guardian;
 }
 
 interface StudentEmergencyContact {
-  emergencyContactId: number;
-  emergencyContactName: string;
-  studentId: number;
-  contactTypeId: number;
-  contactValue: string;
+  id: number;
+  email: string;
+  telephone: string;
+  mobilePhone: string;
+  hasWhatsApp: boolean;
 }
 
 interface StudentNote {
-  studentNoteId: number;
+  id: number;
   studentId: number;
-  summaryNote: string;
-  descrition: string;
-  noteDate: Date;
-  creatorUserId: number;
+  summary: string;
+  description: string;
+  date: Date;
+  creatorId: number;
 }
 
 export interface Student {
@@ -98,8 +95,8 @@ export interface Student {
   transportGuardianName?: string;
   emergencyContact: StudentEmergencyContact;
   notes: StudentNote[];
-  healthData: StudentHealth;
-  dwellingCondition: StudentDwellingCondition;
+  healthData: StudentHealth | null;
+  dwellingCondition: StudentDwellingCondition | null;
   socialInteractions: StudentSocialInteraction[];
   guardianRelashionship: StudentGuardianRelashionship[];
   socialActivities: SocialActivity[];

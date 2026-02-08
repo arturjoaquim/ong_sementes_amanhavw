@@ -1,0 +1,40 @@
+<div class="table-container">
+  <table class="w-full text-sm">
+    <thead>
+      <tr class="border-b">
+        @for (col of columns; track col.field) {
+          <th
+            class="h-12 px-4 text-left align-middle font-medium text-gray-500"
+            [style.width]="col.width"
+            [style.text-align]="col.align || 'left'"
+          >
+            {{ col.header }}
+          </th>
+        }
+        @if (commandsTemplateRef) {
+          <th class="h-12 px-4 text-right align-middle font-medium text-gray-500">Ações</th>
+        }
+      </tr>
+    </thead>
+    <tbody class="[&_tr:last-child]:border-0">
+      @for (item of items; track item.id) {
+        <tr class="border-b transition-colors hover:bg-gray-50/50">
+          @for (col of columns; track col.field) {
+            <td class="p-4 align-middle" [style.text-align]="col.align || 'left'">
+              {{ item[col.field] }}
+            </td>
+          }
+          @if (commandsTemplateRef) {
+            <td class="p-4 align-middle text-right">
+              <!-- Renderiza o template de comandos, passando o item atual no contexto -->
+              <ng-container
+                [ngTemplateOutlet]="commandsTemplateRef"
+                [ngTemplateOutletContext]="{ $implicit: item }"
+              ></ng-container>
+            </td>
+          }
+        </tr>
+      }
+    </tbody>
+  </table>
+</div>

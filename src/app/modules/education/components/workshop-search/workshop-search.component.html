@@ -1,4 +1,3 @@
-
 <div class="bg-white rounded-lg border border-gray-200 p-6 mb-6">
   <div class="flex flex-col md:flex-row gap-4">
     <!-- Search input -->
@@ -16,15 +15,15 @@
           class="app-input pl-10"
         />
       </div>
-      <app-button (click)="searchByName()" contentClass="bg-blue-600 hover:bg-blue-700">
+      <button appButton (click)="searchByName()" class="bg-blue-600 hover:bg-blue-700">
         <lucide-icon [img]="icons.search" size="18" class="mr-2" />
         Buscar
-      </app-button>
+      </button>
     </div>
 
     <!-- Action buttons -->
     <div class="flex gap-3">
-      <app-button variant="outline" (click)="openDialog()" contentClass="relative">
+      <button appButton variant="outline" (click)="openDialog()" class="relative">
         <lucide-icon [img]="icons.filter" size="18" class="mr-2" />
         Filtros
         @if (activeFilterCount > 0) {
@@ -32,12 +31,12 @@
             {{ activeFilterCount }}
           </app-badge>
         }
-      </app-button>
+      </button>
 
-      <app-button (click)="onAddWorkshop()" contentClass="bg-blue-600 hover:bg-blue-700">
+      <button appButton (click)="onAddWorkshop()" class="bg-blue-600 hover:bg-blue-700">
         <lucide-icon [img]="icons.plus" size="18" class="mr-2" />
         Adicionar Oficina
-      </app-button>
+      </button>
     </div>
   </div>
 
@@ -59,14 +58,15 @@
       @if (status && status !== 'all') {
         <app-badge variant="secondary" contentClass="gap-1"> Status: {{ status }} </app-badge>
       }
-      <app-button
+      <button
+        appButton
         variant="ghost"
         size="sm"
         (click)="resetFilters()"
-        contentClass="text-red-600 hover:text-red-700 hover:bg-red-50"
+        class="text-red-600 hover:text-red-700 hover:bg-red-50"
       >
         Limpar Filtros
-      </app-button>
+      </button>
     </div>
   }
 </div>

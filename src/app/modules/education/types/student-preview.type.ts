@@ -1,4 +1,4 @@
-export interface StudentPreviewData {
+export interface StudentPreview {
   id: number;
   avatar: string;
   name: string;

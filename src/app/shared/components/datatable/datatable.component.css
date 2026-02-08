@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  width: 100%;
+}
+
+.table-container {
+  position: relative;
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb; /* border-gray-200 */
+  border-radius: 0.5rem; /* rounded-lg */
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f9fafb; /* bg-gray-50 */
+}

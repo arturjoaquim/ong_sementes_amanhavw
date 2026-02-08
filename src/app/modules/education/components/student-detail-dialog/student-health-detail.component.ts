@@ -1,8 +1,8 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, WritableSignal, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Dialog } from '@angular/cdk/dialog';
 import { CardComponent } from '../../../../shared/components/card/card.component';
-import { Student } from '../../types/student.type';
+import { Student, StudentMedicalTreatment } from '../../types/student.type';
 import {
   AccordionBodyComponent,
   AccordionComponent,
@@ -10,12 +10,15 @@ import {
 } from '../../../../shared/components/accordion/accordion-item.component';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { DetailFieldComponent } from './detail-field.component';
-import { Calendar, Glasses, House } from 'lucide-angular';
+import { Calendar, Clipboard, Glasses, House } from 'lucide-angular';
 import { SectionHeaderComponent } from './section-header.component';
 import {
   DynamicFormDialogComponent,
   DynamicFormDialogData,
 } from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
+import { MedicalLocationMap } from '../../../../shared/utils/lookup.enums';
+import { StudentService } from '../../services/student.service';
 
 @Component({
   selector: 'app-student-health-detail',
@@ -26,48 +29,85 @@ import {
     AccordionComponent,
     AccordionHeaderComponent,
     AccordionBodyComponent,
-    BadgeComponent,
     DetailFieldComponent,
     SectionHeaderComponent,
+    ButtonDirective,
   ],
   templateUrl: './student-health-detail.component.html',
 })
 export class StudentHealthDetailComponent {
-  @Input({ required: true }) student!: Student;
+  @Input({ required: true }) student!: WritableSignal<Student>;
   private dialog = inject(Dialog);
+  private studentService = inject(StudentService);
+
   icons = {
     house: House,
     glasses: Glasses,
     calendar: Calendar,
+    clipboard: Clipboard
   };
-  openMedicalNoteIndex: number | null = null;
-  openMedicalTreatmentIndex: number | null = null;
+  openMedicationIndex: number | null = null;
+  openTreatmentIndex: number | null = null;
 
-  toggleMedicalNote(index: number) {
-    this.openMedicalNoteIndex = this.openMedicalNoteIndex === index ? null : index;
+  toggleMedication(index: number) {
+    this.openMedicationIndex = this.openMedicationIndex === index ? null : index;
   }
 
-  toggleMedicalTreatment(index: number) {
-    this.openMedicalTreatmentIndex = this.openMedicalTreatmentIndex === index ? null : index;
+  toggleTreatment(index: number) {
+    this.openTreatmentIndex = this.openTreatmentIndex === index ? null : index;
+  }
+
+  addMedication() {
+    console.log('Adicionar novo medicamento');
+    // Implementar lógica de adição
+  }
+
+  addTreatment() {
+    console.log('Adicionar novo tratamento');
+    // Implementar lógica de adição
+  }
+
+  editMedication(medication: any) {
+    console.log('Editar medicamento:', medication);
+    // Implementar lógica de edição
+  }
+
+  removeMedication(medicationId: number) {
+    console.log('Remover medicamento com ID:', medicationId);
+    // Implementar lógica de remoção
+  }
+
+  editTreatment(treatment: any) {
+    console.log('Editar tratamento:', treatment);
+    // Implementar lógica de edição
+  }
+
+  removeTreatment(treatmentId: number) {
+    console.log('Remover tratamento com ID:', treatmentId);
+    // Implementar lógica de remoção
   }
 
   editData(section: string): void {
     const editFormDataCatalog: Record<string, DynamicFormDialogData> = {
       healthData: {
         title: 'Editar Dados de Saúde',
-        initialData: this.student.healthData,
+        initialData: {
+            ...this.student().healthData,
+            ubsName: this.student().healthData?.ubsReference, // Mapeia ubsReference -> ubsName (se o form usar ubsName)
+            expirationDate: this.student().healthData?.infoExpirationDate // Mapeia infoExpirationDate -> expirationDate
+        },
         formConfig: [
           { name: 'ubsName', label: 'UBS de Referência', type: 'text' },
           {
-            name: 'flagUseGlasses',
+            name: 'flagUseGlasses', // Mapear wearsGlasses -> flagUseGlasses
             label: 'Utiliza óculos',
             type: 'select',
             options: [
-              { value: 'Sim', viewValue: 'Sim' },
-              { value: 'Não', viewValue: 'Não' },
+              { value: true, viewValue: 'Sim' },
+              { value: false, viewValue: 'Não' },
             ],
           },
-          { name: 'dataExpirationDate', label: 'Vencimento das Informações', type: 'date' },
+          { name: 'expirationDate', label: 'Vencimento das Informações', type: 'date' },
         ],
       },
     };
@@ -79,71 +119,42 @@ export class StudentHealthDetailComponent {
 
       dialogRef.closed.subscribe((result) => {
         if (result) {
-          console.log(`Dados salvos para a seção ${section}:`, result);
+          // Cast para any para evitar erro de tipo com propriedades dinâmicas
+          const res = result as any;
+          const currentStudent = this.student();
+          let updatedStudent = currentStudent;
+
+          if (section === 'healthData') {
+            if (!currentStudent.healthData) return;
+            updatedStudent = {
+                ...currentStudent,
+                healthData: {
+                    ...currentStudent.healthData,
+                    ubsReference: res.ubsName, // Mapeia de volta
+                    wearsGlasses: res.flagUseGlasses,
+                    infoExpirationDate: res.expirationDate
+                }
+            };
+          }
+
+          // Chama o serviço para persistir a atualização
+          this.studentService.updateStudent(updatedStudent).subscribe({
+              next: () => {
+                  console.log('Estudante atualizado com sucesso');
+                  alert('Dados atualizados com sucesso!');
+                  this.student.set(updatedStudent);
+              },
+              error: (err) => {
+                  console.error('Erro ao atualizar estudante', err);
+                  alert('Erro ao atualizar dados. Tente novamente.');
+              }
+          });
         }
       });
     }
   }
 
-  getMedicalNoteBadgeColor(medicalNoteType: string) {
-    switch (medicalNoteType) {
-      case 'Restrição Alimentar':
-        return 'bg-orange-100 text-orange-700';
-      case 'Doença Crônica':
-        return 'bg-orange-100 text-orange-700';
-      case 'Restrição Atividade Física':
-        return 'bg-yellow-100 text-yellow-700';
-      case 'Alergia':
-        return 'bg-red-100 text-red-700';
-      case 'Deficiência':
-        return 'bg-blue-100 text-blue-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  }
-
-  getMedicalNoteTypeName(medicalNoteTypeId: number) {
-    switch (medicalNoteTypeId) {
-      case 1:
-        return 'Restrição Alimentar';
-      case 2:
-        return 'Doença Crônica';
-      case 3:
-        return 'Restrição Atividade Física';
-      case 4:
-        return 'Alergia';
-      case 5:
-        return 'Deficiência';
-      default:
-        return 'Outro';
-    }
-  }
-
-  getMedicalTreatmentName(medicalTreatmentId: number) {
-    switch (medicalTreatmentId) {
-      case 1:
-        return 'Oftamológico';
-      case 2:
-        return 'Odontológico';
-      case 3:
-        return 'Fisioterapia';
-      default:
-        return 'Outro';
-    }
-  }
-
   getMedicalLocationName(medicalLocationId: number) {
-    switch (medicalLocationId) {
-      case 1:
-        return 'UBS';
-      case 2:
-        return 'Hospital Geral';
-      case 3:
-        return 'CAPS';
-      case 4:
-        return 'SER';
-      default:
-        return 'Outro';
-    }
+    return MedicalLocationMap[medicalLocationId]?.descricao || 'Outro';
   }
 }

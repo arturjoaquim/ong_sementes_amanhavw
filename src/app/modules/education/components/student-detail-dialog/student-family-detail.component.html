@@ -1,180 +1,180 @@
 <div class="flex flex-col space-y-4">
   <!-- Dados da Família -->
-  @if (family) {
-    <app-card contentClass="p-6">
-      <app-section-header (edit)="editData('family')">Dados da Família</app-section-header>
-      <div class="grid grid-cols-3 gap-6">
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('family')">Dados da Família</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      <app-detail-field
+        label="Tipo de Domicílio"
+        [value]="dwellingType"
+        [icon]="icons['home']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+      <app-detail-field
+        label="CRAS"
+        [value]="family?.crasName || 'Não informado'"
+        [icon]="icons['home']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+      <app-detail-field
+        label="Vencimento das Informações"
+        [value]="(family?.informationExpirationDate | date: 'dd/MM/yyyy') || 'Não informado'"
+        [icon]="icons['calendar']"
+        iconBgColor="bg-orange-50"
+        iconColor="text-orange-600"
+      />
+    </div>
+    @if (family?.familyEvaluation) {
+      <div class="mt-6">
         <app-detail-field
-          label="Tipo de Domicílio"
-          [value]="dwellingType"
-          [icon]="icons['home']"
-          iconBgColor="bg-blue-50"
-          iconColor="text-blue-600"
-        />
-        <app-detail-field
-          label="CRAS"
-          [value]="family.crasName"
-          [icon]="icons['home']"
-          iconBgColor="bg-blue-50"
-          iconColor="text-blue-600"
-        />
-        <app-detail-field
-          label="Vencimento das Informações"
-          [value]="family.informationExpirationDate | date: 'dd/MM/yyyy'"
-          [icon]="icons['calendar']"
-          iconBgColor="bg-orange-50"
-          iconColor="text-orange-600"
+          label="Avaliação Familiar"
+          [value]="family!.familyEvaluation"
+          [icon]="icons['clipboard']"
+          iconBgColor="bg-indigo-50"
+          iconColor="text-indigo-600"
         />
       </div>
-      @if (family.familyEvaluation) {
-        <div class="mt-6">
-          <app-detail-field
-            label="Avaliação Familiar"
-            [value]="family.familyEvaluation"
-            [icon]="icons['clipboard']"
-            iconBgColor="bg-indigo-50"
-            iconColor="text-indigo-600"
-          />
-        </div>
-      }
-    </app-card>
-  }
+    }
+  </app-card>
 
   <!-- Comportamento Domiciliar -->
-  @if (dwelling) {
-    <app-card contentClass="p-6">
-      <app-section-header (edit)="editData('dwelling')">Situação Domiciliar</app-section-header>
-      <div class="grid grid-cols-3 gap-6">
-        <app-detail-field
-          label="Estado Civil dos Pais"
-          [value]="parentsMaritalStatus"
-          [icon]="icons['users']"
-          iconBgColor="bg-yellow-50"
-          iconColor="text-yellow-600"
-        />
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('dwelling')">Vivência Domiciliar</app-section-header>
+    <div class="grid grid-cols-3 gap-6">
+      <app-detail-field
+        label="Estado Civil dos Pais"
+        [value]="parentsMaritalStatus"
+        [icon]="icons['users']"
+        iconBgColor="bg-yellow-50"
+        iconColor="text-yellow-600"
+      />
 
-        @if (dwelling.parentsMaritalStatusId === 2 || dwelling.parentsMaritalStatusId === 3) {
-          <app-detail-field
-            label="Contato com Cônjuge Separado"
-            [value]="dwelling.hasSeparatedParentContact ? 'Sim' : 'Não'"
-            [icon]="icons['phone']"
-            iconBgColor="bg-blue-50"
-            iconColor="text-blue-600"
-          />
-        }
-
+      @if (dwelling?.parentsMaritalStatusId === 2 || dwelling?.parentsMaritalStatusId === 3) {
         <app-detail-field
-          label="Permanece Sozinho em Casa"
-          [value]="dwelling.staysHomeAlone ? 'Sim' : 'Não'"
-          [icon]="icons['home']"
+          label="Contato com Cônjuge Separado"
+          [value]="dwelling!.hasSeparatedParentContact ? 'Sim' : 'Não'"
+          [icon]="icons['phone']"
           iconBgColor="bg-blue-50"
           iconColor="text-blue-600"
         />
-      </div>
-    </app-card>
-  }
+      }
 
-  <!-- Responsável Legal -->
-  <app-card contentClass="p-6">
-    <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
-    <app-section-header (edit)="editData('guardians')" [showEditButton]="false">
-      Responsável Legal
-    </app-section-header>
-    <div class="space-y-2">
-      @for (guardian of guardians; track guardian.id; let i = $index) {
-        <app-accordion-item [isOpen]="this.openGuardianIndex === i" (toggled)="toggleGuardian(i)">
-          <app-accordion-header>
-            {{ guardian.peopleData.name }}
-          </app-accordion-header>
-          <app-accordion-body>
-            <div class="grid grid-cols-3 gap-x-6 gap-y-4">
-              <app-detail-field
-                label="Grau de Parentesco"
-                [value]="getGuardianKinship(guardian)"
-                [icon]="icons['users']"
-                iconBgColor="bg-yellow-50"
-                iconColor="text-yellow-600"
-              />
-              <app-detail-field
-                label="Telefone"
-                [value]="getGuardianPhone(guardian)"
-                [icon]="icons['phone']"
-                iconBgColor="bg-blue-50"
-                iconColor="text-blue-600"
-              />
-              @if (getGuardianCpf(guardian)) {
-                <app-detail-field
-                  label="CPF"
-                  [value]="getGuardianCpf(guardian)"
-                  [icon]="icons['fileText']"
-                  iconBgColor="bg-blue-50"
-                  iconColor="text-blue-600"
-                />
-              }
-              <app-detail-field
-                label="Data de Nascimento"
-                [value]="guardian.peopleData.birthDate | date: 'dd/MM/yyyy'"
-                [icon]="icons['calendar']"
-                iconBgColor="bg-orange-50"
-                iconColor="text-orange-600"
-              />
-            </div>
-          </app-accordion-body>
-        </app-accordion-item>
+      <app-detail-field
+        label="Permanece Sozinho em Casa"
+        [value]="dwelling?.staysHomeAlone ? 'Sim' : 'Não'"
+        [icon]="icons['home']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+      @if (dwelling?.description) {
+        <app-detail-field
+          label="Observações sobre a Vivência"
+          [value]="dwelling!.description"
+          [icon]="icons['clipboard']"
+          iconBgColor="bg-indigo-50"
+          iconColor="text-indigo-600"
+          class="col-span-3"
+        />
       }
     </div>
   </app-card>
 
-  <!-- Membros da Familia -->
-  @if (family) {
-    <app-card contentClass="p-6">
-      <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
-      <app-section-header (edit)="editData('familyMembers')" [showEditButton]="false">
-        Membros da Família
-      </app-section-header>
-      @if (family.familyMembers && family.familyMembers.length > 0) {
-        <div class="space-y-3">
-          @for (member of family.familyMembers; track member.id) {
-            <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
-              <div class="grid grid-cols-4 gap-4">
-                <div>
-                  <p class="text-xs text-gray-500 mb-1">Nome</p>
-                  <p class="text-sm text-gray-900">{{ member.name }}</p>
-                </div>
-                <div>
-                  <p class="text-xs text-gray-500 mb-1">Relação</p>
-                  <p class="text-sm text-gray-900">{{ member.relationship }}</p>
-                </div>
-                <div>
-                  <p class="text-xs text-gray-500 mb-1">Profissão</p>
-                  <p class="text-sm text-gray-900">
-                    {{ member.profession || 'Não especificado' }}
-                  </p>
-                </div>
-                <div>
-                  <p class="text-xs text-gray-500 mb-1">Renda</p>
-                  <p class="text-sm text-gray-900">
-                    {{ member.income ? (member.income | currency: 'BRL') : 'Não especificado' }}
-                  </p>
-                </div>
+  <!-- Responsável Legal -->
+  <app-card contentClass="p-6">
+    <app-section-header [showEditButton]="false"> Responsável Legal </app-section-header>
+    <div class="space-y-2">
+      @if (guardians.length > 0) {
+        @for (guardian of guardians; track guardian.id; let i = $index) {
+          <app-accordion-item
+            [isOpen]="this.openGuardianIndex === i"
+            (toggled)="toggleGuardian(i)"
+            (edit)="editGuardian(guardian)"
+            (remove)="removeGuardian(guardian.id)"
+            [showEditButton]="true"
+            [showRemoveButton]="true"
+          >
+            <app-accordion-header>
+              {{ guardian.peopleData.personName }}
+            </app-accordion-header>
+            <app-accordion-body>
+              <div class="grid grid-cols-3 gap-x-6 gap-y-4">
+                <app-detail-field
+                  label="Grau de Parentesco"
+                  [value]="getKinshipName(guardian.kinshipDegreeId)"
+                  [icon]="icons['users']"
+                  iconBgColor="bg-blue-50"
+                  iconColor="text-blue-600"
+                />
+                <app-detail-field
+                  label="Telefone"
+                  [value]="getGuardianPhone(guardian)"
+                  [icon]="icons['phone']"
+                  iconBgColor="bg-blue-50"
+                  iconColor="text-blue-600"
+                />
+                @if (getGuardianCpf(guardian)) {
+                  <app-detail-field
+                    label="CPF"
+                    [value]="getGuardianCpf(guardian)"
+                    [icon]="icons['fileText']"
+                    iconBgColor="bg-blue-50"
+                    iconColor="text-blue-600"
+                  />
+                }
+                <app-detail-field
+                  label="Data de Nascimento"
+                  [value]="guardian.peopleData.birthDate | date: 'dd/MM/yyyy'"
+                  [icon]="icons['calendar']"
+                  iconBgColor="bg-blue-50"
+                  iconColor="text-blue-600"
+                />
               </div>
-            </div>
-          }
-        </div>
+            </app-accordion-body>
+          </app-accordion-item>
+        }
       } @else {
-        <p class="text-sm text-gray-600">Nenhum membro familiar registrado</p>
+        <p class="text-sm text-gray-600">Nenhum responsável legal registrado</p>
       }
-    </app-card>
-  }
+    </div>
+    <div class="flex justify-end">
+      <button appButton (click)="addGuardian()" class="cursor-pointer" variant="outline">
+        Adicionar Responsável
+      </button>
+    </div>
+  </app-card>
+
+  <!-- Membros da Familia -->
+  <app-card contentClass="p-6">
+    <app-section-header [showEditButton]="false"> Membros da Família </app-section-header>
+    @if (family?.familyMembers && family!.familyMembers.length > 0) {
+      <app-data-table [items]="family!.familyMembers" [columns]="familyMemberColumns">
+        <ng-template #commandsTemplate let-member>
+          <app-data-table-commands
+            [item]="member"
+            (edit)="onEditFamilyMember($event)"
+            (delete)="onDeleteFamilyMember($event)"
+          >
+          </app-data-table-commands>
+        </ng-template>
+      </app-data-table>
+    } @else {
+      <p class="text-sm text-gray-600">Nenhum membro familiar registrado</p>
+    }
+    <div class="flex justify-end">
+      <button appButton class="cursor-pointer" (click)="addFamilyMember()" variant="outline">
+        Adicionar Familiar
+      </button>
+    </div>
+  </app-card>
 
   <!-- Histórico de Visitas Domiciliares -->
-  @if (visits.length > 0) {
-    <!-- A edição de listas requer um formulário mais complexo (FormArray) -->
-    <app-card contentClass="p-6">
-      <app-section-header (edit)="editData('visits')" [showEditButton]="false">
-        Histórico de Visitas Domiciliares
-      </app-section-header>
-      <div class="space-y-2">
+  <app-card contentClass="p-6">
+    <app-section-header (edit)="editData('visits')" [showEditButton]="false">
+      Histórico de Visitas Domiciliares
+    </app-section-header>
+    <div class="space-y-2">
+      @if (visits.length > 0) {
         @for (visit of visits; track visit.id; let i = $index) {
           <app-accordion-item [isOpen]="openVisitIndex === i" (toggled)="toggleVisit(i)">
             <app-accordion-header>
@@ -191,7 +191,9 @@
             </app-accordion-body>
           </app-accordion-item>
         }
-      </div>
-    </app-card>
-  }
+      } @else {
+        <p class="text-sm text-gray-600">Nenhuma visita domiciliar registrada</p>
+      }
+    </div>
+  </app-card>
 </div>

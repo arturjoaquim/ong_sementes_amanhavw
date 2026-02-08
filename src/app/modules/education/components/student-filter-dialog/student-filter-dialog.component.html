@@ -35,7 +35,7 @@
       </div>
 
       <!-- {/* Grade Level Filter */} -->
-      <label for="gradeLevel" class="app-label text-sm text-gray-900 mb-2 block"> Série </label>
+      <!--<label for="gradeLevel" class="app-label text-sm text-gray-900 mb-2 block"> Série </label>
       <ng-select
         class="app-select"
         #agreeSelect
@@ -51,7 +51,7 @@
         <ng-option value="4-6">4º ao 6º ano</ng-option>
         <ng-option value="7-9">7º ao 9º ano</ng-option>
         <ng-option value="10-12">Ensino Médio</ng-option>
-      </ng-select>
+      </ng-select>-->
 
       <!-- {/* Status Filter */} -->
       <label for="status" class="app-label text-sm text-gray-900 mb-2 block">
@@ -105,21 +105,23 @@
     </div>
 
     <div class="flex gap-3 mt-6">
-      <app-button
+      <button
+        appButton
         variant="outline"
         (click)="resetFilters()"
         class="flex-1 w-full"
-        contentClass="w-full"
+        class="w-full"
       >
         Limpar Filtros
-      </app-button>
-      <app-button
+      </button>
+      <button
+        appButton
         type="submit"
         contentClass="bg-green-600 hover:bg-green-700 w-full"
         class="flex-1 w-full"
       >
         Aplicar Filtros
-      </app-button>
+      </button>
     </div>
   </form>
 </app-dialog>

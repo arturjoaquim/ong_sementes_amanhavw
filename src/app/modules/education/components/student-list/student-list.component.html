@@ -28,7 +28,7 @@
                 <div class="flex items-center gap-3">
                   <app-avatar>
                     <img
-                      class="app-avatar-iimage"
+                      class="app-avatar-image"
                       src="{{ student.avatar }}"
                       alt="{{ student.name }}"
                     />
@@ -58,7 +58,8 @@
                 }}</app-badge>
               </td>
               <td class="whitespace-nowrap text-right">
-                <app-button
+                <button
+                  appButton
                   variant="ghost"
                   size="sm"
                   (click)="viewDetails(student)"
@@ -66,7 +67,7 @@
                 >
                   <lucide-icon [img]="icons.eye" size="16" class="mr-1" />
                   View
-                </app-button>
+                </button>
               </td>
             </tr>
           }

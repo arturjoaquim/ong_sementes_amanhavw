@@ -15,15 +15,15 @@
           class="app-input pl-10"
         />
       </div>
-      <app-button (click)="searchByName()" contentClass="bg-green-600 hover:bg-green-700">
+      <button appButton (click)="searchByName()" class="bg-green-600 hover:bg-green-700">
         <lucide-icon [img]="icons.search" size="18" class="mr-2" />
         Buscar
-      </app-button>
+      </button>
     </div>
 
-    <!-- {/* Action app-buttons */} -->
+    <!-- {/* Action buttons */} -->
     <div class="flex gap-3">
-      <app-button variant="outline" (click)="openDialog()" contentClass="relative">
+      <button appButton variant="outline" (click)="openDialog()" class="relative">
         <lucide-icon [img]="icons.filter" size="18" class="mr-2" />
         Filtros
         @if (activeFilterCount > 0) {
@@ -31,7 +31,7 @@
             {{ activeFilterCount }}
           </app-badge>
         }
-      </app-button>
+      </button>
       <ng-content></ng-content>
     </div>
   </div>
@@ -48,9 +48,9 @@
           Responsável: {{ guardianSearch }}
         </app-badge>
       }
-      @if (gradeLevel && gradeLevel !== 'all') {
+      <!--@if (gradeLevel && gradeLevel !== 'all') {
         <app-badge variant="secondary" contentClass="gap-1"> Série: {{ gradeLevel }} </app-badge>
-      }
+      }-->
       @if (status && status !== 'all') {
         <app-badge variant="secondary" contentClass="gap-1"> Status: {{ status }} </app-badge>
       }
@@ -60,14 +60,15 @@
       @if (ageMax) {
         <app-badge variant="secondary" contentClass="gap-1"> Idade máxima: {{ ageMax }} </app-badge>
       }
-      <app-button
+      <button
+        appButton
         variant="ghost"
         size="sm"
         (click)="resetFilters()"
-        contentClass="text-red-600 hover:text-red-700 hover:bg-red-50"
+        class="text-red-600 hover:text-red-700 hover:bg-red-50"
       >
         Limpar Filtros
-      </app-button>
+      </button>
     </div>
   }
 </div>

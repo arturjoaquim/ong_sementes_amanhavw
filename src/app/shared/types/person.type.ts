@@ -1,50 +1,53 @@
-interface Person {
-  personId: number;
-  personTypeId: number;
+export interface Person {
+  id: number;
+  personTypeId: number | null;
 }
 
 export interface IndividualPerson extends Person {
-  name: string;
+  personName: string;
   birthDate: Date;
   sexId: number;
   fatherName: string;
   motherName: string;
   raceId: number;
   naturalnessId: number;
-  personAddress: PersonAddress;
-  personContact: PersonContact[];
-  personDocument: PersonDocument[];
-  personEducation: IndividualPersonEducation;
+  address?: PersonAddress;
+  contact?: PersonContact;
+  documents: PersonDocument[];
+  education?: IndividualPersonEducation;
 }
 
-interface PersonAddress {
-  personId: number;
+export interface PersonAddress {
+  id: number;
   street: string;
-  number: string;
+  streetNumber: string;
   complement: string;
   neighborhood: string;
   city: string;
-  state: string;
-  zipCode: string;
+  uf: string;
+  cep: string;
 }
 
-interface PersonContact {
-  personId: number;
-  contactTypeId: number;
-  contactValue: string;
+export interface PersonContact {
+  id: number;
+  email: string;
+  telephone: string;
+  mobilePhone: string;
+  hasWhatsApp: boolean;
 }
 
-interface PersonDocument {
-  personId: number;
+export interface PersonDocument {
+  id: number;
   documentTypeId: number;
-  documentNumber: string;
-  documentData: Record<string, any>;
+  number: string;
+  active: boolean | null;
+  documentDetail: Record<string, any> | null;
 }
 
-interface IndividualPersonEducation {
-  personId: number;
-  institutionName: string;
-  studyLevelId: number;
-  academicPeriodId: number;
+export interface IndividualPersonEducation {
+  id: number;
+  institution: string;
+  educationLevelId: number;
+  periodId: number;
   educationStatusId: number;
 }

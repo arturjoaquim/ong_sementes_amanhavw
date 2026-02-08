@@ -12,29 +12,29 @@
       />
       <app-detail-field
         label="Origem da Inscrição"
-        [value]="student.enrollmentOrigin"
+        [value]="enrollmentOriginDescription"
         [icon]="icons['mapPin']"
         iconBgColor="bg-teal-50"
         iconColor="text-teal-600"
       />
       <app-detail-field
         label="Data da Inscrição"
-        [value]="student.enrollmentDate | date: 'dd/MM/yyyy'"
+        [value]="student().enrollmentDate | date: 'dd/MM/yyyy'"
         [icon]="icons['calendar']"
         iconBgColor="bg-orange-50"
         iconColor="text-orange-600"
       />
       <app-detail-field
         label="Vem Acompanhado?"
-        [value]="student.accompaniedStatus ? 'Sim' : 'Não'"
+        [value]="student().accompaniedStatus ? 'Sim' : 'Não'"
         [icon]="icons['users']"
         iconBgColor="bg-yellow-50"
         iconColor="text-yellow-600"
       />
-      @if (student.accompaniedStatus) {
+      @if (student().accompaniedStatus) {
         <app-detail-field
           label="Nome do Acompanhante"
-          [value]="student.transportGuardianName || 'Não informado'"
+          [value]="student().transportGuardianName || 'Não informado'"
           [icon]="icons['userCircle']"
           iconBgColor="bg-green-50"
           iconColor="text-green-600"
@@ -49,7 +49,7 @@
     <div class="grid grid-cols-3 gap-6">
       <app-detail-field
         label="Nome Completo"
-        [value]="student.personData.name"
+        [value]="student().personData.personName"
         [icon]="icons['userCircle']"
         iconBgColor="bg-green-50"
         iconColor="text-green-600"

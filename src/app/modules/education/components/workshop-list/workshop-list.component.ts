@@ -1,23 +1,16 @@
-
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Eye, LucideAngularModule, Users, Clock } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { Workshop } from '../../types/workshop.type';
 import { CommonModule } from '@angular/common';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
   selector: 'app-workshop-list',
   templateUrl: './workshop-list.component.html',
   standalone: true,
-  imports: [
-    CommonModule,
-    LucideAngularModule,
-    BadgeComponent,
-    ButtonComponent,
-    CardComponent,
-  ],
+  imports: [CommonModule, LucideAngularModule, BadgeComponent, ButtonDirective, CardComponent],
 })
 export class WorkshopListComponent {
   icons = {
@@ -48,13 +41,13 @@ export class WorkshopListComponent {
 
   getTypeColor = (type: string) => {
     const colors: { [key: string]: string } = {
-      'Artes': 'bg-purple-100 text-purple-700',
-      'Música': 'bg-pink-100 text-pink-700',
-      'Teatro': 'bg-indigo-100 text-indigo-700',
-      'Tecnologia': 'bg-blue-100 text-blue-700',
-      'Esportes': 'bg-green-100 text-green-700',
-      'Literatura': 'bg-orange-100 text-orange-700',
-      'Gastronomia': 'bg-red-100 text-red-700',
+      Artes: 'bg-purple-100 text-purple-700',
+      Música: 'bg-pink-100 text-pink-700',
+      Teatro: 'bg-indigo-100 text-indigo-700',
+      Tecnologia: 'bg-blue-100 text-blue-700',
+      Esportes: 'bg-green-100 text-green-700',
+      Literatura: 'bg-orange-100 text-orange-700',
+      Gastronomia: 'bg-red-100 text-red-700',
     };
     return colors[type] || 'bg-gray-100 text-gray-700';
   };

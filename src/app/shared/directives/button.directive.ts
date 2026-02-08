@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Directive, HostBinding, Input } from '@angular/core';
 import { cva, VariantProps } from 'class-variance-authority';
-import { cn } from '../../utils/cn.util';
+import { cn } from '../utils/cn.util';
 
 const buttonVariants = cva(
-  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive",
+  "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-all disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 shrink-0 [&_svg]:shrink-0 outline-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive cursor-pointer",
   {
     variants: {
       variant: {
@@ -30,20 +29,18 @@ const buttonVariants = cva(
   },
 );
 
-@Component({
-  selector: 'app-button',
-  templateUrl: './button.component.html',
+@Directive({
+  selector: '[appButton]',
   standalone: true,
-  imports: [CommonModule],
 })
-export class ButtonComponent implements VariantProps<typeof buttonVariants> {
+export class ButtonDirective implements VariantProps<typeof buttonVariants> {
   @Input() variant: VariantProps<typeof buttonVariants>['variant'] = 'default';
   @Input() size: VariantProps<typeof buttonVariants>['size'] = 'default';
-  @Input() type = 'button';
-  @Input() contentClass = '';
-  @Input() disabled = false;
+  @Input() class = '';
 
+  @HostBinding('class')
   get computedClass() {
-    return cn(buttonVariants({ variant: this.variant, size: this.size }), this.contentClass);
+    // Renomeado 'contentClass' para 'class' para ser mais intuitivo como um atributo HTML
+    return cn(buttonVariants({ variant: this.variant, size: this.size }), this.class);
   }
 }

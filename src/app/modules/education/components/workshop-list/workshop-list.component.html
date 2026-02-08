@@ -61,15 +61,16 @@
             </div>
           </div>
 
-          <app-button
+          <button
+            appButton
             variant="outline"
             size="sm"
             (click)="viewDetails(workshop)"
-            contentClass="ml-4"
+            class="ml-4"
           >
             <lucide-icon [img]="icons.eye" [size]="16" class="mr-2"></lucide-icon>
             Ver Detalhes
-          </app-button>
+          </button>
         </div>
       </app-card>
     }

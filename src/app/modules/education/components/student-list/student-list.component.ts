@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { Eye, LucideAngularModule, Phone } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import {
   AvatarComponent,
   AvatarFallbackComponent,
 } from '../../../../shared/components/avatar/avatar.component';
-import { StudentPreviewData } from '../../types/preview-student';
+import { StudentPreview } from '../../types/student-preview.type';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
   selector: 'app-student-list',
@@ -15,7 +15,7 @@ import { StudentPreviewData } from '../../types/preview-student';
   imports: [
     LucideAngularModule,
     BadgeComponent,
-    ButtonComponent,
+    ButtonDirective,
     AvatarComponent,
     AvatarFallbackComponent,
   ],
@@ -26,10 +26,10 @@ export class StudentListComponent {
     eye: Eye,
   };
 
-  @Input() students: StudentPreviewData[] = [];
-  @Output() viewStudentDetail = new EventEmitter<StudentPreviewData>();
+  @Input() students: StudentPreview[] = [];
+  @Output() viewStudentDetail = new EventEmitter<StudentPreview>();
 
-  viewDetails(student: StudentPreviewData) {
+  viewDetails(student: StudentPreview) {
     this.viewStudentDetail.emit(student);
   }
 

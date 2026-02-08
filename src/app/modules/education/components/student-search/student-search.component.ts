@@ -1,13 +1,13 @@
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { StudentFilters } from '../../types/student-filters.type';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { StudentFilterDialog } from '../student-filter-dialog/student-filter-dialog.component';
-import { previewStudents } from '../../services/student.service';
-import { StudentPreviewData } from '../../types/preview-student';
+import { StudentService } from '../../services/student.service';
+import { StudentPreview } from '../../types/student-preview.type';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
   selector: 'app-student-search',
@@ -15,7 +15,7 @@ import { StudentPreviewData } from '../../types/preview-student';
   imports: [
     LucideAngularModule,
     BadgeComponent,
-    ButtonComponent,
+    ButtonDirective,
     FormsModule,
     ReactiveFormsModule,
     DialogModule,
@@ -23,7 +23,7 @@ import { StudentPreviewData } from '../../types/preview-student';
   standalone: true,
 })
 export class StudentSearchComponent {
-  @Output() searchCompleted = new EventEmitter<StudentPreviewData[]>();
+  @Output() searchCompleted = new EventEmitter<StudentPreview[]>();
 
   icons = {
     search: Search,
@@ -31,13 +31,14 @@ export class StudentSearchComponent {
   };
 
   dialog = inject(Dialog);
+  studentService = inject(StudentService);
   nameSearchFilter = new FormControl('');
 
   filters = signal({
     nameSearch: '',
     guardianSearch: '',
-    gradeLevel: 'all',
-    status: 'all',
+    //gradeLevel: 'all',
+    status: '',
     ageMin: '',
     ageMax: '',
   });
@@ -60,8 +61,8 @@ export class StudentSearchComponent {
     this.filters.update((filters) => ({
       ...filters,
       guardianSearch: '',
-      gradeLevel: 'all',
-      status: 'all',
+     // gradeLevel: 'all',
+      status: '',
       ageMin: '',
       ageMax: '',
       nameSearch: this.nameSearchFilter.value || '',
@@ -70,42 +71,9 @@ export class StudentSearchComponent {
   }
 
   private search(filters: StudentFilters) {
-    const filteredStudents = this.searchStudents(filters);
-    this.searchCompleted.emit(filteredStudents);
-  }
-
-  private searchStudents(filters: StudentFilters): StudentPreviewData[] {
-    let students = previewStudents;
-
-    if (filters.nameSearch) {
-      students = students.filter((s) =>
-        s.name.toLowerCase().includes(filters.nameSearch.toLowerCase()),
-      );
-    }
-
-    if (filters.guardianSearch) {
-      students = students.filter((s) =>
-        s.guardian.toLowerCase().includes(filters.guardianSearch.toLowerCase()),
-      );
-    }
-
-    if (filters.status && filters.status !== 'all') {
-      students = students.filter((s) => s.status === filters.status);
-    }
-
-    if (filters.gradeLevel && filters.gradeLevel !== 'all') {
-      students = students.filter((s) => s.grade === filters.gradeLevel);
-    }
-
-    if (filters.ageMin) {
-      students = students.filter((s) => s.age >= parseInt(filters.ageMin));
-    }
-
-    if (filters.ageMax) {
-      students = students.filter((s) => s.age <= parseInt(filters.ageMax));
-    }
-
-    return students;
+    this.studentService.searchStudentsPreview(filters).subscribe((students) => {
+      this.searchCompleted.emit(students);
+    });
   }
 
   resetFilters() {
@@ -113,8 +81,8 @@ export class StudentSearchComponent {
     this.filters.set({
       nameSearch: '',
       guardianSearch: '',
-      gradeLevel: 'all',
-      status: 'all',
+      //gradeLevel: 'all',
+      status: '',
       ageMin: '',
       ageMax: '',
     });
@@ -137,9 +105,9 @@ export class StudentSearchComponent {
     return this.filters().guardianSearch;
   }
 
-  get gradeLevel() {
+  /*get gradeLevel() {
     return this.filters().gradeLevel;
-  }
+  }*/
 
   get status() {
     return this.filters().status;

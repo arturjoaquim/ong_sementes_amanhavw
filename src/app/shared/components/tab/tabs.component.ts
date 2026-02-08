@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
   template: `
     <div class="border-b border-gray-200">
-      <nav class="-mb-px flex space-x-8" aria-label="Tabs">
+      <nav class="-mb-px flex space-x-8 flex-wrap" aria-label="Tabs">
         @for (tab of tabs; track tab.id) {
           <button
             (click)="selectTab(tab.id)"

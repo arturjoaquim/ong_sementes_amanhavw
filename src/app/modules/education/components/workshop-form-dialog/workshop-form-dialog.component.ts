@@ -1,4 +1,3 @@
-
 import { Component, inject, OnInit } from '@angular/core';
 import {
   DialogComponent,
@@ -7,14 +6,20 @@ import {
   DialogTitleComponent,
 } from '../../../../shared/components/dialog/dialog.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { Workshop } from '../../types/workshop.type';
 import { CommonModule } from '@angular/common';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
   selector: 'app-workshop-form-dialog',
@@ -26,7 +31,7 @@ import { CommonModule } from '@angular/common';
     DialogComponent,
     DialogTitleComponent,
     DialogDescriptionComponent,
-    ButtonComponent,
+    ButtonDirective,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -57,7 +62,15 @@ export class WorkshopFormDialogComponent implements OnInit {
     attendanceListUrl: new FormControl(''),
   });
 
-  workshopTypes = ['Artes', 'Música', 'Teatro', 'Tecnologia', 'Esportes', 'Literatura', 'Gastronomia'];
+  workshopTypes = [
+    'Artes',
+    'Música',
+    'Teatro',
+    'Tecnologia',
+    'Esportes',
+    'Literatura',
+    'Gastronomia',
+  ];
   isEditMode = false;
 
   ngOnInit(): void {

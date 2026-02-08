@@ -1,6 +1,6 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, signal, inject } from '@angular/core';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { Student } from '../../types/student.type';
 import {
@@ -19,6 +19,8 @@ import { Tab } from '../../../../shared/types/tab.type';
 import { StudentGeneralDetailComponent } from './student-general-detail.component';
 import { StudentFamilyDetailComponent } from './student-family-detail.component';
 import { StudentHealthDetailComponent } from './student-health-detail.component';
+import { StudentAcademicDetailComponent } from './student-academic-detail.component';
+import { StudentSocialDetailComponent } from './student-social-detail.component';
 
 @Component({
   selector: 'app-student-detail-dialog',
@@ -36,6 +38,8 @@ import { StudentHealthDetailComponent } from './student-health-detail.component'
     StudentGeneralDetailComponent,
     StudentFamilyDetailComponent,
     StudentHealthDetailComponent,
+    StudentAcademicDetailComponent,
+    StudentSocialDetailComponent,
     TabsComponent,
   ],
   templateUrl: './student-detail-dialog.component.html',
@@ -43,7 +47,7 @@ import { StudentHealthDetailComponent } from './student-health-detail.component'
 export class StudentDetailDialogComponent {
   private dialogRef = inject(DialogRef<void>);
   public data = inject<{ student: Student }>(DIALOG_DATA);
-  public student: Student = this.data.student;
+  public student = signal<Student>(this.data.student);
 
   public activeTab = 'general';
 
@@ -51,6 +55,8 @@ export class StudentDetailDialogComponent {
     { id: 'general', label: 'Dados Gerais' },
     { id: 'family', label: 'Família' },
     { id: 'health', label: 'Saúde' },
+    { id: 'academic', label: 'Acadêmico' },
+    { id: 'social', label: 'Social' },
   ];
 
   icons = {
@@ -59,7 +65,7 @@ export class StudentDetailDialogComponent {
 
   get age(): number {
     const today = new Date();
-    const birthDate = new Date(this.student.personData.birthDate);
+    const birthDate = new Date(this.student().personData.birthDate);
     let age = today.getFullYear() - birthDate.getFullYear();
     const m = today.getMonth() - birthDate.getMonth();
     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
@@ -69,7 +75,7 @@ export class StudentDetailDialogComponent {
   }
 
   get name(): string {
-    return this.student.personData.name;
+    return this.student().personData.personName;
   }
 
   setActiveTab(tab: string): void {

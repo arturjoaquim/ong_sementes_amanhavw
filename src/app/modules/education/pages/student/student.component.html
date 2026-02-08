@@ -12,13 +12,14 @@
 
   <!-- {/* Search Section */} -->
   <app-student-search (searchCompleted)="setStudentPreviewList($event)">
-    <app-button
+    <button
+      appButton
       (click)="handleCreateStudent(undefined)"
-      contentClass="bg-green-600 hover:bg-green-700"
+      class="bg-green-600 hover:bg-green-700"
     >
       <lucide-icon [img]="icons.userPlus" size="18" class="mr-2" />
       Adicionar Estudante
-    </app-button>
+    </button>
   </app-student-search>
 
   <!-- {/* Student List */} -->

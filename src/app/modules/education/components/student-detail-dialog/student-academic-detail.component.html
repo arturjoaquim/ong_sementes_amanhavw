@@ -1,0 +1,38 @@
+<div class="flex flex-col space-y-4">
+  <!-- Dados Escolares -->
+  <app-card contentClass="p-6">
+    <app-section-header [showEditButton]="true" (edit)="editAcademicData()"
+      >Dados Escolares</app-section-header
+    >
+    <div class="grid grid-cols-3 gap-6">
+      <app-detail-field
+        label="Instituição de Ensino"
+        [value]="education?.institution || 'Não informado'"
+        [icon]="icons['school']"
+        iconBgColor="bg-blue-50"
+        iconColor="text-blue-600"
+      />
+      <app-detail-field
+        label="Nível de Estudo"
+        [value]="studyLevel"
+        [icon]="icons['bookOpen']"
+        iconBgColor="bg-green-50"
+        iconColor="text-green-600"
+      />
+      <app-detail-field
+        label="Período/Série"
+        [value]="academicPeriod"
+        [icon]="icons['calendar']"
+        iconBgColor="bg-orange-50"
+        iconColor="text-orange-600"
+      />
+      <app-detail-field
+        label="Situação"
+        [value]="educationStatus"
+        [icon]="icons['clipboardCheck']"
+        iconBgColor="bg-teal-50"
+        iconColor="text-teal-600"
+      />
+    </div>
+  </app-card>
+</div>

@@ -1,4 +1,4 @@
-import { Component, Input, inject } from '@angular/core';
+import { Component, Input, WritableSignal, inject } from '@angular/core';
 import {
   Calendar,
   FileText,
@@ -18,6 +18,8 @@ import {
   DynamicFormDialogComponent,
   DynamicFormDialogData,
 } from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+import { EnrollmentOriginMap } from '../../../../shared/utils/lookup.enums';
+import { StudentService } from '../../services/student.service';
 
 @Component({
   selector: 'app-student-general-detail',
@@ -26,8 +28,9 @@ import {
   templateUrl: './student-general-detail.component.html',
 })
 export class StudentGeneralDetailComponent {
-  @Input({ required: true }) student!: Student;
+  @Input({ required: true }) student!: WritableSignal<Student>;
   private dialog = inject(Dialog);
+  private studentService = inject(StudentService);
 
   icons: Record<string, LucideIconData> = {
     graduationCap: GraduationCap,
@@ -39,10 +42,18 @@ export class StudentGeneralDetailComponent {
   };
 
   editData(section: string): void {
+    const enrollmentOriginOptions = Object.values(EnrollmentOriginMap).map((origin) => ({
+      value: origin.id,
+      viewValue: origin.descricao,
+    }));
+
     const editFormDataCatalog: Record<string, DynamicFormDialogData> = {
       personal: {
         title: 'Editar Dados Pessoais',
-        initialData: this.student.personData,
+        initialData: {
+            ...this.student().personData,
+            name: this.student().personData.personName // Mapeia personName -> name
+        },
         formConfig: [
           { name: 'name', label: 'Nome Completo', type: 'text', required: true },
           { name: 'birthDate', label: 'Data de Nascimento', type: 'date', required: true },
@@ -56,11 +67,38 @@ export class StudentGeneralDetailComponent {
             ],
             required: true,
           },
+          {
+            name: 'raceId',
+            label: 'Raça/Cor',
+            type: 'select',
+            options: [
+              { value: 1, viewValue: 'Branca' },
+              { value: 2, viewValue: 'Parda' },
+              { value: 3, viewValue: 'Amarela' },
+              { value: 4, viewValue: 'Preta' },
+              { value: 5, viewValue: 'Indígena' },
+            ],
+          },
+          {
+            name: 'naturalnessId',
+            label: 'Naturalidade',
+            type: 'select',
+            options: [
+              { value: 1, viewValue: 'São Paulo, SP' },
+              { value: 2, viewValue: 'Salvador, BA' },
+              { value: 3, viewValue: 'Curitiba, PR' },
+            ],
+          },
+          { name: 'motherName', label: 'Nome da Mãe', type: 'text' },
+          { name: 'fatherName', label: 'Nome do Pai', type: 'text' },
         ],
       },
       enrollment: {
         title: 'Editar Dados da Matrícula',
-        initialData: this.student,
+        initialData: {
+            ...this.student(),
+            enrollmentOrigin: Number(this.student().enrollmentOrigin) // Converte para número para o select
+        },
         formConfig: [
           {
             name: 'periodId',
@@ -72,7 +110,13 @@ export class StudentGeneralDetailComponent {
             ],
             required: true,
           },
-          { name: 'enrollmentOrigin', label: 'Origem da Inscrição', type: 'text' },
+          {
+            name: 'enrollmentOrigin',
+            label: 'Origem da Inscrição',
+            type: 'select',
+            options: enrollmentOriginOptions,
+            required: true
+          },
           { name: 'enrollmentDate', label: 'Data da Inscrição', type: 'date', required: true },
           {
             name: 'accompaniedStatus',
@@ -88,7 +132,12 @@ export class StudentGeneralDetailComponent {
       },
       address: {
         title: 'Editar Endereço',
-        initialData: this.student.personData.personAddress,
+        initialData: {
+            ...this.student().personData.address,
+            number: this.student().personData.address?.streetNumber, // Mapeia streetNumber -> number
+            state: this.student().personData.address?.uf, // Mapeia uf -> state
+            zipCode: this.student().personData.address?.cep // Mapeia cep -> zipCode
+        },
         formConfig: [
           { name: 'street', label: 'Rua', type: 'text', required: true },
           { name: 'number', label: 'Número', type: 'text', required: true },
@@ -97,6 +146,25 @@ export class StudentGeneralDetailComponent {
           { name: 'city', label: 'Cidade', type: 'text', required: true },
           { name: 'state', label: 'Estado', type: 'text', required: true },
           { name: 'zipCode', label: 'CEP', type: 'text', required: true },
+        ],
+      },
+      documents: {
+        title: 'Editar Documentos Civis',
+        initialData: {
+          cpf: this.cpf,
+          rg: this.rg,
+          nis: this.nisNumber === 'Não informado' ? '' : this.nisNumber,
+          birthCertificateNumber: this.birthCertificate?.number,
+          birthCertificateBook: this.birthCertificate?.book,
+          birthCertificatePage: this.birthCertificate?.page,
+        },
+        formConfig: [
+          { name: 'cpf', label: 'CPF', type: 'text' },
+          { name: 'rg', label: 'RG', type: 'text' },
+          { name: 'nis', label: 'NIS', type: 'text' },
+          { name: 'birthCertificateNumber', label: 'Nº da Certidão de Nasc.', type: 'text' },
+          { name: 'birthCertificateBook', label: 'Livro (Certidão)', type: 'text' },
+          { name: 'birthCertificatePage', label: 'Folha (Certidão)', type: 'text' },
         ],
       },
     };
@@ -109,8 +177,69 @@ export class StudentGeneralDetailComponent {
       dialogRef.closed.subscribe((result) => {
         if (result) {
           console.log(`Dados salvos para a seção ${section}:`, result);
-          // Aqui você chamaria o serviço para atualizar os dados no backend
-          // Ex: this.studentService.updateStudent({...})
+          this.student.update((currentStudent) => {
+            let updatedStudent = currentStudent;
+            switch (section) {
+              case 'personal':
+                const { name, ...restPersonal } = result as any;
+                updatedStudent = {
+                  ...currentStudent,
+                  personData: {
+                      ...currentStudent.personData,
+                      personName: name, // Mapeia de volta name -> personName
+                      ...restPersonal
+                  },
+                };
+                break;
+              case 'enrollment':
+                updatedStudent = { ...currentStudent, ...result };
+                break;
+              case 'address':
+                const { number, state, zipCode, ...restAddress } = result as any;
+                updatedStudent = {
+                  ...currentStudent,
+                  personData: {
+                    ...currentStudent.personData,
+                    address: {
+                        id: currentStudent.personData.address?.id || 0,
+                        street: '',
+                        streetNumber: number, // Mapeia de volta number -> streetNumber
+                        complement: '',
+                        neighborhood: '',
+                        city: '',
+                        uf: state, // Mapeia de volta state -> uf
+                        cep: zipCode, // Mapeia de volta zipCode -> cep
+                        ...currentStudent.personData.address,
+                        ...restAddress
+                    },
+                  },
+                };
+                break;
+              case 'documents':
+                console.warn(
+                  'A atualização de documentos via formulário dinâmico não está totalmente implementada.',
+                );
+                return currentStudent;
+
+              default:
+                return currentStudent;
+            }
+
+            // Chama o serviço para persistir a atualização
+            this.studentService.updateStudent(updatedStudent).subscribe({
+                next: () => {
+                    console.log('Estudante atualizado com sucesso');
+                    alert('Dados atualizados com sucesso!');
+                },
+                error: (err) => {
+                    console.error('Erro ao atualizar estudante', err);
+                    alert('Erro ao atualizar dados. Tente novamente.');
+                    // Opcional: Reverter a atualização local em caso de erro
+                }
+            });
+
+            return updatedStudent;
+          });
         }
       });
     }
@@ -118,7 +247,7 @@ export class StudentGeneralDetailComponent {
 
   // --- Getters para Dados da Matrícula ---
   get period(): string {
-    switch (this.student.periodId) {
+    switch (this.student().periodId) {
       case 1:
         return 'Manhã';
       case 2:
@@ -128,13 +257,19 @@ export class StudentGeneralDetailComponent {
     }
   }
 
+  get enrollmentOriginDescription(): string {
+    const originId = Number(this.student().enrollmentOrigin);
+    if (isNaN(originId)) return this.student().enrollmentOrigin || 'Não informado';
+    return EnrollmentOriginMap[originId]?.descricao || 'Não informado';
+  }
+
   // --- Getters para Dados Pessoais ---
   get birthDate(): Date {
-    return this.student.personData.birthDate;
+    return this.student().personData.birthDate;
   }
 
   get gender(): string {
-    switch (this.student.personData.sexId) {
+    switch (this.student().personData.sexId) {
       case 1:
         return 'Masculino';
       case 2:
@@ -145,7 +280,7 @@ export class StudentGeneralDetailComponent {
   }
 
   get race(): string {
-    switch (this.student.personData.raceId) {
+    switch (this.student().personData.raceId) {
       case 1:
         return 'Branca';
       case 2:
@@ -162,7 +297,7 @@ export class StudentGeneralDetailComponent {
   }
 
   get naturalness(): string {
-    switch (this.student.personData.naturalnessId) {
+    switch (this.student().personData.naturalnessId) {
       case 1:
         return 'São Paulo, SP';
       case 2:
@@ -175,46 +310,44 @@ export class StudentGeneralDetailComponent {
   }
 
   get fatherName(): string {
-    return this.student.personData.fatherName || 'Não informado';
+    return this.student().personData.fatherName || 'Não informado';
   }
 
   get motherName(): string {
-    return this.student.personData.motherName || 'Não informado';
+    return this.student().personData.motherName || 'Não informado';
   }
 
   // --- Getters para Documentos ---
   get cpf(): string | undefined {
-    return this.student.personData.personDocument.find((doc) => doc.documentTypeId === 1)
-      ?.documentNumber;
+    return this.student().personData.documents.find((doc) => doc.documentTypeId === 1)?.number;
   }
 
   get rg(): string | undefined {
-    return this.student.personData.personDocument.find((doc) => doc.documentTypeId === 2)
-      ?.documentNumber;
+    return this.student().personData.documents.find((doc) => doc.documentTypeId === 2)?.number;
   }
 
   get birthCertificate(): { number: string; book: string; page: string } | undefined {
-    const cert = this.student.personData.personDocument.find((doc) => doc.documentTypeId === 3);
+    const cert = this.student().personData.documents.find((doc) => doc.documentTypeId === 3);
     if (!cert) return undefined;
     return {
-      number: cert.documentNumber,
-      book: cert.documentData['book'] || 'N/A',
-      page: cert.documentData['page'] || 'N/A',
+      number: cert.number,
+      book: cert.documentDetail ? cert.documentDetail['book'] || 'N/A' : 'N/A',
+      page: cert.documentDetail ? cert.documentDetail['page'] || 'N/A' : 'N/A',
     };
   }
 
   get nisNumber(): string {
     return (
-      this.student.personData.personDocument.find((doc) => doc.documentTypeId === 4)
-        ?.documentNumber || 'Não informado'
+      this.student().personData.documents.find((doc) => doc.documentTypeId === 4)?.number ||
+      'Não informado'
     );
   }
 
   // --- Getters para Endereço ---
   get fullStreet(): string {
-    const addr = this.student.personData.personAddress;
+    const addr = this.student().personData.address;
     if (!addr) return 'Não informado';
-    let addressString = `${addr.street}, ${addr.number}`;
+    let addressString = `${addr.street}, ${addr.streetNumber}`;
     if (addr.complement) {
       addressString += ` - ${addr.complement}`;
     }
@@ -222,18 +355,18 @@ export class StudentGeneralDetailComponent {
   }
 
   get neighborhood(): string {
-    return this.student.personData.personAddress?.neighborhood || 'Não informado';
+    return this.student().personData.address?.neighborhood || 'Não informado';
   }
 
   get city(): string {
-    return this.student.personData.personAddress?.city || 'Não informado';
+    return this.student().personData.address?.city || 'Não informado';
   }
 
   get state(): string {
-    return this.student.personData.personAddress?.state || 'Não informado';
+    return this.student().personData.address?.uf || 'Não informado';
   }
 
   get zipCode(): string {
-    return this.student.personData.personAddress?.zipCode || 'Não informado';
+    return this.student().personData.address?.cep || 'Não informado';
   }
 }

@@ -1,14 +1,13 @@
-
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search, Plus } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { WorkshopFilters } from '../../types/workshop-filters.type';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { WorkshopFilterDialogComponent } from '../workshop-filter-dialog/workshop-filter-dialog.component';
 import { Workshop } from '../../types/workshop.type';
 import { initialWorkshops } from '../../services/workshop.service';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
   selector: 'app-workshop-search',
@@ -16,7 +15,7 @@ import { initialWorkshops } from '../../services/workshop.service';
   imports: [
     LucideAngularModule,
     BadgeComponent,
-    ButtonComponent,
+    ButtonDirective,
     FormsModule,
     ReactiveFormsModule,
     DialogModule,
@@ -82,13 +81,13 @@ export class WorkshopSearchComponent {
 
     if (filters.nameSearch) {
       workshops = workshops.filter((w) =>
-        w.name.toLowerCase().includes(filters.nameSearch.toLowerCase())
+        w.name.toLowerCase().includes(filters.nameSearch.toLowerCase()),
       );
     }
 
     if (filters.educatorSearch) {
       workshops = workshops.filter((w) =>
-        w.educatorName.toLowerCase().includes(filters.educatorSearch.toLowerCase())
+        w.educatorName.toLowerCase().includes(filters.educatorSearch.toLowerCase()),
       );
     }
 

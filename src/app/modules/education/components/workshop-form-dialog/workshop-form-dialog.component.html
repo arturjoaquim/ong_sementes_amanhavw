@@ -11,7 +11,7 @@
     <!-- Basic Information -->
     <div class="space-y-4">
       <h4 class="text-sm font-semibold text-gray-900">Informações Básicas</h4>
-      
+
       <div class="grid grid-cols-1 gap-4">
         <mat-form-field class="w-full">
           <mat-label>Nome da Oficina</mat-label>
@@ -57,7 +57,7 @@
     <!-- Educator and Capacity -->
     <div class="space-y-4">
       <h4 class="text-sm font-semibold text-gray-900">Educador e Capacidade</h4>
-      
+
       <div class="grid grid-cols-2 gap-4">
         <mat-form-field class="w-full">
           <mat-label>Nome do Educador</mat-label>
@@ -80,7 +80,7 @@
     <!-- Location and Dates -->
     <div class="space-y-4">
       <h4 class="text-sm font-semibold text-gray-900">Local e Datas</h4>
-      
+
       <div class="grid grid-cols-1 gap-4">
         <mat-form-field class="w-full">
           <mat-label>Local</mat-label>
@@ -114,12 +114,12 @@
 
     <!-- Action Buttons -->
     <div class="flex justify-end gap-3 pt-4 border-t">
-      <app-button type="button" variant="outline" (click)="cancel()">
+      <button appButton type="button" variant="outline" (click)="cancel()">
         Cancelar
-      </app-button>
-      <app-button type="submit" [disabled]="!workshopForm.valid">
+      </button>
+      <button appButton type="submit" [disabled]="!workshopForm.valid">
         {{ isEditMode ? 'Atualizar' : 'Criar' }}
-      </app-button>
+      </button>
     </div>
   </form>
 </app-dialog>

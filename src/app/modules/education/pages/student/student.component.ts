@@ -4,16 +4,16 @@ import { StudentSearchComponent } from '../../components/student-search/student-
 import { StudentListComponent } from '../../components/student-list/student-list.component';
 import { Student } from '../../types/student.type';
 import { Dialog } from '@angular/cdk/dialog';
-import { StudentFormDialogComponent } from '../../components/student-form-dialog/student-form-dialog.component';
 import { StudentService } from '../../services/student.service';
 import { StudentDetailDialogComponent } from '../../components/student-detail-dialog/student-detail-dialog.component';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
-import { StudentPreviewData } from '../../types/preview-student';
+import { StudentPreview } from '../../types/student-preview.type';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
+import { StudentCreationDialogComponent } from '../../components/student-creation-dialog/student-creation-dialog.component';
 
 @Component({
   selector: 'app-student',
   templateUrl: './student.component.html',
-  imports: [LucideAngularModule, StudentSearchComponent, StudentListComponent, ButtonComponent],
+  imports: [LucideAngularModule, StudentSearchComponent, StudentListComponent, ButtonDirective],
   standalone: true,
 })
 export class StudentComponent {
@@ -25,14 +25,14 @@ export class StudentComponent {
   dialog = inject(Dialog);
   studentService = inject(StudentService);
 
-  students: StudentPreviewData[] = []; // TODO: Transformar em signal para respeitar reatividade
+  students: StudentPreview[] = []; // TODO: Transformar em signal para respeitar reatividade
 
-  setStudentPreviewList(students: StudentPreviewData[]) {
+  setStudentPreviewList(students: StudentPreview[]) {
     this.students = students;
   }
 
-  showStudentDetails(studentPreview: StudentPreviewData) {
-    this.studentService.getStudentById(studentPreview.id).subscribe((student: Student) => {
+  showStudentDetails(studentPreview: StudentPreview) {
+    this.studentService.getStudentDetailsById(studentPreview.id).subscribe((student: Student) => {
       this.dialog.open(StudentDetailDialogComponent, {
         data: { student },
         width: '90vw',
@@ -43,20 +43,15 @@ export class StudentComponent {
 
   handleCreateStudent(student: Student | undefined) {
     // TODO: Definir nome mais semantico
-    const dialogRef = this.dialog.open<Student>(StudentFormDialogComponent, {
+    const dialogRef = this.dialog.open<void>(StudentCreationDialogComponent, {
       data: { student },
       width: '90vw',
       maxWidth: '800px',
     });
 
-    dialogRef.closed.subscribe((result) => {
-      if (result) {
-        if (student) {
-          this.studentService.updateStudent(result);
-        } else {
-          this.studentService.createStudent(result);
-        }
-      }
+    dialogRef.closed.subscribe(() => {
+      // Recarregar lista se necessário, ou deixar que o usuário filtre novamente
+      // O ideal seria emitir um evento para o StudentSearchComponent recarregar
     });
   }
 }

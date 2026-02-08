@@ -6,7 +6,6 @@ import {
   DialogTitleComponent,
 } from '../../../../shared/components/dialog/dialog.component';
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { ButtonComponent } from '../../../../shared/components/button/button.component';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatSelectModule } from '@angular/material/select';
@@ -14,6 +13,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MAT_FORM_FIELD_DEFAULT_OPTIONS } from '@angular/material/form-field';
 import { StudentFilters } from '../../types/student-filters.type';
 import { NgSelectModule } from '@ng-select/ng-select';
+import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
   selector: 'app-student-filter-dialog',
@@ -24,7 +24,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     DialogComponent,
     DialogTitleComponent,
     DialogDescriptionComponent,
-    ButtonComponent,
+    ButtonDirective,
     FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -46,8 +46,8 @@ export class StudentFilterDialog implements OnInit {
   studentFilters = new FormGroup({
     nameSearch: new FormControl(''),
     guardianSearch: new FormControl(''),
-    gradeLevel: new FormControl('all'),
-    status: new FormControl('all'),
+   // gradeLevel: new FormControl('all'),
+    status: new FormControl(''),
     ageMin: new FormControl(''),
     ageMax: new FormControl(''),
   });
