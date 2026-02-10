@@ -1,11 +1,10 @@
 import { IndividualPerson } from '../../../shared/types/person.type';
-import { PersonDataDTO } from '../types/dtos/student-details.dto';
-import { IndividualPersonDTO } from '../types/dtos/individual-person.dto';
+import { IndividualPersonDTO } from '../../../shared/types/dtos/individual-person.dto';
 
 export class PersonConverter {
-  static toModel(dto: PersonDataDTO): IndividualPerson {
+  static toModel(dto: IndividualPersonDTO): IndividualPerson {
     return {
-      id: 0,
+      id: dto.id,
       personTypeId: null,
       personName: dto.personName,
       birthDate: new Date(dto.birthDate),
@@ -32,10 +31,10 @@ export class PersonConverter {
         hasWhatsApp: dto.contact.hasWhatsApp
       } : undefined,
       documents: dto.documents ? dto.documents.map(d => ({
-        id: 0,
+        id: d.id,
         documentTypeId: d.documentTypeId,
         number: d.number,
-        active: d.active,
+        active: d.active ?? null, // Garante null se undefined
         documentDetail: d.extraData || null
       })) : [],
       education: dto.education ? {
@@ -50,6 +49,7 @@ export class PersonConverter {
 
   static toDTO(person: IndividualPerson): IndividualPersonDTO {
     return {
+      id: person.id,
       personName: person.personName,
       birthDate: person.birthDate,
       motherName: person.motherName,
@@ -79,9 +79,11 @@ export class PersonConverter {
         educationStatusId: person.education.educationStatusId
       } : null as any,
       documents: person.documents ? person.documents.map(d => ({
+        id: d.id,
         documentTypeId: d.documentTypeId,
         number: d.number,
-        extraData: d.documentDetail || undefined
+        extraData: d.documentDetail || undefined,
+        active: d.active
       })) : []
     };
   }

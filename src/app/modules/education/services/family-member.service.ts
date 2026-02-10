@@ -14,7 +14,7 @@ export class FamilyMemberService {
         name: memberData.name,
         profession: memberData.profession,
         monthlyIncome: memberData.income,
-        kinshipId: 0 // Precisa mapear relationship para ID
+        kinshipId: memberData.kinshipDegreeId
     };
     return this.http.post<void>(`${this.apiUrl}/${familyId}/members`, dto);
   }
@@ -24,7 +24,7 @@ export class FamilyMemberService {
         name: memberData.name,
         profession: memberData.profession,
         monthlyIncome: memberData.income,
-        kinshipId: 0 // Precisa mapear relationship para ID
+        kinshipId: memberData.kinshipDegreeId
     };
     return this.http.patch<void>(`${this.apiUrl}/${familyId}/members/${memberId}`, dto);
   }

@@ -1,4 +1,4 @@
-import { IndividualPersonDTO } from './individual-person.dto';
+import { IndividualPersonDTO } from '../../../../shared/types/dtos/individual-person.dto';
 import { StudentDataDTO } from './student-data.dto';
 import { CreateStudentGuardianDTO } from './create-student-guardian.dto';
 

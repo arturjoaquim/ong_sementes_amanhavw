@@ -17,8 +17,10 @@ import {
   DynamicFormDialogData,
 } from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
-import { MedicalLocationMap } from '../../../../shared/utils/lookup.enums';
+import { MedicalLocation, MedicalLocationMap } from '../../../../shared/utils/lookup.enums';
 import { StudentService } from '../../services/student.service';
+import { StudentHealthService } from '../../services/student-health.service';
+import { FormField } from '../../../../shared/types/form-field.type';
 
 @Component({
   selector: 'app-student-health-detail',
@@ -39,6 +41,7 @@ export class StudentHealthDetailComponent {
   @Input({ required: true }) student!: WritableSignal<Student>;
   private dialog = inject(Dialog);
   private studentService = inject(StudentService);
+  private studentHealthService = inject(StudentHealthService);
 
   icons = {
     house: House,
@@ -58,33 +61,187 @@ export class StudentHealthDetailComponent {
   }
 
   addMedication() {
-    console.log('Adicionar novo medicamento');
-    // Implementar lógica de adição
+    const formConfig: FormField[] = [
+      { name: 'medicationName', label: 'Nome do Medicamento', type: 'text', required: true },
+      { name: 'frequency', label: 'Frequência', type: 'text', required: true },
+      { name: 'dosage', label: 'Dosagem', type: 'text', required: true },
+    ];
+
+    const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+      data: { title: 'Adicionar Medicamento', formConfig },
+    });
+
+    dialogRef.closed.subscribe((result: any) => {
+        if (result) {
+            this.studentHealthService.addMedication(this.student().id, result).subscribe({
+                next: () => {
+                    alert('Medicamento adicionado com sucesso!');
+                    this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+                },
+                error: (err) => {
+                    console.error('Erro ao adicionar medicamento', err);
+                    alert('Erro ao adicionar medicamento.');
+                }
+            });
+        }
+    });
   }
 
   addTreatment() {
-    console.log('Adicionar novo tratamento');
-    // Implementar lógica de adição
+    const medicalLocationOptions = Object.values(MedicalLocation).map((loc) => ({
+        value: loc.id,
+        viewValue: loc.descricao,
+    }));
+
+    const formConfig: FormField[] = [
+      {
+        name: 'description',
+        label: 'Descrição do Tratamento',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'observations',
+        label: 'Observações',
+        type: 'text',
+      },
+      {
+        name: 'monitoringLocationId',
+        label: 'Local de Acompanhamento',
+        type: 'select',
+        options: medicalLocationOptions,
+      },
+    ];
+
+    const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+      data: { title: 'Adicionar Tratamento Médico', formConfig },
+    });
+
+    dialogRef.closed.subscribe((result: any) => {
+        if (result) {
+            this.studentHealthService.addTreatment(this.student().id, result).subscribe({
+                next: () => {
+                    alert('Tratamento adicionado com sucesso!');
+                    this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+                },
+                error: (err) => {
+                    console.error('Erro ao adicionar tratamento', err);
+                    alert('Erro ao adicionar tratamento.');
+                }
+            });
+        }
+    });
   }
 
   editMedication(medication: any) {
-    console.log('Editar medicamento:', medication);
-    // Implementar lógica de edição
+    const formConfig: FormField[] = [
+      { name: 'medicationName', label: 'Nome do Medicamento', type: 'text', required: true },
+      { name: 'frequency', label: 'Frequência', type: 'text', required: true },
+      { name: 'dosage', label: 'Dosagem', type: 'text', required: true },
+    ];
+
+    const initialData = { ...medication };
+
+    const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+      data: { title: 'Editar Medicamento', formConfig, initialData },
+    });
+
+    dialogRef.closed.subscribe((result: any) => {
+        if (result) {
+            this.studentHealthService.updateMedication(this.student().id, medication.id, result).subscribe({
+                next: () => {
+                    alert('Medicamento atualizado com sucesso!');
+                    this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+                },
+                error: (err) => {
+                    console.error('Erro ao atualizar medicamento', err);
+                    alert('Erro ao atualizar medicamento.');
+                }
+            });
+        }
+    });
   }
 
   removeMedication(medicationId: number) {
-    console.log('Remover medicamento com ID:', medicationId);
-    // Implementar lógica de remoção
+    if (confirm('Tem certeza que deseja remover este medicamento?')) {
+        this.studentHealthService.removeMedication(this.student().id, medicationId).subscribe({
+            next: () => {
+                alert('Medicamento removido com sucesso!');
+                this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+            },
+            error: (err) => {
+                console.error('Erro ao remover medicamento', err);
+                alert('Erro ao remover medicamento.');
+            }
+        });
+    }
   }
 
   editTreatment(treatment: any) {
-    console.log('Editar tratamento:', treatment);
-    // Implementar lógica de edição
+    const medicalLocationOptions = Object.values(MedicalLocation).map((loc) => ({
+        value: loc.id,
+        viewValue: loc.descricao,
+    }));
+
+    const formConfig: FormField[] = [
+      {
+        name: 'description',
+        label: 'Descrição do Tratamento',
+        type: 'text',
+        required: true,
+      },
+      {
+        name: 'observations',
+        label: 'Observações',
+        type: 'text',
+      },
+      {
+        name: 'monitoringLocationId',
+        label: 'Local de Acompanhamento',
+        type: 'select',
+        options: medicalLocationOptions,
+      },
+    ];
+
+    const initialData = {
+        description: treatment.treatmentDescription,
+        observations: treatment.observations,
+        monitoringLocationId: treatment.monitoringLocationId
+    };
+
+    const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
+      data: { title: 'Editar Tratamento Médico', formConfig, initialData },
+    });
+
+    dialogRef.closed.subscribe((result: any) => {
+        if (result) {
+            this.studentHealthService.updateTreatment(this.student().id, treatment.id, result).subscribe({
+                next: () => {
+                    alert('Tratamento atualizado com sucesso!');
+                    this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+                },
+                error: (err) => {
+                    console.error('Erro ao atualizar tratamento', err);
+                    alert('Erro ao atualizar tratamento.');
+                }
+            });
+        }
+    });
   }
 
   removeTreatment(treatmentId: number) {
-    console.log('Remover tratamento com ID:', treatmentId);
-    // Implementar lógica de remoção
+    if (confirm('Tem certeza que deseja remover este tratamento?')) {
+        this.studentHealthService.removeTreatment(this.student().id, treatmentId).subscribe({
+            next: () => {
+                alert('Tratamento removido com sucesso!');
+                this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+            },
+            error: (err) => {
+                console.error('Erro ao remover tratamento', err);
+                alert('Erro ao remover tratamento.');
+            }
+        });
+    }
   }
 
   editData(section: string): void {

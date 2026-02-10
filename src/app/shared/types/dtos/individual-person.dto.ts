@@ -4,6 +4,7 @@ import { PersonDocumentDTO } from './person-document.dto';
 import { PersonEducationDTO } from './person-education.dto';
 
 export interface IndividualPersonDTO {
+  id: number;
   personName: string;
   birthDate: Date;
   motherName: string;

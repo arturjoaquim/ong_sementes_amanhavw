@@ -36,11 +36,11 @@ import { StudentService } from '../../services/student.service';
 import { GuardianService } from '../../services/guardian.service';
 import { FormField } from '../../../../shared/types/form-field.type';
 import { PersonConverter } from '../../utils/person.converter';
-import { PersonDataDTO } from '../../types/dtos/student-details.dto';
 import { StudentGuardianService } from '../../services/student-guardian.service';
 import { FamilyMemberService } from '../../services/family-member.service';
 import { forkJoin, of } from 'rxjs';
 import { PersonDocumentService } from '../../services/person-document.service';
+import { IndividualPersonDTO } from '../../../../shared/types/dtos/individual-person.dto';
 
 @Component({
   selector: 'app-student-family-detail',
@@ -209,7 +209,7 @@ export class StudentFamilyDetailComponent {
         if (result) {
             this.guardianService.createGuardian(result).subscribe({
                 next: (createdGuardian) => {
-                    const personModel = PersonConverter.toModel(createdGuardian.person as unknown as PersonDataDTO);
+                    const personModel = PersonConverter.toModel(createdGuardian.person as unknown as IndividualPersonDTO);
                     personModel.id = createdGuardian.id;
 
                     const newRelationship = {
@@ -299,7 +299,7 @@ export class StudentFamilyDetailComponent {
             // 3. Atualizar Documento (CPF)
             const existingCpfDoc = guardian.peopleData.documents.find(d => d.documentTypeId === 1);
             const newCpf = result.cpf;
-            const personId = guardian.id; // Assumindo que ID do guardião é o mesmo da pessoa (OneToOne MapsId)
+            const personId = guardian.peopleData.id;
 
             if (newCpf && !existingCpfDoc) {
                 // Criar
@@ -348,12 +348,25 @@ export class StudentFamilyDetailComponent {
   }
 
   addFamilyMember(): void {
-    const formConfig: FormField[] = [
-        { name: 'name', label: 'Nome', type: 'text', required: true },
-        { name: 'relationship', label: 'Parentesco', type: 'text' },
-        { name: 'profession', label: 'Profissão', type: 'text' },
-        { name: 'income', label: 'Renda', type: 'text' }
-    ];
+      const formConfig: FormField[] = [
+          { name: 'name', label: 'Nome Completo', type: 'text', required: true },
+          {
+              name: 'kinshipDegreeId',
+              label: 'Grau de Parentesco',
+              type: 'select',
+              required: true,
+              options: [
+                  { value: 1, viewValue: 'Mãe' },
+                  { value: 2, viewValue: 'Pai' },
+                  { value: 3, viewValue: 'Irmão/Irmã' },
+                  { value: 4, viewValue: 'Avô/Avó' },
+                  { value: 5, viewValue: 'Tio/Tia' },
+                  { value: 6, viewValue: 'Outro' },
+              ],
+          },
+          { name: 'profession', label: 'Profissão', type: 'text' },
+          { name: 'income', label: 'Renda (R$)', type: 'text' },
+      ];
 
     const dialogRef = this.dialog.open(DynamicFormDialogComponent, {
         data: { title: 'Adicionar Membro da Família', formConfig }
@@ -382,12 +395,25 @@ export class StudentFamilyDetailComponent {
   }
 
   onEditFamilyMember(familyMember: FamilyMember) {
-    const formConfig: FormField[] = [
-        { name: 'name', label: 'Nome', type: 'text', required: true },
-        { name: 'relationship', label: 'Parentesco', type: 'text' },
-        { name: 'profession', label: 'Profissão', type: 'text' },
-        { name: 'income', label: 'Renda', type: 'text' }
-    ];
+      const formConfig: FormField[] = [
+          { name: 'name', label: 'Nome Completo', type: 'text', required: true },
+          {
+              name: 'kinshipDegreeId',
+              label: 'Grau de Parentesco',
+              type: 'select',
+              required: true,
+              options: [
+                  { value: 1, viewValue: 'Mãe' },
+                  { value: 2, viewValue: 'Pai' },
+                  { value: 3, viewValue: 'Irmão/Irmã' },
+                  { value: 4, viewValue: 'Avô/Avó' },
+                  { value: 5, viewValue: 'Tio/Tia' },
+                  { value: 6, viewValue: 'Outro' },
+              ],
+          },
+          { name: 'profession', label: 'Profissão', type: 'text' },
+          { name: 'income', label: 'Renda (R$)', type: 'text' },
+      ];
 
     const initialData = { ...familyMember };
 

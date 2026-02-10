@@ -1,11 +1,12 @@
 import { Student, StudentMedicalTreatment, StudentMedication } from '../types/student.type';
-import { StudentDetailsDTO, PersonDataDTO, GuardianPersonDTO, StudentHealthResponseDTO, FamilyResponseDTO } from '../types/dtos/student-details.dto';
+import { StudentDetailsDTO, StudentHealthResponseDTO, FamilyResponseDTO } from '../types/dtos/student-details.dto';
 import { IndividualPerson } from '../../../shared/types/person.type';
 import { StudentFamily } from '../types/student-family.type';
 import { CreateStudentDTO } from '../types/dtos/create-student.dto';
 import { UpdateStudentDTO } from '../types/dtos/update-student.dto';
 import { PersonConverter } from './person.converter';
 import { KinshipDegreeMap } from '../../../shared/utils/lookup.enums';
+import { IndividualPersonDTO } from '../../../shared/types/dtos/individual-person.dto';
 
 export class StudentConverter {
   static toModel(dto: StudentDetailsDTO): Student {
@@ -102,8 +103,8 @@ export class StudentConverter {
     };
   }
 
-  private static mapGuardianPerson(dto: GuardianPersonDTO): IndividualPerson {
-    return PersonConverter.toModel(dto as unknown as PersonDataDTO);
+  private static mapGuardianPerson(dto: IndividualPersonDTO): IndividualPerson {
+    return PersonConverter.toModel(dto);
   }
 
   private static mapHealthData(dto: StudentHealthResponseDTO, studentId: number) {

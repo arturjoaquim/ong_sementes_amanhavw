@@ -1,51 +1,4 @@
-export interface AddressDTO {
-  cep: string;
-  streetNumber: string;
-  street: string;
-  neighborhood: string;
-  city: string;
-  complement: string;
-  uf: string;
-}
-
-export interface ContactDTO {
-  telephone: string;
-  mobilePhone: string;
-  hasWhatsApp: boolean;
-  email: string;
-}
-
-export interface EducationDTO {
-  institution: string;
-  periodId: number;
-  educationLevelId: number;
-  educationStatusId: number;
-}
-
-export interface DocumentDTO {
-  documentTypeId: number;
-  number: string;
-  extraData: {
-    book?: string;
-    term?: string;
-    sheet?: string;
-  } | null;
-  active: boolean | null;
-}
-
-export interface PersonDataDTO {
-  personName: string;
-  birthDate: string;
-  motherName: string;
-  fatherName: string;
-  naturalnessId: number;
-  raceId: number;
-  sexId: number;
-  address: AddressDTO;
-  contact: ContactDTO;
-  education: EducationDTO;
-  documents: DocumentDTO[];
-}
+import { IndividualPersonDTO } from '../../../../shared/types/dtos/individual-person.dto';
 
 export interface EmergencyContactDTO {
   telephone: string;
@@ -54,25 +7,11 @@ export interface EmergencyContactDTO {
   email: string;
 }
 
-export interface GuardianPersonDTO {
-  personName: string;
-  birthDate: string;
-  motherName: string;
-  fatherName: string;
-  naturalnessId: number;
-  raceId: number;
-  sexId: number;
-  address: AddressDTO;
-  contact: ContactDTO;
-  education: EducationDTO;
-  documents: DocumentDTO[];
-}
-
 export interface GuardianRelationshipDTO {
   id: number;
   kinshipId: number;
   legalGuardianId: number | null;
-  person: GuardianPersonDTO;
+  person: IndividualPersonDTO;
 }
 
 export interface SocialActivityDTO {
@@ -167,7 +106,7 @@ export interface SocialInteractionResponseDTO {
 
 export interface StudentDetailsDTO {
   id: number;
-  personData: PersonDataDTO;
+  personData: IndividualPersonDTO;
   enrollmentDate: string;
   status: 'active' | 'inactive';
   attendance: number;
