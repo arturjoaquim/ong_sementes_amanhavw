@@ -31,9 +31,9 @@ import { CardComponent } from '../../../../shared/components/card/card.component
 export class WorkshopDetailDialogComponent {
   data = inject(DIALOG_DATA);
   dialogRef = inject<DialogRef>(DialogRef);
-  
+
   workshop: Workshop = this.data.workshop;
-  
+
   icons = {
     user: User,
     calendar: Calendar,
@@ -43,29 +43,7 @@ export class WorkshopDetailDialogComponent {
     link: Link,
   };
 
-  getStatusColor(status: string): string {
-    switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-700';
-      case 'inactive':
-        return 'bg-gray-100 text-gray-700';
-      case 'completed':
-        return 'bg-blue-100 text-blue-700';
-      default:
-        return 'bg-gray-100 text-gray-700';
-    }
-  }
-
-  getTypeColor(type: string): string {
-    const colors: { [key: string]: string } = {
-      'Artes': 'bg-purple-100 text-purple-700',
-      'Música': 'bg-pink-100 text-pink-700',
-      'Teatro': 'bg-indigo-100 text-indigo-700',
-      'Tecnologia': 'bg-blue-100 text-blue-700',
-      'Esportes': 'bg-green-100 text-green-700',
-      'Literatura': 'bg-orange-100 text-orange-700',
-      'Gastronomia': 'bg-red-100 text-red-700',
-    };
-    return colors[type] || 'bg-gray-100 text-gray-700';
+  getStatusColor(active: boolean): string {
+    return active ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-700';
   }
 }

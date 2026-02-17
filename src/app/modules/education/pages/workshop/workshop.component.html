@@ -1,22 +1,22 @@
-
-<div class="p-8">
-  <!-- Page Header -->
-  <div class="mb-8">
-    <div class="flex items-center gap-3 mb-2">
-      <div class="bg-blue-100 p-2 rounded-lg">
-        <lucide-icon [img]="icons.briefcase" size="24" class="text-blue-600" />
-      </div>
-      <h1 class="text-gray-900">Gerenciar Oficinas</h1>
+<div class="p-6 space-y-6">
+  <div class="flex items-center gap-3">
+    <div class="bg-blue-600 p-2 rounded-lg">
+      <lucide-icon [img]="icons.briefcase" [size]="24" class="text-white"></lucide-icon>
     </div>
-    <p class="text-gray-600">Pesquise, visualize e gerencie oficinas oferecidas pela organização.</p>
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Oficinas</h1>
+      <p class="text-sm text-gray-500">Gerencie as oficinas e atividades educacionais</p>
+    </div>
   </div>
 
-  <!-- Search Section -->
-  <app-workshop-search 
-    (searchCompleted)="showListResult($event)" 
-    (createWorkshop)="handleCreateWorkshop(undefined)" 
-  />
+  <app-workshop-search
+    (searchCompleted)="showListResult($event)"
+    (createWorkshop)="handleCreateWorkshop()"
+    (createSession)="handleCreateSession()"
+  ></app-workshop-search>
 
-  <!-- Workshop List -->
-  <app-workshop-list [workshops]="workshops" (viewWorkshopDetail)="showWorkshopDetails($event)" />
+  <app-workshop-list
+    [workshops]="workshops"
+    (viewWorkshopDetail)="showWorkshopDetails($event)"
+  ></app-workshop-list>
 </div>

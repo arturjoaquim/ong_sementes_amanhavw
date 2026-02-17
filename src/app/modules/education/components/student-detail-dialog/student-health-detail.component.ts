@@ -15,7 +15,7 @@ import { SectionHeaderComponent } from './section-header.component';
 import {
   DynamicFormDialogComponent,
   DynamicFormDialogData,
-} from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+} from '../../../../shared/components/dynamic-form-dialog/dynamic-form-dialog.component';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
 import { MedicalLocation, MedicalLocationMap } from '../../../../shared/utils/lookup.enums';
 import { StudentService } from '../../services/student.service';

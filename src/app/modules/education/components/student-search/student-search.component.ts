@@ -34,7 +34,7 @@ export class StudentSearchComponent {
   studentService = inject(StudentService);
   nameSearchFilter = new FormControl('');
 
-  filters = signal({
+  filters = signal<StudentFilters>({
     nameSearch: '',
     guardianSearch: '',
     //gradeLevel: 'all',

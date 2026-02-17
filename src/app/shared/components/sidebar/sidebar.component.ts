@@ -25,9 +25,9 @@ export class SidebarComponent {
     { id: 'students', label: 'Alunos', icon: Users, route: '/students' },
     { id: 'workshops', label: 'Oficinas', icon: Calendar, route: '/workshops' },
     { id: 'employees', label: 'Funcionários', icon: Briefcase, route: '/employees' },
-    { id: 'inventory', label: 'Estoque', icon: Package, route: '/inventory' },
+    //{ id: 'inventory', label: 'Estoque', icon: Package, route: '/inventory' },
     { id: 'reports', label: 'Relatórios', icon: FileText, route: '/reports' },
-    { id: 'settings', label: 'Settings', icon: Settings, route: '/settings' },
+    //{ id: 'settings', label: 'Settings', icon: Settings, route: '/settings' },
   ];
 
   activePageId = signal('dashboard');

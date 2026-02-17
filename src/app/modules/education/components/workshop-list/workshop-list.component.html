@@ -18,43 +18,22 @@
               <div class="flex-1">
                 <div class="flex items-center gap-2 mb-2">
                   <h3 class="text-lg font-semibold text-gray-900">{{ workshop.name }}</h3>
-                  <app-badge [contentClass]="getTypeColor(workshop.type)">
-                    {{ workshop.type }}
-                  </app-badge>
-                  <app-badge [contentClass]="getStatusColor(workshop.status)">
-                    {{
-                      workshop.status === 'active'
-                        ? 'Ativa'
-                        : workshop.status === 'inactive'
-                          ? 'Inativa'
-                          : 'Concluída'
-                    }}
+                  <app-badge [contentClass]="getStatusColor(workshop.active)">
+                    {{ workshop.active ? 'Ativa' : 'Inativa' }}
                   </app-badge>
                 </div>
 
-                <p class="text-sm text-gray-600 mb-3">{{ workshop.description }}</p>
-
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-3">
                   <div>
-                    <p class="text-xs text-gray-500">Educador</p>
-                    <p class="text-sm text-gray-900 mt-1">{{ workshop.educatorName }}</p>
+                    <p class="text-xs text-gray-500">Limite</p>
+                    <p class="text-sm text-gray-900 mt-1">{{ workshop.enrollmentLimit }}</p>
                   </div>
 
                   <div>
-                    <p class="text-xs text-gray-500">Participantes</p>
+                    <p class="text-xs text-gray-500">Sessões</p>
                     <p class="text-sm text-gray-900 mt-1">
-                      {{ workshop.participants.length }} / {{ workshop.maxParticipants }}
+                      {{ workshop.sessionsCount }}
                     </p>
-                  </div>
-
-                  <div>
-                    <p class="text-xs text-gray-500">Horário</p>
-                    <p class="text-sm text-gray-900 mt-1">{{ getScheduleText(workshop) }}</p>
-                  </div>
-
-                  <div>
-                    <p class="text-xs text-gray-500">Local</p>
-                    <p class="text-sm text-gray-900 mt-1">{{ workshop.location }}</p>
                   </div>
                 </div>
               </div>

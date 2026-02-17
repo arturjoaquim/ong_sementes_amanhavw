@@ -2,9 +2,9 @@ import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { Component, ViewChild, inject } from '@angular/core';
 import { LucideAngularModule } from 'lucide-angular';
-import { FormField } from '../types/form-field.type';
+import { FormField } from '../../types/form-field.type';
 import { DynamicFormComponent } from './dynamic-form.component';
-import { ButtonDirective } from '../directives/button.directive';
+import { ButtonDirective } from '../../directives/button.directive';
 
 export interface DynamicFormDialogData {
   title: string;

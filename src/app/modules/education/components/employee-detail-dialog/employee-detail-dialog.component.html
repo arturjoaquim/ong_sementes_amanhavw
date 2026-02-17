@@ -1,0 +1,112 @@
+<app-dialog contentClass="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+  <app-dialog-header>
+    <app-dialog-title>Detalhes do Funcionário</app-dialog-title>
+  </app-dialog-header>
+
+  <div class="space-y-6 mt-4">
+    <!-- Dados Pessoais -->
+    <app-card contentClass="p-6">
+      <app-section-header (edit)="editData('personal')">
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.user" [size]="20" class="text-blue-600"></lucide-icon>
+          <span>Informações Pessoais</span>
+        </div>
+      </app-section-header>
+      <div class="grid grid-cols-2 gap-6">
+        <div>
+          <p class="text-xs text-gray-500">Nome Completo</p>
+          <p class="text-sm text-gray-900 font-medium">{{ employee().person.personName }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Data de Nascimento</p>
+          <p class="text-sm text-gray-900">{{ employee().person.birthDate | date: 'dd/MM/yyyy' }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Cargo</p>
+          <p class="text-sm text-gray-900">{{ getPositionName(employee().positionId) }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Nome da Mãe</p>
+          <p class="text-sm text-gray-900">{{ employee().person.motherName || 'Não informado' }}</p>
+        </div>
+        <div>
+          <p class="text-xs text-gray-500">Nome do Pai</p>
+          <p class="text-sm text-gray-900">{{ employee().person.fatherName || 'Não informado' }}</p>
+        </div>
+      </div>
+    </app-card>
+
+    <!-- Endereço -->
+    <app-card contentClass="p-6 mt-4">
+      <app-section-header (edit)="editData('address')">
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.mapPin" [size]="20" class="text-purple-600"></lucide-icon>
+          <span>Endereço</span>
+        </div>
+      </app-section-header>
+      <p class="text-sm text-gray-900">{{ fullAddress }}</p>
+    </app-card>
+
+    <!-- Contato -->
+    <app-card contentClass="p-6 mt-4">
+      <app-section-header (edit)="editData('contact')">
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.phone" [size]="20" class="text-green-600"></lucide-icon>
+          <span>Contato</span>
+        </div>
+      </app-section-header>
+      <div class="grid grid-cols-2 gap-6">
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.mail" [size]="16" class="text-gray-400"></lucide-icon>
+          <div>
+            <p class="text-xs text-gray-500">E-mail</p>
+            <p class="text-sm text-gray-900">{{ contact.email || 'Não informado' }}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.phone" [size]="16" class="text-gray-400"></lucide-icon>
+          <div>
+            <p class="text-xs text-gray-500">Celular</p>
+            <p class="text-sm text-gray-900">
+              {{ contact.mobilePhone || 'Não informado' }}
+              <span *ngIf="contact.hasWhatsApp" class="text-xs text-green-600 ml-1">(WhatsApp)</span>
+            </p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.phone" [size]="16" class="text-gray-400"></lucide-icon>
+          <div>
+            <p class="text-xs text-gray-500">Telefone Fixo</p>
+            <p class="text-sm text-gray-900">{{ contact.telephone || 'Não informado' }}</p>
+          </div>
+        </div>
+      </div>
+    </app-card>
+
+    <!-- Documentos -->
+    <app-card contentClass="p-6 mt-4">
+      <app-section-header [showEditButton]="false">
+        <div class="flex items-center gap-2">
+          <lucide-icon [img]="icons.fileText" [size]="20" class="text-orange-600"></lucide-icon>
+          <span>Documentos</span>
+        </div>
+      </app-section-header>
+      @if (documents.length > 0) {
+        <div class="grid grid-cols-2 gap-4">
+          @for (doc of documents; track doc.id) {
+            <div class="p-3 bg-gray-50 rounded-lg border border-gray-100">
+              <p class="text-xs text-gray-500 mb-1">{{ getDocumentName(doc.documentTypeId) }}</p>
+              <p class="text-sm font-medium text-gray-900">{{ doc.number }}</p>
+            </div>
+          }
+        </div>
+      } @else {
+        <p class="text-sm text-gray-500 italic">Nenhum documento cadastrado.</p>
+      }
+    </app-card>
+  </div>
+
+  <div class="flex justify-end gap-3 pt-4 border-t mt-6">
+    <button appButton type="button" variant="outline" (click)="close()">Fechar</button>
+  </div>
+</app-dialog>

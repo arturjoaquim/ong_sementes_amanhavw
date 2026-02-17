@@ -1,0 +1,88 @@
+<app-dialog contentClass="sm:max-w-[500px]">
+  <app-dialog-header>
+    <app-dialog-title>Nova Sessão de Oficina</app-dialog-title>
+    <app-dialog-description>
+      Crie uma nova sessão para uma oficina existente.
+    </app-dialog-description>
+  </app-dialog-header>
+
+  <form [formGroup]="sessionForm" (ngSubmit)="onSubmit()" class="space-y-4 mt-4">
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700">Oficina</label>
+      <ng-select
+        [items]="workshops"
+        bindLabel="name"
+        bindValue="id"
+        formControlName="workshopId"
+        [clearable]="false"
+        class="app-select"
+        placeholder="Selecione a oficina"
+        required
+      >
+      </ng-select>
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700">Descrição da Sessão</label>
+      <input
+        type="text"
+        formControlName="description"
+        class="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="Ex: Turma A - Manhã"
+        required
+      />
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700">Link da Lista de Presença</label>
+      <input
+        type="url"
+        formControlName="attendanceListLink"
+        class="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        placeholder="https://..."
+      />
+    </div>
+
+    <!-- Participants Selection -->
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700">Participantes</label>
+      <div class="w-full">
+        <ng-select
+            class="app-select"
+            [formControl]="selectedStudentControl"
+            [items]="(students$ | async) || []"
+            [multiple]="false"
+            [typeahead]="studentInput$"
+            [loading]="loadingStudents"
+            bindLabel="name"
+            placeholder="Adicionar estudante..."
+        >
+        </ng-select>
+      </div>
+
+      <!-- Lista de Participantes Selecionados -->
+      @if (selectedStudents.length > 0) {
+        <div class="border rounded-md divide-y mt-2 max-h-40 overflow-y-auto">
+          @for (student of selectedStudents; track student.id) {
+            <div class="flex items-center justify-between p-2 bg-white">
+              <span class="text-sm text-gray-900">{{ student.name }} (ID: {{ student.id }})</span>
+              <button
+                type="button"
+                (click)="removeStudent(student.id)"
+                class="text-red-500 hover:text-red-700 p-1 rounded-full hover:bg-red-50 transition-colors"
+                title="Remover participante"
+              >
+                <lucide-icon [img]="icons.trash" [size]="16"></lucide-icon>
+              </button>
+            </div>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="flex justify-end gap-3 pt-4">
+      <button appButton type="button" variant="outline" (click)="cancel()">Cancelar</button>
+      <button appButton type="submit" [disabled]="!sessionForm.valid">Criar Sessão</button>
+    </div>
+  </form>
+</app-dialog>

@@ -21,7 +21,7 @@ import { ButtonDirective } from '../../../../shared/directives/button.directive'
 import { Tab } from '../../../../shared/types/tab.type';
 import { TabsComponent } from '../../../../shared/components/tab/tabs.component';
 import { FormField } from '../../../../shared/types/form-field.type';
-import { DynamicFormDialogComponent } from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+import { DynamicFormDialogComponent } from '../../../../shared/components/dynamic-form-dialog/dynamic-form-dialog.component';
 import {
   DocumentTypeMap,
   DwellingType,

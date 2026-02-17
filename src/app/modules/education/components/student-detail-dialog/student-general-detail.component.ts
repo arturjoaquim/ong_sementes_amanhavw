@@ -17,7 +17,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import {
   DynamicFormDialogComponent,
   DynamicFormDialogData,
-} from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+} from '../../../../shared/components/dynamic-form-dialog/dynamic-form-dialog.component';
 import { EnrollmentOriginMap } from '../../../../shared/utils/lookup.enums';
 import { StudentService } from '../../services/student.service';
 

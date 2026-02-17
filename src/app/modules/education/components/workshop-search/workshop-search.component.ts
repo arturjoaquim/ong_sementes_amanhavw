@@ -1,12 +1,12 @@
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
-import { Filter, LucideAngularModule, Search, Plus } from 'lucide-angular';
+import { Filter, LucideAngularModule, Search, Plus, CalendarPlus } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { WorkshopFilters } from '../../types/workshop-filters.type';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Dialog, DialogModule } from '@angular/cdk/dialog';
 import { WorkshopFilterDialogComponent } from '../workshop-filter-dialog/workshop-filter-dialog.component';
-import { Workshop } from '../../types/workshop.type';
-import { initialWorkshops } from '../../services/workshop.service';
+import { WorkshopPreview } from '../../types/workshop-preview.type';
+import { WorkshopService } from '../../services/workshop.service';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
 
 @Component({
@@ -23,16 +23,19 @@ import { ButtonDirective } from '../../../../shared/directives/button.directive'
   standalone: true,
 })
 export class WorkshopSearchComponent {
-  @Output() searchCompleted = new EventEmitter<Workshop[]>();
+  @Output() searchCompleted = new EventEmitter<WorkshopPreview[]>();
   @Output() createWorkshop = new EventEmitter<void>();
+  @Output() createSession = new EventEmitter<void>();
 
   icons = {
     search: Search,
     plus: Plus,
     filter: Filter,
+    calendarPlus: CalendarPlus
   };
 
   dialog = inject(Dialog);
+  workshopService = inject(WorkshopService);
   nameSearchFilter = new FormControl('');
 
   filters = signal({
@@ -44,6 +47,10 @@ export class WorkshopSearchComponent {
 
   onAddWorkshop() {
     this.createWorkshop.emit();
+  }
+
+  onAddSession() {
+    this.createSession.emit();
   }
 
   openDialog() {
@@ -72,34 +79,13 @@ export class WorkshopSearchComponent {
   }
 
   private search(filters: WorkshopFilters) {
-    const filteredWorkshops = this.searchWorkshops(filters);
-    this.searchCompleted.emit(filteredWorkshops);
-  }
-
-  private searchWorkshops(filters: WorkshopFilters): Workshop[] {
-    let workshops = initialWorkshops;
-
-    if (filters.nameSearch) {
-      workshops = workshops.filter((w) =>
-        w.name.toLowerCase().includes(filters.nameSearch.toLowerCase()),
-      );
-    }
-
-    if (filters.educatorSearch) {
-      workshops = workshops.filter((w) =>
-        w.educatorName.toLowerCase().includes(filters.educatorSearch.toLowerCase()),
-      );
-    }
-
-    if (filters.status && filters.status !== 'all') {
-      workshops = workshops.filter((w) => w.status === filters.status);
-    }
-
-    if (filters.type && filters.type !== 'all') {
-      workshops = workshops.filter((w) => w.type === filters.type);
-    }
-
-    return workshops;
+    this.workshopService.getWorkshopsPreview().subscribe(previews => {
+        let filtered = previews;
+        if (filters.nameSearch) {
+            filtered = filtered.filter(w => w.name.toLowerCase().includes(filters.nameSearch!.toLowerCase()));
+        }
+        this.searchCompleted.emit(filtered);
+    });
   }
 
   resetFilters() {
@@ -110,7 +96,7 @@ export class WorkshopSearchComponent {
       type: 'all',
       status: 'all',
     });
-    this.searchCompleted.emit([]);
+    this.search(this.filters());
   }
 
   get activeFilterCount() {

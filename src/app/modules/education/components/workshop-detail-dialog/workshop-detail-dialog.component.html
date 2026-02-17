@@ -12,22 +12,11 @@
         <p class="text-gray-600 mt-1">ID: {{ workshop.id }}</p>
       </div>
       <div class="flex gap-2">
-        <app-badge [contentClass]="getTypeColor(workshop.type)">
-          {{ workshop.type }}
-        </app-badge>
-        <app-badge [contentClass]="getStatusColor(workshop.status)">
-          {{
-            workshop.status === 'active'
-              ? 'Ativa'
-              : workshop.status === 'inactive'
-                ? 'Inativa'
-                : 'Concluída'
-          }}
+        <app-badge [contentClass]="getStatusColor(workshop.active)">
+          {{ workshop.active ? 'Ativa' : 'Inativa' }}
         </app-badge>
       </div>
     </div>
-
-    <p class="text-sm text-gray-700">{{ workshop.description }}</p>
   </div>
 
   <!-- Basic Information -->
@@ -36,99 +25,98 @@
       <h4 class="text-base font-semibold text-gray-900 mb-4">Informações Gerais</h4>
       <div class="grid grid-cols-2 gap-6">
         <div class="flex items-start gap-3">
-          <div class="bg-blue-50 p-2 rounded-lg">
-            <lucide-icon [img]="icons.user" [size]="18" class="text-blue-600"></lucide-icon>
-          </div>
-          <div>
-            <p class="text-xs text-gray-500">Educador Responsável</p>
-            <p class="text-sm text-gray-900 mt-1">{{ workshop.educatorName }}</p>
-          </div>
-        </div>
-
-        <div class="flex items-start gap-3">
           <div class="bg-green-50 p-2 rounded-lg">
             <lucide-icon [img]="icons.users" [size]="18" class="text-green-600"></lucide-icon>
           </div>
           <div>
-            <p class="text-xs text-gray-500">Participantes</p>
+            <p class="text-xs text-gray-500">Limite de Participantes</p>
             <p class="text-sm text-gray-900 mt-1">
-              {{ workshop.participants.length }} / {{ workshop.maxParticipants }}
-              <span class="text-gray-500">
-                ({{ ((workshop.participants.length / workshop.maxParticipants) * 100).toFixed(0) }}%
-                ocupação)
-              </span>
+              {{ workshop.enrollmentLimit }}
             </p>
           </div>
         </div>
 
         <div class="flex items-start gap-3">
-          <div class="bg-purple-50 p-2 rounded-lg">
-            <lucide-icon [img]="icons.mapPin" [size]="18" class="text-purple-600"></lucide-icon>
+          <div class="bg-blue-50 p-2 rounded-lg">
+            <lucide-icon [img]="icons.users" [size]="18" class="text-blue-600"></lucide-icon>
           </div>
           <div>
-            <p class="text-xs text-gray-500">Local</p>
-            <p class="text-sm text-gray-900 mt-1">{{ workshop.location }}</p>
+            <p class="text-xs text-gray-500">Matriculados</p>
+            <p class="text-sm text-gray-900 mt-1">
+              {{ workshop.enrolledStudents ? workshop.enrolledStudents.length : 0 }}
+            </p>
           </div>
         </div>
+      </div>
+    </app-card>
 
-        <div class="flex items-start gap-3">
-          <div class="bg-orange-50 p-2 rounded-lg">
-            <lucide-icon [img]="icons.calendar" [size]="18" class="text-orange-600"></lucide-icon>
-          </div>
-          <div>
-            <p class="text-xs text-gray-500">Data de Início</p>
-            <p class="text-sm text-gray-900 mt-1">{{ workshop.startDate }}</p>
-          </div>
-        </div>
-
-        @if (workshop.endDate) {
-          <div class="flex items-start gap-3">
-            <div class="bg-red-50 p-2 rounded-lg">
-              <lucide-icon [img]="icons.calendar" [size]="18" class="text-red-600"></lucide-icon>
-            </div>
-            <div>
-              <p class="text-xs text-gray-500">Data de Término</p>
-              <p class="text-sm text-gray-900 mt-1">{{ workshop.endDate }}</p>
+    <!-- Enrolled Students List -->
+    <app-card contentClass="p-6">
+      <h4 class="text-base font-semibold text-gray-900 mb-4">Alunos Matriculados</h4>
+      <div class="space-y-2">
+        @for (student of workshop.enrolledStudents; track student.id) {
+          <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+            <div class="flex items-center gap-3">
+              <div class="bg-blue-100 p-2 rounded-full">
+                <lucide-icon [img]="icons.user" [size]="16" class="text-blue-600"></lucide-icon>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-gray-900">{{ student.studentName }}</p>
+                <p class="text-xs text-gray-500">ID do Estudante: {{ student.studentId }}</p>
+              </div>
             </div>
           </div>
-        }
-
-        @if (workshop.attendanceListUrl) {
-          <div class="flex items-start gap-3">
-            <div class="bg-teal-50 p-2 rounded-lg">
-              <lucide-icon [img]="icons.link" [size]="18" class="text-teal-600"></lucide-icon>
-            </div>
-            <div>
-              <p class="text-xs text-gray-500">Lista de Presença</p>
-              <a
-                [href]="workshop.attendanceListUrl"
-                target="_blank"
-                class="text-sm text-blue-600 hover:text-blue-800 mt-1 block"
-              >
-                Acessar lista
-              </a>
-            </div>
-          </div>
+        } @empty {
+          <p class="text-sm text-gray-500 italic text-center py-4">Nenhum aluno matriculado nesta oficina.</p>
         }
       </div>
     </app-card>
 
-    <!-- Schedule Information -->
+    <!-- Sessions List -->
     <app-card contentClass="p-6">
-      <h4 class="text-base font-semibold text-gray-900 mb-4">Horários</h4>
-      <div class="space-y-3">
-        @for (schedule of workshop.schedule; track schedule) {
-          <div class="flex items-center gap-3 p-3 bg-gray-50 rounded-lg">
-            <div class="bg-blue-100 p-2 rounded-lg">
-              <lucide-icon [img]="icons.clock" [size]="18" class="text-blue-600"></lucide-icon>
+      <h4 class="text-base font-semibold text-gray-900 mb-4">Sessões</h4>
+      <div class="space-y-4">
+        @for (session of workshop.sessions; track session.id) {
+          <div class="p-4 bg-gray-50 rounded-lg border border-gray-100">
+            <div class="flex justify-between items-start mb-2">
+              <h5 class="text-sm font-medium text-gray-900">{{ session.description }}</h5>
+              <span class="text-xs text-gray-500">ID: {{ session.id }}</span>
             </div>
-            <div class="flex-1">
-              <p class="text-sm font-medium text-gray-900">{{ schedule.dayOfWeek }}</p>
-              <p class="text-xs text-gray-600">{{ schedule.startTime }} - {{ schedule.endTime }}</p>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p class="text-xs text-gray-500">Educador</p>
+                <p class="text-gray-900">{{ session.responsibleEducatorName }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Participantes na Sessão</p>
+                <p class="text-gray-900">{{ session.participantsCount }}</p>
+              </div>
             </div>
+            @if (session.attendanceListLink) {
+              <div class="mt-2">
+                <a [href]="session.attendanceListLink" target="_blank" class="text-xs text-blue-600 hover:underline flex items-center gap-1">
+                  <lucide-icon [img]="icons.link" [size]="12"></lucide-icon>
+                  Lista de Presença
+                </a>
+              </div>
+            }
+
+            <!-- Lista de Presença da Sessão -->
+            @if (session.presences && session.presences.length > 0) {
+              <div class="mt-4 pt-4 border-t border-gray-200">
+                <h6 class="text-xs font-semibold text-gray-700 mb-2">Alunos Presentes/Participantes:</h6>
+                <div class="flex flex-wrap gap-2">
+                  @for (presence of session.presences; track presence.id) {
+                    <span class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20">
+                      {{ presence.studentName }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
           </div>
         } @empty {
-          <p class="text-sm text-gray-600">Nenhum horário definido</p>
+          <p class="text-sm text-gray-500 italic text-center py-4">Nenhuma sessão registrada nesta oficina.</p>
         }
       </div>
     </app-card>

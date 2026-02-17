@@ -34,6 +34,11 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./modules/education/pages/workshop/workshop.component').then((m) => m.WorkshopComponent),
       },
+      {
+        path: 'employees',
+        loadComponent: () =>
+          import('./modules/education/pages/employee/employee.component').then((m) => m.EmployeeComponent),
+      },
     ]
   },
   // Rota coringa para redirecionar qualquer URL desconhecida para o login ou dashboard

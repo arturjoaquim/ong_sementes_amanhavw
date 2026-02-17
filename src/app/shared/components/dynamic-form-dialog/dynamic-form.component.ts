@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormField } from '../types/form-field.type';
+import { FormField } from '../../types/form-field.type';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @Component({

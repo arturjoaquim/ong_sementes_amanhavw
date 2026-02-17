@@ -23,7 +23,7 @@ import {
 } from '../../../../shared/utils/lookup.enums';
 import { FormField } from '../../../../shared/types/form-field.type';
 import { Dialog } from '@angular/cdk/dialog';
-import { DynamicFormDialogComponent } from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+import { DynamicFormDialogComponent } from '../../../../shared/components/dynamic-form-dialog/dynamic-form-dialog.component';
 import { StudentService } from '../../services/student.service';
 
 interface Option {

@@ -1,0 +1,140 @@
+<app-dialog contentClass="sm:max-w-3xl max-h-[90vh] overflow-y-auto">
+  <app-dialog-header>
+    <app-dialog-title>Novo Funcionário</app-dialog-title>
+    <app-dialog-description>
+      Preencha os dados para cadastrar um novo funcionário.
+    </app-dialog-description>
+  </app-dialog-header>
+
+  <app-tabs
+    class="overflow-x-auto"
+    [tabs]="tabs"
+    [activeTab]="activeTab"
+    (tabChange)="onTabChange($event)"
+  ></app-tabs>
+
+  <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()" class="mt-6">
+
+    <!-- Tab: Dados Pessoais -->
+    @if (activeTab === 'personal') {
+      <div formGroupName="personal" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="col-span-2">
+            <label class="app-label pb-1">Nome Completo</label>
+            <input class="app-input" type="text" formControlName="name" required />
+          </div>
+
+          <div>
+            <label class="app-label pb-1">Data de Nascimento</label>
+            <input class="app-input" type="date" formControlName="birthDate" required />
+          </div>
+
+          <div>
+            <label class="app-label pb-1">Cargo</label>
+            <ng-select
+              class="app-select"
+              [items]="positionsOptions"
+              bindLabel="name"
+              bindValue="id"
+              formControlName="positionId"
+              [clearable]="false"
+              required
+            >
+            </ng-select>
+          </div>
+
+          <div>
+            <label class="app-label pb-1">Nome da Mãe</label>
+            <input class="app-input" type="text" formControlName="motherName" />
+          </div>
+
+          <div>
+            <label class="app-label pb-1">Nome do Pai</label>
+            <input class="app-input" type="text" formControlName="fatherName" />
+          </div>
+
+          <!-- Adicionar selects para Sexo, Raça, Naturalidade se tiver as listas -->
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Endereço -->
+    @if (activeTab === 'address') {
+      <div formGroupName="address" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <label class="app-label pb-1">CEP</label>
+            <input class="app-input" type="text" formControlName="zipCode" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Rua</label>
+            <input class="app-input" type="text" formControlName="street" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Número</label>
+            <input class="app-input" type="text" formControlName="number" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Complemento</label>
+            <input class="app-input" type="text" formControlName="complement" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Bairro</label>
+            <input class="app-input" type="text" formControlName="neighborhood" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Cidade</label>
+            <input class="app-input" type="text" formControlName="city" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Estado</label>
+            <input class="app-input" type="text" formControlName="state" />
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Contato -->
+    @if (activeTab === 'contact') {
+      <div formGroupName="contact" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          <div class="col-span-2">
+            <label class="app-label pb-1">E-mail</label>
+            <input class="app-input" type="email" formControlName="email" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Telefone Fixo</label>
+            <input class="app-input" type="text" formControlName="phone" />
+          </div>
+          <div>
+            <label class="app-label pb-1">Celular</label>
+            <input class="app-input" type="text" formControlName="mobilePhone" />
+          </div>
+          <div class="flex items-center gap-2 pt-6">
+            <input class="app-checkbox" type="checkbox" id="whatsapp" formControlName="hasWhatsApp" />
+            <label class="app-label pb-1 !mb-0" for="whatsapp">Tem WhatsApp?</label>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Tab: Documentos -->
+    @if (activeTab === 'documents') {
+      <div formArrayName="documents" class="space-y-4">
+        <div class="grid grid-cols-2 gap-4">
+          @for (doc of $any(employeeForm.get('documents')).controls; track $index) {
+            <div [formGroupName]="$index">
+              <label class="app-label pb-1">{{ getDocumentTypeName(doc.value.documentTypeId) }}</label>
+              <input class="app-input" type="text" formControlName="documentNumber" />
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <div class="flex justify-end gap-3 pt-4 mt-6 border-t">
+      <button appButton type="button" variant="outline" (click)="cancel()">Cancelar</button>
+      <button appButton type="submit" [disabled]="!employeeForm.valid">Criar Funcionário</button>
+    </div>
+  </form>
+</app-dialog>

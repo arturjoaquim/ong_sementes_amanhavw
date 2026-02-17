@@ -1,9 +1,9 @@
 <div class="p-8">
   <!-- {/* Page Header */} -->
   <div class="mb-8">
-    <h1 class="text-gray-900">Dashboard Overview</h1>
+    <h1 class="text-gray-900 text-2xl font-bold">Dashboard - Visão Geral</h1>
     <p class="text-gray-600 mt-2">
-      Welcome back! Here's what's happening with your organization today.
+      Bem vindo de volta! Veja as principais mudanças no sistema.
     </p>
   </div>
 
@@ -11,53 +11,101 @@
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
     <app-stat-card
       title="Total Estudantes"
-      value="1,247"
-      change="+12.5%"
-      changeType="positive"
+      [value]="stats().totalStudents.toString()"
+      change=""
+      changeType="neutral"
       [icon]="UsersIcon"
       iconColor="text-green-600"
       iconBg="bg-green-50"
     />
     <app-stat-card
-      title="Oficinas no Mês"
-      value="24"
-      change="+3"
-      changeType="positive"
+      title="Total Oficinas"
+      [value]="stats().totalWorkshops.toString()"
+      change=""
+      changeType="neutral"
       [icon]="CalendarIcon"
       iconColor="text-orange-600"
       iconBg="bg-orange-50"
     />
     <app-stat-card
       title="Funcionários"
-      value="86"
-      change="+5.2%"
-      changeType="positive"
+      [value]="stats().totalEmployees.toString()"
+      change=""
+      changeType="neutral"
       [icon]="TrendingUpIcon"
       iconColor="text-blue-600"
       iconBg="bg-blue-50"
-    />
-    <app-stat-card
-      title="Itens em Estoque"
-      value="342"
-      change="-2"
-      changeType="negative"
-      [icon]="PackageIcon"
-      iconColor="text-purple-600"
-      iconBg="bg-purple-50"
     />
   </div>
 
   <!-- {/* Main Content Grid */} -->
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-    <!-- {/* Left Column - Workshops and Activities */} -->
+    <!-- {/* Left Column - Recent Activities */} -->
     <div class="lg:col-span-2 space-y-6">
-      <!-- <UpcomingWorkshops /> -->
-      <!-- <RecentActivities /> -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h3 class="text-lg font-semibold text-gray-900">Atividades Recentes</h3>
+          <button class="text-sm text-blue-600 hover:text-blue-700 font-medium">Ver todas</button>
+        </div>
+        <div class="space-y-6">
+          @for (activity of activities(); track activity.id) {
+            <div class="flex items-start gap-4">
+              <div [class]="'p-2 rounded-lg ' + activity.bg">
+                <lucide-icon [img]="activity.icon" [class]="'w-5 h-5 ' + activity.color"></lucide-icon>
+              </div>
+              <div class="flex-1">
+                <p class="text-sm font-medium text-gray-900">{{ activity.title }}</p>
+                <p class="text-sm text-gray-500">{{ activity.description }}</p>
+              </div>
+              <span class="text-xs text-gray-400">{{ activity.time }}</span>
+            </div>
+          } @empty {
+            <p class="text-sm text-gray-500 text-center py-4">Nenhuma atividade recente.</p>
+          }
+        </div>
+      </div>
     </div>
 
-    <!-- {/* Right Column - Inventory */} -->
-    <div class="lg:col-span-1">
-      <!-- <InventoryStatus /> -->
+    <!-- {/* Right Column - Quick Actions / Distribution */} -->
+    <div class="lg:col-span-1 space-y-6">
+      <!-- Distribution Card -->
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Distribuição</h3>
+        <div class="space-y-4">
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">Estudantes Ativos</span>
+              <span class="font-medium text-gray-900">{{ distribution().activeStudentsPercentage.toFixed(1) }}%</span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-2">
+              <div class="bg-green-500 h-2 rounded-full" [style.width.%]="distribution().activeStudentsPercentage"></div>
+            </div>
+          </div>
+          <div>
+            <div class="flex justify-between text-sm mb-1">
+              <span class="text-gray-600">Oficinas Cheias</span>
+              <span class="font-medium text-gray-900">{{ distribution().fullWorkshopsPercentage.toFixed(1) }}%</span>
+            </div>
+            <div class="w-full bg-gray-100 rounded-full h-2">
+              <div class="bg-orange-500 h-2 rounded-full" [style.width.%]="distribution().fullWorkshopsPercentage"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Actions -->
+      <div class="bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl shadow-sm p-6 text-white">
+        <h3 class="text-lg font-semibold mb-2">Acesso Rápido</h3>
+        <p class="text-blue-100 text-sm mb-6">Gerencie seus recursos de forma eficiente.</p>
+        <div class="grid grid-cols-2 gap-3">
+          <button class="bg-white/10 hover:bg-white/20 transition-colors p-3 rounded-lg text-sm font-medium text-center">
+            Novo Aluno
+          </button>
+          <button class="bg-white/10 hover:bg-white/20 transition-colors p-3 rounded-lg text-sm font-medium text-center">
+            Nova Oficina
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </div>

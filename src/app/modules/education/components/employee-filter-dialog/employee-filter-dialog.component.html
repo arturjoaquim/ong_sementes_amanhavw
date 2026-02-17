@@ -1,0 +1,38 @@
+<app-dialog contentClass="sm:max-w-[425px]">
+  <app-dialog-header>
+    <app-dialog-title>Filtrar Funcionários</app-dialog-title>
+    <app-dialog-description>
+      Defina os critérios para filtrar a lista de funcionários.
+    </app-dialog-description>
+  </app-dialog-header>
+
+  <form [formGroup]="filterForm" (ngSubmit)="applyFilters()" class="space-y-4 mt-4">
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700">Nome</label>
+      <input
+        type="text"
+        formControlName="nameSearch"
+        class="flex h-10 w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:cursor-not-allowed disabled:opacity-50"
+        placeholder="Buscar por nome..."
+      />
+    </div>
+
+    <div class="space-y-2">
+      <label class="text-sm font-medium text-gray-700">Cargo</label>
+      <ng-select
+        [items]="positions"
+        bindLabel="name"
+        bindValue="id"
+        formControlName="positionId"
+        [clearable]="false"
+        class="app-select"
+      >
+      </ng-select>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-4">
+      <button appButton type="button" variant="outline" (click)="cancel()">Cancelar</button>
+      <button appButton type="submit">Aplicar Filtros</button>
+    </div>
+  </form>
+</app-dialog>

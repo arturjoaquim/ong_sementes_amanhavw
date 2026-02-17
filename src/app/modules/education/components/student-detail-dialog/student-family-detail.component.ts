@@ -27,7 +27,7 @@ import { Dialog } from '@angular/cdk/dialog';
 import {
   DynamicFormDialogComponent,
   DynamicFormDialogData,
-} from '../../../../shared/dynamic-form-dialog/dynamic-form-dialog.component';
+} from '../../../../shared/components/dynamic-form-dialog/dynamic-form-dialog.component';
 import { DataTableComponent } from '../../../../shared/components/datatable/datatable.component';
 import { DataTableColumn } from '../../../../shared/components/datatable/datatable-column.interface';
 import { DataTableCommandsComponent } from '../../../../shared/components/datatable/datatable-commands.component';

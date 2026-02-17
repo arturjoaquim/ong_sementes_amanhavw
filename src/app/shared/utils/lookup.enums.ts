@@ -159,6 +159,25 @@ export const NaturalnessType = {
 };
 export type NaturalnessType = (typeof NaturalnessType)[keyof typeof NaturalnessType];
 
+export const WorkshopType = {
+  ARTES: { id: 1, descricao: 'Artes' },
+  MUSICA: { id: 2, descricao: 'Música' },
+  TEATRO: { id: 3, descricao: 'Teatro' },
+  TECNOLOGIA: { id: 4, descricao: 'Tecnologia' },
+  ESPORTES: { id: 5, descricao: 'Esportes' },
+  LITERATURA: { id: 6, descricao: 'Literatura' },
+  GASTRONOMIA: { id: 7, descricao: 'Gastronomia' },
+} as const;
+export type WorkshopType = (typeof WorkshopType)[keyof typeof WorkshopType];
+
+export const PositionType = {
+  COORDENADOR: { id: 1, name: 'Coordenador' },
+  PROFESSOR: { id: 2, name: 'Professor' },
+  ASSISTENTE_SOCIAL: { id: 3, name: 'Assistente Social' },
+  PSICOLOGO: {id: 4, name:"Psicólogo"},
+}
+export type PositionType = (typeof PositionType)[keyof typeof  PositionType]
+
 /**
  * Função auxiliar para criar um mapa a partir de um objeto "enum" para busca rápida por ID.
  * @param enumObject O objeto imutável que simula o enum.
@@ -194,3 +213,6 @@ export const EducationStatusMap = createLookupMap(EducationStatus);
 export const RaceTypeMap = createLookupMap(RaceType);
 export const NaturalnessTypeMap = createLookupMap(NaturalnessType);
 export const EnrollmentOriginMap = createLookupMap(EnrollmentOrigin);
+export const WorkshopTypeMap = createLookupMap(WorkshopType);
+
+export const PositionTypeMap = createLookupMap(PositionType);
