@@ -4,7 +4,7 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LookupTypeEnum } from '../utils/lookup-type.enum';
 import { LookupDTO } from '../types/lookup.dto';
-import {environment} from '../../../enviroments/environment';
+import {environment} from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

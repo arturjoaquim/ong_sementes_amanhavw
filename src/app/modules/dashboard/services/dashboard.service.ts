@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { DashboardStatsDTO } from '../types/dashboard-stats.dto';
 import { RecentActivityDTO } from '../types/recent-activity.dto';
 import { DashboardDistributionDTO } from '../types/dashboard-distribution.dto';
-import {environment} from '../../../../enviroments/environment';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

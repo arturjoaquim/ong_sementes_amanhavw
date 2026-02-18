@@ -11,7 +11,7 @@ import { StudentPreviewDTO } from '../types/dtos/student-preview.dto';
 import { StudentPreviewConverter } from '../utils/student-preview.converter';
 import { CreateStudentDTO } from '../types/dtos/create-student.dto';
 import { UpdateStudentDTO } from '../types/dtos/update-student.dto';
-import {environment} from '../../../../enviroments/environment';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

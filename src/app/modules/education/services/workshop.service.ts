@@ -6,7 +6,7 @@ import { WorkshopPreviewDTO } from '../types/dtos/workshop-preview.dto';
 import { CreateWorkshopDTO } from '../types/dtos/create-workshop.dto';
 import { CreateWorkshopSessionDTO } from '../types/dtos/create-workshop-session.dto';
 import {UpdateWorkshopDTO} from '../types/dtos/update-workshop.dto';
-import { environment } from '../../../../enviroments/environment';
+import { environment } from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

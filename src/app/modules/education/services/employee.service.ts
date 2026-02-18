@@ -6,7 +6,7 @@ import { EmployeePreview } from '../types/employee-preview.type';
 import { EmployeeFilters } from '../types/employee-filters.type';
 import { CreateEmployeeDTO } from '../types/dtos/create-employee.dto';
 import { UpdateEmployeeDTO } from '../types/dtos/update-employee.dto';
-import {environment} from '../../../../enviroments/environment';
+import {environment} from '../../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',

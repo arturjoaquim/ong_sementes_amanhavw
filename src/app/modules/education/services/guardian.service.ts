@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LegalGuardianResponseDTO } from '../types/dtos/legal-guardian-response.dto';
-import { environment } from '../../../../enviroments/environment';
+import { environment } from '../../../../environments/environment';
 @Injectable({
   providedIn: 'root',
 })
