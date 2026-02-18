@@ -35,12 +35,11 @@ export class StudentSearchComponent {
   nameSearchFilter = new FormControl('');
 
   filters = signal<StudentFilters>({
-    nameSearch: '',
-    guardianSearch: '',
-    //gradeLevel: 'all',
+    studentName: '',
+    guardianName: '',
     status: '',
-    ageMin: '',
-    ageMax: '',
+    minAge: undefined,
+    maxAge: undefined,
   });
 
   openDialog() {
@@ -51,7 +50,7 @@ export class StudentSearchComponent {
     dialogRef.closed.subscribe((result) => {
       if (result) {
         this.filters.set(result);
-        this.nameSearchFilter.setValue(result.nameSearch || '');
+        this.nameSearchFilter.setValue(result.studentName || '');
         this.search(this.filters());
       }
     });
@@ -60,12 +59,11 @@ export class StudentSearchComponent {
   searchByName() {
     this.filters.update((filters) => ({
       ...filters,
-      guardianSearch: '',
-     // gradeLevel: 'all',
+      guardianName: '',
       status: '',
-      ageMin: '',
-      ageMax: '',
-      nameSearch: this.nameSearchFilter.value || '',
+      minAge: undefined,
+      maxAge: undefined,
+      studentName: this.nameSearchFilter.value || '',
     }));
     this.search(this.filters());
   }
@@ -79,45 +77,40 @@ export class StudentSearchComponent {
   resetFilters() {
     this.nameSearchFilter.reset();
     this.filters.set({
-      nameSearch: '',
-      guardianSearch: '',
-      //gradeLevel: 'all',
+      studentName: '',
+      guardianName: '',
       status: '',
-      ageMin: '',
-      ageMax: '',
+      minAge: undefined,
+      maxAge: undefined,
     });
     this.searchCompleted.emit([]);
   }
 
   get activeFilterCount() {
-    const { nameSearch, ...otherFilters } = this.filters();
+    const { studentName, ...otherFilters } = this.filters();
     const otherFiltersCount = Object.values(otherFilters).filter(
-      (value) => value && value !== 'all',
+      (value) => value !== undefined && value !== '' && value !== 'all',
     ).length;
-    return (nameSearch ? 1 : 0) + otherFiltersCount;
+    return (studentName ? 1 : 0) + otherFiltersCount;
   }
 
-  get nameSearch() {
-    return this.filters().nameSearch;
+  get studentName() {
+    return this.filters().studentName;
   }
 
-  get guardianSearch() {
-    return this.filters().guardianSearch;
+  get guardianName() {
+    return this.filters().guardianName;
   }
-
-  /*get gradeLevel() {
-    return this.filters().gradeLevel;
-  }*/
 
   get status() {
     return this.filters().status;
   }
 
-  get ageMin() {
-    return this.filters().ageMin;
+  get minAge() {
+    return this.filters().minAge;
   }
 
-  get ageMax() {
-    return this.filters().ageMax;
+  get maxAge() {
+    return this.filters().maxAge;
   }
 }

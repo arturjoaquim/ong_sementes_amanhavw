@@ -7,6 +7,7 @@ import {
 } from '../../../../shared/components/avatar/avatar.component';
 import { StudentPreview } from '../../types/student-preview.type';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
+import {DecimalPipe} from '@angular/common';
 
 @Component({
   selector: 'app-student-list',
@@ -18,6 +19,7 @@ import { ButtonDirective } from '../../../../shared/directives/button.directive'
     ButtonDirective,
     AvatarComponent,
     AvatarFallbackComponent,
+    DecimalPipe,
   ],
 })
 export class StudentListComponent {

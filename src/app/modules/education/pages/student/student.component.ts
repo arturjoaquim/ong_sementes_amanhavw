@@ -50,7 +50,7 @@ export class StudentComponent {
     });
 
     dialogRef.closed.subscribe(() => {
-      // Recarregar lista se necessário, ou deixar que o usuário filtre novamente
+      // TODO: Recarregar lista se necessário, ou deixar que o usuário filtre novamente
       // O ideal seria emitir um evento para o StudentSearchComponent recarregar
     });
   }

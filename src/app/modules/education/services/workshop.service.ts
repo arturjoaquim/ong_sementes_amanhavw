@@ -5,6 +5,7 @@ import { HttpClient } from '@angular/common/http';
 import { WorkshopPreviewDTO } from '../types/dtos/workshop-preview.dto';
 import { CreateWorkshopDTO } from '../types/dtos/create-workshop.dto';
 import { CreateWorkshopSessionDTO } from '../types/dtos/create-workshop-session.dto';
+import {UpdateWorkshopDTO} from '../types/dtos/update-workshop.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -37,13 +38,30 @@ export class WorkshopService {
       return this.http.post(`${this.apiUrl}/sessions`, dto);
   }
 
+  enrollStudent(workshopId: number, studentId: number): Observable<void> {
+      return this.http.post<void>(`${this.apiUrl}/${workshopId}/enrollments`, { studentId });
+  }
+
+  unenrollStudent(workshopId: number, studentId: number): Observable<void> {
+      return this.http.delete<void>(`${this.apiUrl}/${workshopId}/enrollments/${studentId}`);
+  }
+
+  updateSessionPresences(sessionId: number, studentIds: number[]): Observable<void> {
+      return this.http.put<void>(`${this.apiUrl}/sessions/${sessionId}/presences`, { studentIds });
+  }
+
   // Métodos antigos mantidos para compatibilidade temporária ou refatoração futura
   getWorkshops(): Observable<Workshop[]> {
     return this.workshops$;
   }
 
-  updateWorkshop(workshop: Workshop): void {
-    // Implementar chamada ao backend
+  updateWorkshop(workshop: Partial<Workshop>): Observable<Workshop> {
+    const dto: UpdateWorkshopDTO = {
+      name: workshop.name!,
+      enrollmentLimit: workshop.enrollmentLimit!,
+      active: workshop.active!
+    };
+    return this.http.patch<Workshop>(`${this.apiUrl}/${workshop.id}`, dto);
   }
 
   deleteWorkshop(id: number): void {

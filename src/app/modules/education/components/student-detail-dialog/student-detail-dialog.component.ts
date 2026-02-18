@@ -21,6 +21,7 @@ import { StudentFamilyDetailComponent } from './student-family-detail.component'
 import { StudentHealthDetailComponent } from './student-health-detail.component';
 import { StudentAcademicDetailComponent } from './student-academic-detail.component';
 import { StudentSocialDetailComponent } from './student-social-detail.component';
+import {PeriodMap, SchoolGradeMap} from '../../../../shared/utils/lookup.enums';
 
 @Component({
   selector: 'app-student-detail-dialog',
@@ -56,7 +57,7 @@ export class StudentDetailDialogComponent {
     { id: 'family', label: 'Família' },
     { id: 'health', label: 'Saúde' },
     { id: 'academic', label: 'Acadêmico' },
-    { id: 'social', label: 'Social' },
+    //{ id: 'social', label: 'Social' },
   ];
 
   icons = {
@@ -110,5 +111,12 @@ export class StudentDetailDialogComponent {
       .split(' ')
       .map((n) => n[0])
       .join('');
+  }
+
+  get studyLevel(): string {
+    const studyLevelId = this.student().personData.education?.educationLevelId;
+
+    if (!studyLevelId) return 'N/A';
+    return SchoolGradeMap[studyLevelId]?.descricao || 'N/A';
   }
 }

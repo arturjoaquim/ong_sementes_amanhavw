@@ -31,7 +31,7 @@ import {
   Period,
   RaceType,
   SchoolGrade,
-  MedicalLocation,
+  MedicalLocation, MedicalLocationMap,
 } from '../../../../shared/utils/lookup.enums';
 import { StudentService } from '../../services/student.service';
 import { GuardianService } from '../../services/guardian.service';
@@ -516,5 +516,9 @@ export class StudentCreationDialogComponent implements OnInit {
 
   getDocumentTypeName(id: number) {
     return DocumentTypeMap[id]?.descricao || 'Não informado';
+  }
+
+  getMedicalLocationName(medicalLocationId: number) {
+    return MedicalLocationMap[medicalLocationId]?.descricao || 'Outro';
   }
 }

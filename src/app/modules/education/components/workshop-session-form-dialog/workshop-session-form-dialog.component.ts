@@ -113,7 +113,7 @@ export class WorkshopSessionFormDialogComponent implements OnInit {
             this.loadingStudents = false;
             return of([]);
           }
-          return this.studentService.searchStudentsPreview({ nameSearch: term, limit: 10 }).pipe(
+          return this.studentService.searchStudentsPreview({ studentName: term, limit: 10 }).pipe(
             catchError(() => of([])),
             tap(() => this.loadingStudents = false)
           );

@@ -7,6 +7,11 @@ import { CommonModule } from '@angular/common';
 import { LucideAngularModule } from 'lucide-angular';
 import { RecentActivityDTO } from '../../types/recent-activity.dto';
 import { DashboardDistributionDTO } from '../../types/dashboard-distribution.dto';
+import { Dialog } from '@angular/cdk/dialog';
+import { StudentCreationDialogComponent } from '../../../education/components/student-creation-dialog/student-creation-dialog.component';
+import { WorkshopFormDialogComponent } from '../../../education/components/workshop-form-dialog/workshop-form-dialog.component';
+import { WorkshopService } from '../../../education/services/workshop.service';
+import { Workshop } from '../../../education/types/workshop.type';
 
 @Component({
   selector: 'app-initial-dashboard',
@@ -16,6 +21,8 @@ import { DashboardDistributionDTO } from '../../types/dashboard-distribution.dto
 })
 export class InitialDashboardComponent implements OnInit {
   private dashboardService = inject(DashboardService);
+  private dialog = inject(Dialog);
+  private workshopService = inject(WorkshopService);
 
   protected readonly UsersIcon = Users;
   protected readonly PackageIcon = Package;
@@ -37,6 +44,10 @@ export class InitialDashboardComponent implements OnInit {
   });
 
   ngOnInit() {
+    this.loadDashboardData();
+  }
+
+  loadDashboardData() {
     this.dashboardService.getStats().subscribe(data => {
       this.stats.set(data);
     });
@@ -56,6 +67,41 @@ export class InitialDashboardComponent implements OnInit {
 
     this.dashboardService.getDistribution().subscribe(data => {
       this.distribution.set(data);
+    });
+  }
+
+  openNewStudentDialog() {
+    const dialogRef = this.dialog.open(StudentCreationDialogComponent, {
+      width: '90vw',
+      maxWidth: '800px',
+    });
+
+    dialogRef.closed.subscribe((result) => {
+      if (result) {
+        this.loadDashboardData(); // Recarrega dashboard após criar
+      }
+    });
+  }
+
+  openNewWorkshopDialog() {
+    const dialogRef = this.dialog.open<Workshop>(WorkshopFormDialogComponent, {
+      width: '90vw',
+      maxWidth: '800px',
+    });
+
+    dialogRef.closed.subscribe((result) => {
+      if (result) {
+          this.workshopService.createWorkshop(result).subscribe({
+              next: () => {
+                  alert('Oficina criada com sucesso!');
+                  this.loadDashboardData(); // Recarrega dashboard
+              },
+              error: (err) => {
+                  console.error('Erro ao criar oficina', err);
+                  alert('Erro ao criar oficina.');
+              }
+          });
+      }
     });
   }
 

@@ -19,15 +19,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { Workshop } from '../../types/workshop.type';
 import { CommonModule } from '@angular/common';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
-import { NgSelectComponent } from '@ng-select/ng-select';
-import { StudentService } from '../../services/student.service';
-import { Observable, Subject, of, concat, forkJoin } from 'rxjs';
-import { catchError, debounceTime, distinctUntilChanged, switchMap, tap } from 'rxjs/operators';
-import { StudentPreview } from '../../types/student-preview.type';
 import { LucideAngularModule, Trash2 } from 'lucide-angular';
-import { Student } from '../../types/student.type';
-import { AuthService } from '../../../../core/services/auth.service';
-import { EmployeeService } from '../../services/employee.service';
 
 @Component({
   selector: 'app-workshop-form-dialog',

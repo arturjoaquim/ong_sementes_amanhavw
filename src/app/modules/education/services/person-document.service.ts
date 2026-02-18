@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { PersonDocumentDTO } from '../../../shared/types/dtos/person-document.dto';
 
 @Injectable({
   providedIn: 'root',
@@ -8,6 +9,10 @@ import { Observable } from 'rxjs';
 export class PersonDocumentService {
   private http = inject(HttpClient);
   private apiUrl = 'http://localhost:8080/people';
+
+  getDocuments(personId: number): Observable<PersonDocumentDTO[]> {
+      return this.http.get<PersonDocumentDTO[]>(`${this.apiUrl}/${personId}/documents`);
+  }
 
   createDocument(personId: number, documentData: any): Observable<void> {
     const dto = {

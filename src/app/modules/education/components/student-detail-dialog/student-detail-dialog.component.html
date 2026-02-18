@@ -33,7 +33,7 @@
       <div class="grid grid-cols-3 gap-4 mt-4">
         <div>
           <p class="text-xs text-gray-500">Série/Ano</p>
-          <p class="text-sm text-gray-900 mt-1">Não definido</p>
+          <p class="text-sm text-gray-900 mt-1">{{ studyLevel }}</p>
         </div>
         <div>
           <p class="text-xs text-gray-500">Idade</p>
@@ -42,7 +42,7 @@
         <div>
           <p class="text-xs text-gray-500">Taxa de Frequência</p>
           <p class="text-sm mt-1" [ngClass]="getAttendanceColor(student().attendance)">
-            {{ student().attendance }}%
+            {{ student().attendance | number:'1.2-2' }}%
           </p>
         </div>
       </div>

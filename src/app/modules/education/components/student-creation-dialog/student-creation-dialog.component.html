@@ -268,7 +268,7 @@
 
         <!-- Apontamentos Médicos -->
         <div class="col-span-2 mt-6 border-t pt-4">
-          <h4 class="font-semibold text-gray-900 mb-4">Apontamentos Médicos</h4>
+          <h4 class="font-semibold text-gray-900 mb-4">Medicamentos Contínuos</h4>
           <div class="flex justify-end mb-4">
             <button appButton type="button" variant="outline" (click)="addMedicalNote()">
               Adicionar Apontamento
@@ -282,12 +282,10 @@
                   [formGroup]="$any(noteControl)"
                 >
                   <div>
-                    <p class="font-medium text-gray-800">{{ noteControl.value.summaryNote }}</p>
+                    <p class="font-medium text-gray-800">{{ noteControl.value.medicationName }}</p>
                     <p class="text-sm text-gray-600">
-                      Tipo: {{ noteControl.value.medicalNoteTypeId }} <br />
-                      Descrição: {{ noteControl.value.description }} <br />
-                      Procedimento Emergencial:
-                      {{ noteControl.value.descriptionEmergencyProcedure }}
+                      Frequência: {{ noteControl.value.frequency }} <br />
+                      Dosagem: {{ noteControl.value.dosage }} <br />
                     </p>
                   </div>
                   <button
@@ -311,7 +309,7 @@
 
         <!-- Tratamentos e Medicamentos -->
         <div class="col-span-2 mt-6 border-t pt-4">
-          <h4 class="font-semibold text-gray-900 mb-4">Tratamentos e Medicamentos</h4>
+          <h4 class="font-semibold text-gray-900 mb-4">Tratamentos Médicos</h4>
           <div class="flex justify-end mb-4">
             <button appButton type="button" variant="outline" (click)="addMedicalTreatment()">
               Adicionar Tratamento
@@ -327,6 +325,10 @@
                   <div>
                     <p class="font-medium text-gray-800">
                       {{ treatmentControl.value.description }}
+                    </p>
+                    <p class="text-sm text-gray-600">
+                      Local: {{ getMedicalLocationName (treatmentControl.value.monitoringLocationId) }} <br />
+                      Observações: {{ treatmentControl.value.observations }} <br />
                     </p>
                   </div>
                   <button

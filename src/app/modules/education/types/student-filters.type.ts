@@ -1,9 +1,8 @@
 export interface StudentFilters {
-  nameSearch?: string;
-  name?: string; // Alias para nameSearch ou filtro específico por nome
-  guardianSearch?: string;
+  studentName?: string;
+  guardianName?: string;
+  minAge?: number;
+  maxAge?: number;
   status?: string;
-  ageMin?: string;
-  ageMax?: string;
   limit?: number; // Limitação de resultados
 }

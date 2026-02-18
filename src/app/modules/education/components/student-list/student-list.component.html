@@ -49,7 +49,7 @@
               </td>
               <td class="whitespace-nowrap">
                 <span [class]="getAttendanceColor(student.attendance)">
-                  {{ student.attendance }}%
+                  {{ student.attendance | number:'1.2-2' }}%
                 </span>
               </td>
               <td class="whitespace-nowrap">

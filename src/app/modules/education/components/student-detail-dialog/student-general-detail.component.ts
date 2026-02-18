@@ -20,6 +20,10 @@ import {
 } from '../../../../shared/components/dynamic-form-dialog/dynamic-form-dialog.component';
 import { EnrollmentOriginMap } from '../../../../shared/utils/lookup.enums';
 import { StudentService } from '../../services/student.service';
+import { PersonDocumentService } from '../../services/person-document.service';
+import { forkJoin, of, Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { PersonDocumentDTO } from '../../../../shared/types/dtos/person-document.dto';
 
 @Component({
   selector: 'app-student-general-detail',
@@ -31,6 +35,7 @@ export class StudentGeneralDetailComponent {
   @Input({ required: true }) student!: WritableSignal<Student>;
   private dialog = inject(Dialog);
   private studentService = inject(StudentService);
+  private personDocumentService = inject(PersonDocumentService);
 
   icons: Record<string, LucideIconData> = {
     graduationCap: GraduationCap,
@@ -177,6 +182,12 @@ export class StudentGeneralDetailComponent {
       dialogRef.closed.subscribe((result) => {
         if (result) {
           console.log(`Dados salvos para a seção ${section}:`, result);
+
+          if (section === 'documents') {
+              this.updateDocuments(result);
+              return;
+          }
+
           this.student.update((currentStudent) => {
             let updatedStudent = currentStudent;
             switch (section) {
@@ -215,12 +226,6 @@ export class StudentGeneralDetailComponent {
                   },
                 };
                 break;
-              case 'documents':
-                console.warn(
-                  'A atualização de documentos via formulário dinâmico não está totalmente implementada.',
-                );
-                return currentStudent;
-
               default:
                 return currentStudent;
             }
@@ -243,6 +248,69 @@ export class StudentGeneralDetailComponent {
         }
       });
     }
+  }
+
+  private updateDocuments(result: any) {
+      const personId = this.student().personData.id;
+
+      // Buscar documentos atuais
+      this.personDocumentService.getDocuments(personId).pipe(
+          switchMap((documents: PersonDocumentDTO[]) => {
+              const observables: Observable<any>[] = [];
+
+              // CPF (Tipo 1)
+              this.handleDocumentUpdate(observables, personId, documents, 1, result.cpf);
+
+              // RG (Tipo 2)
+              this.handleDocumentUpdate(observables, personId, documents, 2, result.rg);
+
+              // NIS (Tipo 4)
+              this.handleDocumentUpdate(observables, personId, documents, 4, result.nis);
+
+              // Certidão de Nascimento (Tipo 3)
+              const certData = {
+                  book: result.birthCertificateBook,
+                  page: result.birthCertificatePage,
+                  term: '' // Se tiver termo
+              };
+              this.handleDocumentUpdate(observables, personId, documents, 3, result.birthCertificateNumber, certData);
+
+              return forkJoin(observables.length > 0 ? observables : [of(null)]);
+          })
+      ).subscribe({
+          next: () => {
+              alert('Documentos atualizados com sucesso!');
+              // Recarregar estudante para atualizar a lista de documentos
+              this.studentService.getStudentDetailsById(this.student().id).subscribe(s => this.student.set(s));
+          },
+          error: (err: any) => {
+              console.error('Erro ao atualizar documentos', err);
+              alert('Erro ao atualizar documentos.');
+          }
+      });
+  }
+
+  private handleDocumentUpdate(observables: Observable<any>[], personId: number, documents: PersonDocumentDTO[], typeId: number, newValue: string, extraData?: any) {
+      const existingDoc = documents.find((d) => d.documentTypeId === typeId);
+
+      if (newValue && !existingDoc) {
+          // Criar
+          observables.push(this.personDocumentService.createDocument(personId, {
+              documentTypeId: typeId,
+              number: newValue,
+              extraData: extraData
+          }));
+      } else if (newValue && existingDoc && (newValue !== existingDoc.number || JSON.stringify(extraData) !== JSON.stringify(existingDoc.extraData))) {
+          // Atualizar
+          observables.push(this.personDocumentService.updateDocument(personId, existingDoc.id, {
+              documentTypeId: typeId,
+              number: newValue,
+              extraData: extraData
+          }));
+      } else if (!newValue && existingDoc) {
+          // Remover
+          observables.push(this.personDocumentService.deleteDocument(personId, existingDoc.id));
+      }
   }
 
   // --- Getters para Dados da Matrícula ---

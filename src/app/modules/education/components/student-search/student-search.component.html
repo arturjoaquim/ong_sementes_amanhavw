@@ -37,15 +37,15 @@
   </div>
 
   <!-- {/* Active Filters Display */} -->
-  @if (nameSearch || activeFilterCount > 0) {
+  @if (studentName || activeFilterCount > 0) {
     <div class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200">
       <span class="text-sm text-gray-600">Active filters:</span>
-      @if (nameSearch) {
-        <app-badge variant="secondary" contentClass="gap-1"> Nome: {{ nameSearch }} </app-badge>
+      @if (studentName) {
+        <app-badge variant="secondary" contentClass="gap-1"> Nome: {{ studentName }} </app-badge>
       }
-      @if (guardianSearch) {
+      @if (guardianName) {
         <app-badge variant="secondary" contentClass="gap-1">
-          Responsável: {{ guardianSearch }}
+          Responsável: {{ guardianName }}
         </app-badge>
       }
       <!--@if (gradeLevel && gradeLevel !== 'all') {
@@ -54,11 +54,11 @@
       @if (status && status !== 'all') {
         <app-badge variant="secondary" contentClass="gap-1"> Status: {{ status }} </app-badge>
       }
-      @if (ageMin) {
-        <app-badge variant="secondary" contentClass="gap-1"> Idade mínima: {{ ageMin }} </app-badge>
+      @if (minAge) {
+        <app-badge variant="secondary" contentClass="gap-1"> Idade mínima: {{ minAge }} </app-badge>
       }
-      @if (ageMax) {
-        <app-badge variant="secondary" contentClass="gap-1"> Idade máxima: {{ ageMax }} </app-badge>
+      @if (maxAge) {
+        <app-badge variant="secondary" contentClass="gap-1"> Idade máxima: {{ maxAge }} </app-badge>
       }
       <button
         appButton
