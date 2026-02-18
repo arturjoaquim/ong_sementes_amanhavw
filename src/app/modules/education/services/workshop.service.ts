@@ -6,13 +6,14 @@ import { WorkshopPreviewDTO } from '../types/dtos/workshop-preview.dto';
 import { CreateWorkshopDTO } from '../types/dtos/create-workshop.dto';
 import { CreateWorkshopSessionDTO } from '../types/dtos/create-workshop-session.dto';
 import {UpdateWorkshopDTO} from '../types/dtos/update-workshop.dto';
+import { environment } from '../../../../enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class WorkshopService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/workshops';
+  private apiUrl = `${environment.apiUrl}/workshops`;
 
   private workshopsSubject = new BehaviorSubject<Workshop[]>([]);
   public workshops$ = this.workshopsSubject.asObservable();

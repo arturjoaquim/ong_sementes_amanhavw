@@ -6,13 +6,14 @@ import { EmployeePreview } from '../types/employee-preview.type';
 import { EmployeeFilters } from '../types/employee-filters.type';
 import { CreateEmployeeDTO } from '../types/dtos/create-employee.dto';
 import { UpdateEmployeeDTO } from '../types/dtos/update-employee.dto';
+import {environment} from '../../../../enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class EmployeeService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/employees';
+  private apiUrl = `${environment.apiUrl}/employees`;
 
   getEmployeeByUserId(userId: number): Observable<EmployeeResponseDTO> {
     return this.http.get<EmployeeResponseDTO>(`${this.apiUrl}/user/${userId}`);

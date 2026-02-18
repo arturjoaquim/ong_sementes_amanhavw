@@ -2,13 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { LegalGuardianResponseDTO } from '../types/dtos/legal-guardian-response.dto';
-
+import { environment } from '../../../../enviroments/environment';
 @Injectable({
   providedIn: 'root',
 })
 export class GuardianService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/guardians';
+  private apiUrl = `${environment.apiUrl}/guardians`;
 
   /**
    * Cria um novo guardião no backend.

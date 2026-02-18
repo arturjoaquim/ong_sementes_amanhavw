@@ -11,13 +11,14 @@ import { StudentPreviewDTO } from '../types/dtos/student-preview.dto';
 import { StudentPreviewConverter } from '../utils/student-preview.converter';
 import { CreateStudentDTO } from '../types/dtos/create-student.dto';
 import { UpdateStudentDTO } from '../types/dtos/update-student.dto';
+import {environment} from '../../../../enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/students'; // URL direta
+  private apiUrl = `${environment.apiUrl}/students`; // URL direta
 
   /**
    * Busca os detalhes completos de um estudante pelo ID.

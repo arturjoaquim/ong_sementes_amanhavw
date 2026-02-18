@@ -2,6 +2,7 @@ import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { environment } from '../../../enviroments/environment';
 
 export interface User {
   id: number;
@@ -15,7 +16,7 @@ export interface User {
 })
 export class AuthService {
   private http = inject(HttpClient);
-  private authUrl = 'http://localhost:8080/auth';
+  private authUrl = `${environment.apiUrl}/auth`;
 
   private currentUser = signal<User | null>(null);
 

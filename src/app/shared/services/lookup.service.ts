@@ -4,13 +4,14 @@ import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LookupTypeEnum } from '../utils/lookup-type.enum';
 import { LookupDTO } from '../types/lookup.dto';
+import {environment} from '../../../enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class LookupService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/lookups';
+  private apiUrl = `${environment.apiUrl}/lookups`;
 
   // Cache para armazenar os resultados das requisições
   private listCache = new Map<LookupTypeEnum, LookupDTO[]>();

@@ -2,13 +2,15 @@ import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PersonDocumentDTO } from '../../../shared/types/dtos/person-document.dto';
+import {environment} from '../../../../enviroments/environment';
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class PersonDocumentService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/people';
+  private apiUrl = `${environment.apiUrl}people`;
 
   getDocuments(personId: number): Observable<PersonDocumentDTO[]> {
       return this.http.get<PersonDocumentDTO[]>(`${this.apiUrl}/${personId}/documents`);

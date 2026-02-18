@@ -1,13 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import {environment} from '../../../../enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class StudentGuardianService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/students';
+  private apiUrl = `${environment.apiUrl}/students`;
 
   addGuardian(studentId: number, guardianId: number, kinshipId: number): Observable<void> {
     const dto = {

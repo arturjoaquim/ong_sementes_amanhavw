@@ -4,13 +4,14 @@ import { Observable } from 'rxjs';
 import { DashboardStatsDTO } from '../types/dashboard-stats.dto';
 import { RecentActivityDTO } from '../types/recent-activity.dto';
 import { DashboardDistributionDTO } from '../types/dashboard-distribution.dto';
+import {environment} from '../../../../enviroments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class DashboardService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://localhost:8080/dashboard';
+  private apiUrl = `${environment.apiUrl}/dashboard`;
 
   getStats(): Observable<DashboardStatsDTO> {
     return this.http.get<DashboardStatsDTO>(`${this.apiUrl}/stats`);
