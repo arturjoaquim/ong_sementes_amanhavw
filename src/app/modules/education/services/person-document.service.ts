@@ -10,7 +10,7 @@ import {environment} from '../../../../enviroments/environment';
 })
 export class PersonDocumentService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment.apiUrl}people`;
+  private apiUrl = `${environment.apiUrl}/people`;
 
   getDocuments(personId: number): Observable<PersonDocumentDTO[]> {
       return this.http.get<PersonDocumentDTO[]>(`${this.apiUrl}/${personId}/documents`);
