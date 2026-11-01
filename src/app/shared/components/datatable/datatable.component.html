@@ -1,40 +1,60 @@
-<div class="table-container">
-  <table class="w-full text-sm">
-    <thead>
-      <tr class="border-b">
+<div class="card bg-white rounded-lg border border-border shadow-sm overflow-hidden">
+  <p-table
+    [value]="items"
+    [columns]="columns"
+    [paginator]="paginator && items.length > rows"
+    [rows]="rows"
+    [rowsPerPageOptions]="rowsPerPageOptions"
+    [tableStyle]="{ 'min-width': '50rem' }"
+    styleClass="p-datatable-sm p-datatable-striped"
+  >
+    <ng-template #header let-columns>
+      <tr>
         @for (col of columns; track col.field) {
           <th
-            class="h-12 px-4 text-left align-middle font-medium text-gray-500"
+            [pSortableColumn]="col.field"
             [style.width]="col.width"
             [style.text-align]="col.align || 'left'"
+            class="bg-muted/40 font-medium text-foreground py-3 px-4 text-xs tracking-wider uppercase border-b border-border"
           >
-            {{ col.header }}
+            <div class="flex items-center gap-2">
+              <span>{{ col.header }}</span>
+              <p-sortIcon [field]="col.field" />
+            </div>
           </th>
         }
         @if (commandsTemplateRef) {
-          <th class="h-12 px-4 text-right align-middle font-medium text-gray-500">Ações</th>
+          <th class="bg-muted/40 font-medium text-foreground py-3 px-4 text-xs tracking-wider uppercase text-right border-b border-border">
+            Ações
+          </th>
         }
       </tr>
-    </thead>
-    <tbody class="[&_tr:last-child]:border-0">
-      @for (item of items; track item.id) {
-        <tr class="border-b transition-colors hover:bg-gray-50/50">
-          @for (col of columns; track col.field) {
-            <td class="p-4 align-middle" [style.text-align]="col.align || 'left'">
-              {{ item[col.field] }}
-            </td>
-          }
-          @if (commandsTemplateRef) {
-            <td class="p-4 align-middle text-right">
-              <!-- Renderiza o template de comandos, passando o item atual no contexto -->
-              <ng-container
-                [ngTemplateOutlet]="commandsTemplateRef"
-                [ngTemplateOutletContext]="{ $implicit: item }"
-              ></ng-container>
-            </td>
-          }
-        </tr>
-      }
-    </tbody>
-  </table>
+    </ng-template>
+
+    <ng-template #body let-rowData let-columns="columns">
+      <tr class="hover:bg-muted/20 transition-colors border-b border-border last:border-0">
+        @for (col of columns; track col.field) {
+          <td class="py-3 px-4 text-sm text-foreground align-middle" [style.text-align]="col.align || 'left'">
+            {{ rowData[col.field] }}
+          </td>
+        }
+        @if (commandsTemplateRef) {
+          <td class="py-3 px-4 text-sm align-middle text-right">
+            <ng-container
+              [ngTemplateOutlet]="commandsTemplateRef"
+              [ngTemplateOutletContext]="{ $implicit: rowData }"
+            ></ng-container>
+          </td>
+        }
+      </tr>
+    </ng-template>
+
+    <ng-template #emptymessage>
+      <tr>
+        <td [attr.colspan]="columns.length + (commandsTemplateRef ? 1 : 0)" class="text-center py-8 text-muted-foreground text-sm">
+          Nenhum registro encontrado.
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
 </div>
