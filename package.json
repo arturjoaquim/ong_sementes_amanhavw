@@ -25,6 +25,7 @@
   },
   "private": true,
   "dependencies": {
+    "@angular/animations": "^20.3.34",
     "@angular/cdk": "^20.2.12",
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
@@ -34,9 +35,12 @@
     "@angular/router": "^20.3.0",
     "@ng-select/ng-select": "^20.7.0",
     "@ngneat/tailwind": "^7.0.3",
+    "@primeng/themes": "^20.4.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "lucide-angular": "^0.553.0",
+    "primeicons": "^8.0.2",
+    "primeng": "^20.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },
