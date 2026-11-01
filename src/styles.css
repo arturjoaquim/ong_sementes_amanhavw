@@ -1,5 +1,4 @@
 @import 'tailwindcss';
-@import '@angular/material/prebuilt-themes/indigo-pink.css';
 
 @custom-variant dark (&:is(.dark *));
 
