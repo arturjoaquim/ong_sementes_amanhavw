@@ -13,9 +13,6 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatSelectModule } from '@angular/material/select';
 import { Workshop } from '../../types/workshop.type';
 import { CommonModule } from '@angular/common';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
@@ -34,9 +31,6 @@ import { LucideAngularModule, Trash2 } from 'lucide-angular';
     ButtonDirective,
     FormsModule,
     ReactiveFormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatSelectModule,
     LucideAngularModule
   ]
 })
