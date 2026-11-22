@@ -1,0 +1,107 @@
+<app-page-layout
+  [title]="student() ? student()!.personData.personName : 'Detalhes do Estudante'"
+  description="Visualize as informações detalhadas e o histórico do estudante"
+>
+  <lucide-icon page-icon [img]="icons.users" size="24" class="text-green-600" />
+
+  <div page-actions>
+    <button
+      appButton
+      variant="outline"
+      (click)="back()"
+      class="flex items-center gap-2 cursor-pointer"
+    >
+      <lucide-icon [img]="icons.arrowLeft" [size]="16" />
+      Voltar para Estudantes
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center p-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-green-600"></div>
+      <span class="ml-3 text-muted-foreground text-sm">Carregando detalhes do estudante...</span>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="p-6 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
+      <lucide-icon [img]="icons.alertCircle" [size]="20" />
+      <span>{{ errorMessage() }}</span>
+    </div>
+  } @else if (student(); as currentStudent) {
+    <div class="space-y-6">
+      <!-- Header do Estudante com Resumo -->
+      <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-6">
+          <app-avatar contentClass="h-20 w-20">
+            @if (currentStudent.avatar) {
+              <img class="app-avatar-image" [src]="currentStudent.avatar" [alt]="name" />
+            }
+            <app-avatar-fallback>{{ getInitials(name) }}</app-avatar-fallback>
+          </app-avatar>
+
+          <div class="flex-1">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="text-xl font-bold text-foreground">{{ name }}</h3>
+                <p class="text-sm text-muted-foreground mt-0.5">Matrícula / ID: {{ currentStudent.id }}</p>
+              </div>
+              <app-badge [contentClass]="getStatusColor(currentStudent.status)">
+                {{
+                  currentStudent.status === 'active'
+                    ? 'Ativo'
+                    : currentStudent.status === 'inactive'
+                      ? 'Inativo'
+                      : 'Graduado'
+                }}
+              </app-badge>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 pt-4 border-t border-border">
+              <div>
+                <p class="text-xs text-muted-foreground">Série / Grau Escolar</p>
+                <p class="text-sm font-medium text-foreground mt-0.5">{{ studyLevel }}</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground">Idade</p>
+                <p class="text-sm font-medium text-foreground mt-0.5">{{ age }} anos</p>
+              </div>
+              <div>
+                <p class="text-xs text-muted-foreground">Taxa de Frequência</p>
+                <p class="text-sm font-medium mt-0.5" [ngClass]="getAttendanceColor(currentStudent.attendance)">
+                  {{ currentStudent.attendance | number:'1.2-2' }}%
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Abas de Navegação -->
+      <div>
+        <app-tabs
+          [tabs]="tabs"
+          [activeTab]="activeTab"
+          (tabChange)="setActiveTab($event)"
+        ></app-tabs>
+      </div>
+
+      <!-- Conteúdo das Abas -->
+      <div class="mt-4">
+        @if (activeTab === 'general') {
+          <app-student-general-detail [student]="student"></app-student-general-detail>
+        }
+
+        @if (activeTab === 'family') {
+          <app-student-family-detail [student]="student"></app-student-family-detail>
+        }
+
+        @if (activeTab === 'health') {
+          <app-student-health-detail [student]="student"></app-student-health-detail>
+        }
+
+        @if (activeTab === 'academic') {
+          <app-student-academic-detail [student]="student"></app-student-academic-detail>
+        }
+      </div>
+    </div>
+  }
+</app-page-layout>

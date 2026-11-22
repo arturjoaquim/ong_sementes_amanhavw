@@ -30,14 +30,29 @@ export const routes: Routes = [
           import('./modules/education/pages/student/student.component').then((m) => m.StudentComponent),
       },
       {
+        path: 'students/:id',
+        loadComponent: () =>
+          import('./modules/education/pages/student-detail/student-detail.component').then((m) => m.StudentDetailComponent),
+      },
+      {
         path: 'workshops',
         loadComponent: () =>
           import('./modules/education/pages/workshop/workshop.component').then((m) => m.WorkshopComponent),
       },
       {
+        path: 'workshops/:id',
+        loadComponent: () =>
+          import('./modules/education/pages/workshop-detail/workshop-detail.component').then((m) => m.WorkshopDetailComponent),
+      },
+      {
         path: 'employees',
         loadComponent: () =>
           import('./modules/education/pages/employee/employee.component').then((m) => m.EmployeeComponent),
+      },
+      {
+        path: 'employees/:id',
+        loadComponent: () =>
+          import('./modules/education/pages/employee-detail/employee-detail.component').then((m) => m.EmployeeDetailComponent),
       },
     ]
   },
