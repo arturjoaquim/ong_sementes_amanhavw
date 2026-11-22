@@ -7,11 +7,17 @@ import { EmployeeService } from '../../services/employee.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { EmployeeCreationDialogComponent } from '../../components/employee-creation-dialog/employee-creation-dialog.component';
 import { EmployeeDetailDialogComponent } from '../../components/employee-detail-dialog/employee-detail-dialog.component';
+import { PageLayoutComponent } from '../../../../shared/components/page-layout/page-layout.component';
 
 @Component({
   selector: 'app-employee',
   templateUrl: './employee.component.html',
-  imports: [LucideAngularModule, EmployeeSearchComponent, EmployeeListComponent],
+  imports: [
+    LucideAngularModule,
+    EmployeeSearchComponent,
+    EmployeeListComponent,
+    PageLayoutComponent,
+  ],
   standalone: true,
 })
 export class EmployeeComponent implements OnInit {
