@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { LucideAngularModule, Briefcase } from 'lucide-angular';
 import { EmployeeSearchComponent } from '../../components/employee-search/employee-search.component';
 import { EmployeeListComponent } from '../../components/employee-list/employee-list.component';
@@ -6,7 +7,6 @@ import { EmployeePreview } from '../../types/employee-preview.type';
 import { EmployeeService } from '../../services/employee.service';
 import { Dialog } from '@angular/cdk/dialog';
 import { EmployeeCreationDialogComponent } from '../../components/employee-creation-dialog/employee-creation-dialog.component';
-import { EmployeeDetailDialogComponent } from '../../components/employee-detail-dialog/employee-detail-dialog.component';
 import { PageLayoutComponent } from '../../../../shared/components/page-layout/page-layout.component';
 
 @Component({
@@ -27,6 +27,7 @@ export class EmployeeComponent implements OnInit {
 
   private employeeService = inject(EmployeeService);
   private dialog = inject(Dialog);
+  private router = inject(Router);
 
   searchComponent = viewChild(EmployeeSearchComponent);
   employees = signal<EmployeePreview[]>([]);
@@ -63,18 +64,6 @@ export class EmployeeComponent implements OnInit {
   }
 
   showEmployeeDetails(employeePreview: EmployeePreview) {
-    this.employeeService.getEmployeeById(employeePreview.id).subscribe((employee) => {
-      const dialogRef = this.dialog.open(EmployeeDetailDialogComponent, {
-        data: { employee },
-        width: '90vw',
-        maxWidth: '1200px',
-      });
-
-      dialogRef.closed.subscribe((result) => {
-        if (result) {
-          this.loadEmployees();
-        }
-      });
-    });
+    this.router.navigate(['/employees', employeePreview.id]);
   }
 }

@@ -1,10 +1,10 @@
 import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { LucideAngularModule, Briefcase } from 'lucide-angular';
 import { WorkshopSearchComponent } from '../../components/workshop-search/workshop-search.component';
 import { WorkshopListComponent } from '../../components/workshop-list/workshop-list.component';
 import { Workshop } from '../../types/workshop.type';
 import { Dialog } from '@angular/cdk/dialog';
-import { WorkshopDetailDialogComponent } from '../../components/workshop-detail-dialog/workshop-detail-dialog.component';
 import { WorkshopFormDialogComponent } from '../../components/workshop-form-dialog/workshop-form-dialog.component';
 import { WorkshopService } from '../../services/workshop.service';
 import { WorkshopPreview } from '../../types/workshop-preview.type';
@@ -28,6 +28,7 @@ export class WorkshopComponent implements OnInit {
   };
 
   dialog = inject(Dialog);
+  router = inject(Router);
   workshopService = inject(WorkshopService);
 
   searchComponent = viewChild(WorkshopSearchComponent);
@@ -52,18 +53,7 @@ export class WorkshopComponent implements OnInit {
   }
 
   showWorkshopDetails(workshopPreview: WorkshopPreview) {
-    this.workshopService.getWorkshopById(workshopPreview.id).subscribe({
-      next: (workshop) => {
-        this.dialog.open(WorkshopDetailDialogComponent, {
-          data: { workshop },
-          width: '90vw',
-          maxWidth: '1200px',
-        });
-      },
-      error: (err) => {
-        console.error('Workshop not found details', err);
-      },
-    });
+    this.router.navigate(['/workshops', workshopPreview.id]);
   }
 
   handleCreateWorkshop(workshop?: Workshop) {

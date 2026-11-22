@@ -6,7 +6,7 @@ export class StudentPreviewConverter {
   static toModel(dto: StudentPreviewDTO): StudentPreview {
     return {
       id: dto.id,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${dto.studentName}`, // Gerando avatar baseado no nome
+      avatar: '',
       name: dto.studentName,
       guardian: dto.guardianName,
       guardianPhone: dto.guardianPhone,

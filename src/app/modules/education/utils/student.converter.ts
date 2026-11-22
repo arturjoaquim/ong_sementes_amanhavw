@@ -13,7 +13,7 @@ export class StudentConverter {
     return {
       id: dto.id,
       personData: PersonConverter.toModel(dto.personData),
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${dto.personData.personName}`,
+      avatar: '',
       enrollmentDate: new Date(dto.enrollmentDate),
       status: dto.status,
       attendance: dto.attendance,

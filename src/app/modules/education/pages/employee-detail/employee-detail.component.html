@@ -1,0 +1,147 @@
+<app-page-layout
+  [title]="employee() ? employee()!.person.personName : 'Detalhes do Funcionário'"
+  description="Visualize as informações cadastrais, endereço, contato e documentos do colaborador"
+>
+  <lucide-icon page-icon [img]="icons.briefcase" size="24" class="text-blue-600" />
+
+  <div page-actions>
+    <button
+      appButton
+      variant="outline"
+      (click)="back()"
+      class="flex items-center gap-2 cursor-pointer"
+    >
+      <lucide-icon [img]="icons.arrowLeft" [size]="16" />
+      Voltar para Funcionários
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center p-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <span class="ml-3 text-muted-foreground text-sm">Carregando detalhes do funcionário...</span>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="p-6 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
+      <lucide-icon [img]="icons.alertCircle" [size]="20" />
+      <span>{{ errorMessage() }}</span>
+    </div>
+  } @else if (employee(); as currentEmployee) {
+    <div class="space-y-6">
+      <!-- Dados Pessoais -->
+      <app-card contentClass="p-6">
+        <app-section-header (edit)="editData('personal')">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="icons.user" [size]="20" class="text-blue-600"></lucide-icon>
+            <span class="font-semibold text-foreground">Informações Pessoais</span>
+          </div>
+        </app-section-header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-4">
+          <div>
+            <p class="text-xs text-muted-foreground">Nome Completo</p>
+            <p class="text-sm font-semibold text-foreground mt-0.5">{{ currentEmployee.person.personName }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Data de Nascimento</p>
+            <p class="text-sm text-foreground mt-0.5">{{ currentEmployee.person.birthDate | date: 'dd/MM/yyyy' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Cargo</p>
+            <p class="text-sm text-foreground mt-0.5">{{ getPositionName(currentEmployee.positionId) }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Nome da Mãe</p>
+            <p class="text-sm text-foreground mt-0.5">{{ currentEmployee.person.motherName || 'Não informado' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground">Nome do Pai</p>
+            <p class="text-sm text-foreground mt-0.5">{{ currentEmployee.person.fatherName || 'Não informado' }}</p>
+          </div>
+          <div>
+            <p class="text-xs text-muted-foreground">ID do Colaborador</p>
+            <p class="text-sm text-foreground mt-0.5">{{ currentEmployee.id }}</p>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Endereço -->
+      <app-card contentClass="p-6">
+        <app-section-header (edit)="editData('address')">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="icons.mapPin" [size]="20" class="text-purple-600"></lucide-icon>
+            <span class="font-semibold text-foreground">Endereço</span>
+          </div>
+        </app-section-header>
+        <div class="mt-4">
+          <p class="text-sm text-foreground">{{ fullAddress }}</p>
+        </div>
+      </app-card>
+
+      <!-- Contato -->
+      <app-card contentClass="p-6">
+        <app-section-header (edit)="editData('contact')">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="icons.phone" [size]="20" class="text-green-600"></lucide-icon>
+            <span class="font-semibold text-foreground">Contato</span>
+          </div>
+        </app-section-header>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-4">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-50 rounded-lg">
+              <lucide-icon [img]="icons.mail" [size]="18" class="text-blue-600"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">E-mail</p>
+              <p class="text-sm text-foreground mt-0.5">{{ contact.email || 'Não informado' }}</p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-green-50 rounded-lg">
+              <lucide-icon [img]="icons.phone" [size]="18" class="text-green-600"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">Celular</p>
+              <p class="text-sm text-foreground mt-0.5">
+                {{ contact.mobilePhone || 'Não informado' }}
+                @if (contact.hasWhatsApp) {
+                  <span class="text-xs font-medium text-green-600 ml-1">(WhatsApp)</span>
+                }
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-gray-50 rounded-lg">
+              <lucide-icon [img]="icons.phone" [size]="18" class="text-gray-600"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">Telefone Fixo</p>
+              <p class="text-sm text-foreground mt-0.5">{{ contact.telephone || 'Não informado' }}</p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Documentos -->
+      <app-card contentClass="p-6">
+        <app-section-header [showEditButton]="false">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="icons.fileText" [size]="20" class="text-orange-600"></lucide-icon>
+            <span class="font-semibold text-foreground">Documentos</span>
+          </div>
+        </app-section-header>
+        @if (documents.length > 0) {
+          <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-4">
+            @for (doc of documents; track doc.id) {
+              <div class="p-4 bg-muted/30 rounded-lg border border-border">
+                <p class="text-xs text-muted-foreground mb-1">{{ getDocumentName(doc.documentTypeId) }}</p>
+                <p class="text-sm font-semibold text-foreground">{{ doc.number }}</p>
+              </div>
+            }
+          </div>
+        } @else {
+          <p class="text-sm text-muted-foreground italic mt-4">Nenhum documento cadastrado.</p>
+        }
+      </app-card>
+    </div>
+  }
+</app-page-layout>

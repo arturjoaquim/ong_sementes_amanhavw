@@ -8,7 +8,7 @@ import { environment } from '../../../../environments/environment';
 })
 export class FamilyMemberService {
   private http = inject(HttpClient);
-  private apiUrl = `${environment}/families`;
+  private apiUrl = `${environment.apiUrl}/families`;
 
   addMember(familyId: number, memberData: any): Observable<void> {
     const dto = {

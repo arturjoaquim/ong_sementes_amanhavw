@@ -1,0 +1,208 @@
+<app-page-layout
+  [title]="workshop() ? workshop()!.name : 'Detalhes da Oficina'"
+  description="Visualize as informações completas, alunos matriculados e sessões da oficina"
+>
+  <lucide-icon page-icon [img]="icons.briefcase" size="24" class="text-blue-600" />
+
+  <div page-actions>
+    <button
+      appButton
+      variant="outline"
+      (click)="back()"
+      class="flex items-center gap-2 cursor-pointer"
+    >
+      <lucide-icon [img]="icons.arrowLeft" [size]="16" />
+      Voltar para Oficinas
+    </button>
+  </div>
+
+  @if (loading()) {
+    <div class="flex items-center justify-center p-12">
+      <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <span class="ml-3 text-muted-foreground text-sm">Carregando detalhes da oficina...</span>
+    </div>
+  } @else if (errorMessage()) {
+    <div class="p-6 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3 text-red-700">
+      <lucide-icon [img]="icons.alertCircle" [size]="20" />
+      <span>{{ errorMessage() }}</span>
+    </div>
+  } @else if (workshop(); as currentWorkshop) {
+    <div class="space-y-6">
+      <!-- Cabeçalho da Oficina -->
+      <div class="bg-card border border-border rounded-xl p-6 shadow-sm">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div>
+            <h3 class="text-xl font-bold text-foreground">{{ currentWorkshop.name }}</h3>
+            <p class="text-sm text-muted-foreground mt-0.5">Identificador / ID: {{ currentWorkshop.id }}</p>
+          </div>
+          <app-badge [contentClass]="getStatusColor(currentWorkshop.active)">
+            {{ currentWorkshop.active ? 'Ativa' : 'Inativa' }}
+          </app-badge>
+        </div>
+      </div>
+
+      <!-- Informações Gerais em Card -->
+      <app-card contentClass="p-6">
+        <app-section-header (edit)="editGeneralInfo()">
+          <div class="flex items-center gap-2">
+            <lucide-icon [img]="icons.clock" [size]="20" class="text-blue-600"></lucide-icon>
+            <span class="font-semibold text-foreground">Informações Gerais</span>
+          </div>
+        </app-section-header>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-4">
+          <div class="flex items-start gap-3">
+            <div class="bg-green-50 p-2.5 rounded-lg">
+              <lucide-icon [img]="icons.users" [size]="20" class="text-green-600"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">Limite de Participantes</p>
+              <p class="text-base font-semibold text-foreground mt-0.5">
+                {{ currentWorkshop.enrollmentLimit }}
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-3">
+            <div class="bg-blue-50 p-2.5 rounded-lg">
+              <lucide-icon [img]="icons.users" [size]="20" class="text-blue-600"></lucide-icon>
+            </div>
+            <div>
+              <p class="text-xs text-muted-foreground">Matriculados Atualmente</p>
+              <p class="text-base font-semibold text-foreground mt-0.5">
+                {{ currentWorkshop.enrolledStudents ? currentWorkshop.enrolledStudents.length : 0 }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </app-card>
+
+      <!-- Lista de Alunos Matriculados -->
+      <app-card contentClass="p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-base font-semibold text-foreground">Alunos Matriculados</h4>
+          <button
+            appButton
+            size="sm"
+            variant="outline"
+            (click)="addEnrollment()"
+            class="flex items-center gap-1 cursor-pointer"
+          >
+            <lucide-icon [img]="icons.userPlus" [size]="16"></lucide-icon>
+            Matricular Aluno
+          </button>
+        </div>
+
+        <div class="space-y-2">
+          @for (student of currentWorkshop.enrolledStudents; track student.id) {
+            <div class="flex items-center justify-between p-3 bg-muted/40 hover:bg-muted/60 transition-colors rounded-lg border border-border">
+              <div class="flex items-center gap-3">
+                <div class="bg-blue-100 p-2 rounded-full">
+                  <lucide-icon [img]="icons.users" [size]="16" class="text-blue-600"></lucide-icon>
+                </div>
+                <div>
+                  <p class="text-sm font-medium text-foreground">{{ student.studentName }}</p>
+                  <p class="text-xs text-muted-foreground">ID do Estudante: {{ student.studentId }}</p>
+                </div>
+              </div>
+              <button
+                (click)="removeEnrollment(student.studentId)"
+                class="text-destructive hover:text-destructive/80 p-1.5 rounded hover:bg-destructive/10 transition-colors cursor-pointer"
+                title="Remover Matrícula"
+              >
+                <lucide-icon [img]="icons.userMinus" [size]="16"></lucide-icon>
+              </button>
+            </div>
+          } @empty {
+            <p class="text-sm text-muted-foreground italic text-center py-6">Nenhum aluno matriculado nesta oficina.</p>
+          }
+        </div>
+      </app-card>
+
+      <!-- Lista de Sessões -->
+      <app-card contentClass="p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h4 class="text-base font-semibold text-foreground">Sessões da Oficina</h4>
+          <button
+            appButton
+            size="sm"
+            variant="outline"
+            (click)="addSession()"
+            class="flex items-center gap-1 cursor-pointer"
+          >
+            <lucide-icon [img]="icons.plus" [size]="16"></lucide-icon>
+            Nova Sessão
+          </button>
+        </div>
+
+        <div class="space-y-4">
+          @for (session of currentWorkshop.sessions; track session.id) {
+            <div class="p-4 bg-muted/30 rounded-lg border border-border">
+              <div class="flex justify-between items-start mb-2">
+                <h5 class="text-sm font-semibold text-foreground">{{ session.description }}</h5>
+                <div class="flex items-center gap-2">
+                  <span class="text-xs text-muted-foreground mr-1">ID: {{ session.id }}</span>
+                  <button
+                    (click)="managePresences(session)"
+                    class="text-green-600 hover:text-green-800 p-1.5 rounded hover:bg-green-50 transition-colors cursor-pointer"
+                    title="Gerenciar Presenças"
+                  >
+                    <lucide-icon [img]="icons.checkSquare" [size]="15"></lucide-icon>
+                  </button>
+                  <button
+                    (click)="editSession(session)"
+                    class="text-blue-600 hover:text-blue-800 p-1.5 rounded hover:bg-blue-50 transition-colors cursor-pointer"
+                    title="Editar Sessão"
+                  >
+                    <lucide-icon [img]="icons.pencil" [size]="15"></lucide-icon>
+                  </button>
+                  <button
+                    (click)="deleteSession(session.id)"
+                    class="text-destructive hover:text-destructive/80 p-1.5 rounded hover:bg-destructive/10 transition-colors cursor-pointer"
+                    title="Excluir Sessão"
+                  >
+                    <lucide-icon [img]="icons.trash" [size]="15"></lucide-icon>
+                  </button>
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-3 pt-3 border-t border-border">
+                <div>
+                  <p class="text-xs text-muted-foreground">Educador Responsável</p>
+                  <p class="text-foreground font-medium mt-0.5">{{ session.responsibleEducatorName || 'Não especificado' }}</p>
+                </div>
+                <div>
+                  <p class="text-xs text-muted-foreground">Total de Participantes Registrados</p>
+                  <p class="text-foreground font-medium mt-0.5">{{ session.participantsCount }}</p>
+                </div>
+              </div>
+
+              @if (session.attendanceListLink) {
+                <div class="mt-3">
+                  <a [href]="session.attendanceListLink" target="_blank" class="text-xs text-primary hover:underline flex items-center gap-1">
+                    <lucide-icon [img]="icons.link" [size]="12"></lucide-icon>
+                    Lista de Presença Digital
+                  </a>
+                </div>
+              }
+
+              @if (session.presences && session.presences.length > 0) {
+                <div class="mt-4 pt-3 border-t border-border">
+                  <h6 class="text-xs font-semibold text-muted-foreground mb-2">Alunos Presentes / Participantes:</h6>
+                  <div class="flex flex-wrap gap-2">
+                    @for (presence of session.presences; track presence.id) {
+                      <span class="inline-flex items-center px-2.5 py-1 rounded-md text-xs font-medium bg-green-50 text-green-700 ring-1 ring-inset ring-green-600/20">
+                        {{ presence.studentName }}
+                      </span>
+                    }
+                  </div>
+                </div>
+              }
+            </div>
+          } @empty {
+            <p class="text-sm text-muted-foreground italic text-center py-6">Nenhuma sessão registrada nesta oficina.</p>
+          }
+        </div>
+      </app-card>
+    </div>
+  }
+</app-page-layout>

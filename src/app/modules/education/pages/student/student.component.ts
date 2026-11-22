@@ -1,11 +1,11 @@
 import { Component, inject, signal, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 import { LucideAngularModule, UserPlus, Users } from 'lucide-angular';
 import { StudentSearchComponent } from '../../components/student-search/student-search.component';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
 import { Student } from '../../types/student.type';
 import { Dialog } from '@angular/cdk/dialog';
 import { StudentService } from '../../services/student.service';
-import { StudentDetailDialogComponent } from '../../components/student-detail-dialog/student-detail-dialog.component';
 import { StudentPreview } from '../../types/student-preview.type';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
 import { StudentCreationDialogComponent } from '../../components/student-creation-dialog/student-creation-dialog.component';
@@ -30,6 +30,7 @@ export class StudentComponent {
   };
 
   dialog = inject(Dialog);
+  router = inject(Router);
   studentService = inject(StudentService);
 
   searchComponent = viewChild(StudentSearchComponent);
@@ -40,13 +41,7 @@ export class StudentComponent {
   }
 
   showStudentDetails(studentPreview: StudentPreview) {
-    this.studentService.getStudentDetailsById(studentPreview.id).subscribe((student: Student) => {
-      this.dialog.open(StudentDetailDialogComponent, {
-        data: { student },
-        width: '90vw',
-        maxWidth: '1200px',
-      });
-    });
+    this.router.navigate(['/students', studentPreview.id]);
   }
 
   handleCreateStudent(student: Student | undefined) {
