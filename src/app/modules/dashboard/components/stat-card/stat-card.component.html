@@ -1,28 +1,30 @@
 <app-card contentClass="p-6 hover:shadow-lg transition-shadow">
   <div class="flex items-start justify-between">
     <div class="flex-1">
-      <p class="text-sm text-gray-600">{{ title }}</p>
-      <p class="text-3xl text-gray-900 mt-2">{{ value }}</p>
-      @if (change) {
+      <p class="text-sm text-gray-600">{{ title() }}</p>
+      <p class="text-3xl text-gray-900 mt-2">{{ value() }}</p>
+      @if (change()) {
         <div class="flex items-center gap-1 mt-2">
           <span
             [ngClass]="[
               'text-sm',
-              changeType === 'positive'
+              changeType() === 'positive'
                 ? 'text-green-600'
-                : changeType === 'negative'
+                : changeType() === 'negative'
                   ? 'text-red-600'
                   : 'text-gray-600',
             ]"
           >
-            {{ change }}
+            {{ change() }}
           </span>
           <span class="text-xs text-gray-500">vs último mês</span>
         </div>
       }
     </div>
-    <div [ngClass]="['iconBg', 'p-3 rounded-lg']">
-      <lucide-icon [img]="icon" size="24" [class]="iconColor" strokeWidth="1.5" />
+    <div [ngClass]="[iconBg(), 'p-3 rounded-lg']">
+      @if (icon()) {
+        <lucide-icon [img]="icon()!" size="24" [class]="iconColor()" strokeWidth="1.5" />
+      }
     </div>
   </div>
 </app-card>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
 import { cn } from '../../utils/cn.util';
 import { cva, VariantProps } from 'class-variance-authority';
 
@@ -28,11 +28,11 @@ const badgeVariants = cva(
   standalone: true,
   imports: [CommonModule],
 })
-export class BadgeComponent implements VariantProps<typeof badgeVariants> {
-  @Input() variant: VariantProps<typeof badgeVariants>['variant'];
-  @Input() contentClass = '';
+export class BadgeComponent {
+  variant = input<VariantProps<typeof badgeVariants>['variant']>('default');
+  contentClass = input<string>('');
 
-  get computedClass() {
-    return cn(badgeVariants({ variant: this.variant }), this.contentClass);
-  }
+  computedClass = computed(() => {
+    return cn(badgeVariants({ variant: this.variant() }), this.contentClass());
+  });
 }

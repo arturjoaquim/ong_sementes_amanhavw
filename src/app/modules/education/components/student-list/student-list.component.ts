@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Eye, LucideAngularModule, Phone } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../../../shared/components/avatar/avatar.component';
 import { StudentPreview } from '../../types/student-preview.type';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
-import {DecimalPipe} from '@angular/common';
+import { DecimalPipe } from '@angular/common';
 
 @Component({
   selector: 'app-student-list',
@@ -28,8 +28,8 @@ export class StudentListComponent {
     eye: Eye,
   };
 
-  @Input() students: StudentPreview[] = [];
-  @Output() viewStudentDetail = new EventEmitter<StudentPreview>();
+  students = input<StudentPreview[]>([]);
+  viewStudentDetail = output<StudentPreview>();
 
   viewDetails(student: StudentPreview) {
     this.viewStudentDetail.emit(student);

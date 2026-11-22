@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search, Plus, CalendarPlus } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { WorkshopFilters } from '../../types/workshop-filters.type';
@@ -23,15 +23,15 @@ import { ButtonDirective } from '../../../../shared/directives/button.directive'
   standalone: true,
 })
 export class WorkshopSearchComponent {
-  @Output() searchCompleted = new EventEmitter<WorkshopPreview[]>();
-  @Output() createWorkshop = new EventEmitter<void>();
-  @Output() createSession = new EventEmitter<void>();
+  searchCompleted = output<WorkshopPreview[]>();
+  createWorkshop = output<void>();
+  createSession = output<void>();
 
   icons = {
     search: Search,
     plus: Plus,
     filter: Filter,
-    calendarPlus: CalendarPlus
+    calendarPlus: CalendarPlus,
   };
 
   dialog = inject(Dialog);
@@ -79,12 +79,14 @@ export class WorkshopSearchComponent {
   }
 
   private search(filters: WorkshopFilters) {
-    this.workshopService.getWorkshopsPreview().subscribe(previews => {
-        let filtered = previews;
-        if (filters.nameSearch) {
-            filtered = filtered.filter(w => w.name.toLowerCase().includes(filters.nameSearch!.toLowerCase()));
-        }
-        this.searchCompleted.emit(filtered);
+    this.workshopService.getWorkshopsPreview().subscribe((previews) => {
+      let filtered = previews;
+      if (filters.nameSearch) {
+        filtered = filtered.filter((w) =>
+          w.name.toLowerCase().includes(filters.nameSearch!.toLowerCase()),
+        );
+      }
+      this.searchCompleted.emit(filtered);
     });
   }
 

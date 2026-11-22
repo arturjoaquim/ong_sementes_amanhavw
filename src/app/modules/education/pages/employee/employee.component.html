@@ -12,7 +12,7 @@
   </div>
 
   <app-employee-list
-    [employees]="employees"
+    [employees]="employees()"
     (viewEmployeeDetail)="showEmployeeDetails($event)"
   ></app-employee-list>
 </app-page-layout>

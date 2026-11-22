@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 import { CardComponent } from '../../../../shared/components/card/card.component';
 import { LucideAngularModule, LucideIconData } from 'lucide-angular';
 import { CommonModule } from '@angular/common';
@@ -10,11 +10,11 @@ import { CommonModule } from '@angular/common';
   imports: [CardComponent, LucideAngularModule, CommonModule],
 })
 export class StatCardComponent {
-  @Input() value = '';
-  @Input() title = '';
-  @Input() iconColor = '';
-  @Input() change = '';
-  @Input() changeType = '';
-  @Input() icon?: LucideIconData;
-  @Input() iconBg = '';
+  value = input<string>('');
+  title = input<string>('');
+  iconColor = input<string>('');
+  change = input<string>('');
+  changeType = input<string>('');
+  icon = input<LucideIconData | undefined>(undefined);
+  iconBg = input<string>('');
 }

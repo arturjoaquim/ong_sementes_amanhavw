@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Tab } from '../../types/tab.type';
 import { CommonModule } from '@angular/common';
 
@@ -9,11 +9,11 @@ import { CommonModule } from '@angular/common';
   template: `
     <div class="border-b border-gray-200">
       <nav class="-mb-px flex space-x-8 flex-wrap" aria-label="Tabs">
-        @for (tab of tabs; track tab.id) {
+        @for (tab of tabs(); track tab.id) {
           <button
             (click)="selectTab(tab.id)"
             [ngClass]="
-              activeTab === tab.id
+              activeTab() === tab.id
                 ? 'border-blue-500 text-blue-600'
                 : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
             "
@@ -27,9 +27,9 @@ import { CommonModule } from '@angular/common';
   `,
 })
 export class TabsComponent {
-  @Input() tabs: Tab[] = [];
-  @Input() activeTab: string | null = null;
-  @Output() tabChange = new EventEmitter<string>();
+  tabs = input<Tab[]>([]);
+  activeTab = input<string | null>(null);
+  tabChange = output<string>();
 
   selectTab(tabId: string): void {
     this.tabChange.emit(tabId);

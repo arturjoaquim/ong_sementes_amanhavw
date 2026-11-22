@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { Eye, LucideAngularModule, Users, Clock } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { CardComponent } from '../../../../shared/components/card/card.component';
@@ -19,8 +19,8 @@ export class WorkshopListComponent {
     clock: Clock,
   };
 
-  @Input() workshops: WorkshopPreview[] = [];
-  @Output() viewWorkshopDetail = new EventEmitter<WorkshopPreview>();
+  workshops = input<WorkshopPreview[]>([]);
+  viewWorkshopDetail = output<WorkshopPreview>();
 
   viewDetails(workshop: WorkshopPreview) {
     this.viewWorkshopDetail.emit(workshop);

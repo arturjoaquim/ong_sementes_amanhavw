@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular';
 
@@ -19,7 +19,7 @@ import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular
         </button>
 
         <div class="flex items-center gap-3 ml-4">
-          @if (showEditButton) {
+          @if (showEditButton()) {
             <button
               (click)="edit.emit(); $event.stopPropagation()"
               class="text-gray-500 hover:text-blue-600 transition-colors cursor-pointer"
@@ -29,7 +29,7 @@ import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular
             </button>
           }
 
-          @if (showRemoveButton) {
+          @if (showRemoveButton()) {
             <button
               (click)="remove.emit(); $event.stopPropagation()"
               class="text-gray-500 hover:text-red-600 transition-colors cursor-pointer"
@@ -44,12 +44,12 @@ import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular
           [img]="icons.chevronDown"
           [size]="20"
           class="text-gray-500 transition-transform ml-3 cursor-pointer"
-          [class.rotate-180]="isOpen"
+          [class.rotate-180]="isOpen()"
           (click)="toggled.emit()"
         ></lucide-icon>
       </div>
 
-      @if (isOpen) {
+      @if (isOpen()) {
         <div class="p-4 border-t border-gray-200 bg-gray-50">
           <ng-content select="app-accordion-body"></ng-content>
         </div>
@@ -58,12 +58,12 @@ import { LucideAngularModule, ChevronDown, Pencil, Trash2 } from 'lucide-angular
   `,
 })
 export class AccordionComponent {
-  @Input({ required: true }) isOpen!: boolean;
-  @Input() showEditButton = false;
-  @Input() showRemoveButton = false;
-  @Output() toggled = new EventEmitter<void>();
-  @Output() edit = new EventEmitter<void>();
-  @Output() remove = new EventEmitter<void>();
+  isOpen = input.required<boolean>();
+  showEditButton = input<boolean>(false);
+  showRemoveButton = input<boolean>(false);
+  toggled = output<void>();
+  edit = output<void>();
+  remove = output<void>();
   icons = { chevronDown: ChevronDown, pencil: Pencil, trash2: Trash2 };
 }
 
