@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search, Plus } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { EmployeeFilters } from '../../types/employee-filters.type';
@@ -8,6 +8,7 @@ import { EmployeeService } from '../../services/employee.service';
 import { EmployeePreview } from '../../types/employee-preview.type';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
 import { EmployeeFilterDialogComponent } from '../employee-filter-dialog/employee-filter-dialog.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-employee-search',
@@ -22,7 +23,7 @@ import { EmployeeFilterDialogComponent } from '../employee-filter-dialog/employe
   ],
   standalone: true,
 })
-export class EmployeeSearchComponent {
+export class EmployeeSearchComponent implements OnInit {
   searchCompleted = output<EmployeePreview[]>();
   createEmployee = output<void>();
 
@@ -34,12 +35,30 @@ export class EmployeeSearchComponent {
 
   dialog = inject(Dialog);
   employeeService = inject(EmployeeService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   nameSearchFilter = new FormControl('');
 
   filters = signal<EmployeeFilters>({
     nameSearch: '',
     positionId: 'all',
   });
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const nameSearch = params['nameSearch'] || '';
+      const positionId = params['positionId'] ? (isNaN(Number(params['positionId'])) ? params['positionId'] : Number(params['positionId'])) : 'all';
+
+      this.filters.set({
+        nameSearch,
+        positionId,
+      });
+
+      this.nameSearchFilter.setValue(nameSearch);
+      this.search(this.filters(), false);
+    });
+  }
 
   onAddEmployee() {
     this.createEmployee.emit();
@@ -68,7 +87,21 @@ export class EmployeeSearchComponent {
     this.search(this.filters());
   }
 
-  private search(filters: EmployeeFilters) {
+  private updateQueryParams(filters: EmployeeFilters) {
+    const queryParams: Record<string, string | number | null> = {};
+    if (filters.nameSearch) queryParams['nameSearch'] = filters.nameSearch;
+    if (filters.positionId && filters.positionId !== 'all') queryParams['positionId'] = filters.positionId;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+    });
+  }
+
+  search(filters: EmployeeFilters = this.filters(), syncUrl = true) {
+    if (syncUrl) {
+      this.updateQueryParams(filters);
+    }
     this.employeeService.searchEmployees(filters).subscribe((employees) => {
       let filtered = employees;
       if (filters.nameSearch) {
@@ -86,7 +119,11 @@ export class EmployeeSearchComponent {
       nameSearch: '',
       positionId: 'all',
     });
-    this.search(this.filters());
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+    });
+    this.search(this.filters(), false);
   }
 
   get activeFilterCount() {

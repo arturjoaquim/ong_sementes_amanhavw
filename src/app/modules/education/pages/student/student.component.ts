@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, viewChild } from '@angular/core';
 import { LucideAngularModule, UserPlus, Users } from 'lucide-angular';
 import { StudentSearchComponent } from '../../components/student-search/student-search.component';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
@@ -32,6 +32,7 @@ export class StudentComponent {
   dialog = inject(Dialog);
   studentService = inject(StudentService);
 
+  searchComponent = viewChild(StudentSearchComponent);
   students = signal<StudentPreview[]>([]);
 
   setStudentPreviewList(students: StudentPreview[]) {
@@ -49,14 +50,16 @@ export class StudentComponent {
   }
 
   handleCreateStudent(student: Student | undefined) {
-    const dialogRef = this.dialog.open<void>(StudentCreationDialogComponent, {
+    const dialogRef = this.dialog.open<boolean>(StudentCreationDialogComponent, {
       data: { student },
       width: '90vw',
       maxWidth: '800px',
     });
 
-    dialogRef.closed.subscribe(() => {
-      // Notifica recarregamento se necessário
+    dialogRef.closed.subscribe((result) => {
+      if (result) {
+        this.searchComponent()?.search();
+      }
     });
   }
 }
