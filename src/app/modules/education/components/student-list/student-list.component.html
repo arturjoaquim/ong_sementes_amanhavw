@@ -27,12 +27,14 @@
               <td class="whitespace-nowrap">
                 <div class="flex items-center gap-3">
                   <app-avatar>
-                    <img
-                      class="app-avatar-image"
-                      src="{{ student.avatar }}"
-                      alt="{{ student.name }}"
-                    />
-                    <app-avatar-fallback>{{ student.name }}</app-avatar-fallback>
+                    @if (student.avatar) {
+                      <img
+                        class="app-avatar-image"
+                        src="{{ student.avatar }}"
+                        alt="{{ student.name }}"
+                      />
+                    }
+                    <app-avatar-fallback>{{ getInitials(student.name) }}</app-avatar-fallback>
                   </app-avatar>
                   <span className="text-gray-900">{{ student.name }}</span>
                 </div>

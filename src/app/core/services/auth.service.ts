@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../../../environments/environment';
 
 export interface User {
@@ -22,6 +22,28 @@ export class AuthService {
 
   getUser() {
     return this.currentUser();
+  }
+
+  /**
+   * Verifica a sessão ativa no backend com o cookie de sessão.
+   */
+  checkSession(): Observable<User | null> {
+    const user = this.currentUser();
+    if (user) {
+      return of(user);
+    }
+
+    return this.http
+      .get<User>(`${this.authUrl}/me`, { withCredentials: true })
+      .pipe(
+        tap((userResponse) => {
+          this.currentUser.set(userResponse);
+        }),
+        catchError(() => {
+          this.currentUser.set(null);
+          return of(null);
+        }),
+      );
   }
 
   /**
