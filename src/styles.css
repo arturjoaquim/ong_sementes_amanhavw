@@ -1,5 +1,6 @@
 @import 'tailwindcss';
 @import 'primeicons/primeicons.css';
+@import '@angular/cdk/overlay-prebuilt.css';
 
 @custom-variant dark (&:is(.dark *));
 
