@@ -9,11 +9,18 @@ import { StudentDetailDialogComponent } from '../../components/student-detail-di
 import { StudentPreview } from '../../types/student-preview.type';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
 import { StudentCreationDialogComponent } from '../../components/student-creation-dialog/student-creation-dialog.component';
+import { PageLayoutComponent } from '../../../../shared/components/page-layout/page-layout.component';
 
 @Component({
   selector: 'app-student',
   templateUrl: './student.component.html',
-  imports: [LucideAngularModule, StudentSearchComponent, StudentListComponent, ButtonDirective],
+  imports: [
+    LucideAngularModule,
+    StudentSearchComponent,
+    StudentListComponent,
+    ButtonDirective,
+    PageLayoutComponent,
+  ],
   standalone: true,
 })
 export class StudentComponent {

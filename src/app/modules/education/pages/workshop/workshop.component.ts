@@ -1,4 +1,3 @@
-
 import { Component, inject, OnInit } from '@angular/core';
 import { LucideAngularModule, Briefcase } from 'lucide-angular';
 import { WorkshopSearchComponent } from '../../components/workshop-search/workshop-search.component';
@@ -10,11 +9,17 @@ import { WorkshopFormDialogComponent } from '../../components/workshop-form-dial
 import { WorkshopService } from '../../services/workshop.service';
 import { WorkshopPreview } from '../../types/workshop-preview.type';
 import { WorkshopSessionFormDialogComponent } from '../../components/workshop-session-form-dialog/workshop-session-form-dialog.component';
+import { PageLayoutComponent } from '../../../../shared/components/page-layout/page-layout.component';
 
 @Component({
   selector: 'app-workshop',
   templateUrl: './workshop.component.html',
-  imports: [LucideAngularModule, WorkshopSearchComponent, WorkshopListComponent],
+  imports: [
+    LucideAngularModule,
+    WorkshopSearchComponent,
+    WorkshopListComponent,
+    PageLayoutComponent,
+  ],
   standalone: true,
 })
 export class WorkshopComponent implements OnInit {
