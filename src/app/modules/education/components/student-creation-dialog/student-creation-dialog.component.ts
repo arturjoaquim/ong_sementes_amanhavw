@@ -57,7 +57,7 @@ import { switchMap, map } from 'rxjs/operators';
 })
 export class StudentCreationDialogComponent implements OnInit {
   data = inject(DIALOG_DATA);
-  dialogRef = inject<DialogRef<Student>>(DialogRef<Student>);
+  dialogRef = inject<DialogRef<boolean | Student>>(DialogRef<boolean | Student>);
   private dialog = inject(Dialog);
   private cdr = inject(ChangeDetectorRef);
   private studentService = inject(StudentService);
@@ -291,7 +291,7 @@ export class StudentCreationDialogComponent implements OnInit {
       ).subscribe({
         next: () => {
             alert('Estudante criado com sucesso!');
-            this.dialogRef.close();
+            this.dialogRef.close(true);
         },
         error: (err) => {
             console.error('Erro ao criar estudante', err);

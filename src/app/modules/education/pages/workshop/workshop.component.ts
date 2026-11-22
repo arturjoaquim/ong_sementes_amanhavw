@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { LucideAngularModule, Briefcase } from 'lucide-angular';
 import { WorkshopSearchComponent } from '../../components/workshop-search/workshop-search.component';
 import { WorkshopListComponent } from '../../components/workshop-list/workshop-list.component';
@@ -30,6 +30,7 @@ export class WorkshopComponent implements OnInit {
   dialog = inject(Dialog);
   workshopService = inject(WorkshopService);
 
+  searchComponent = viewChild(WorkshopSearchComponent);
   workshops = signal<WorkshopPreview[]>([]);
 
   ngOnInit() {
@@ -37,9 +38,13 @@ export class WorkshopComponent implements OnInit {
   }
 
   loadWorkshops() {
-    this.workshopService.getWorkshopsPreview().subscribe((previews) => {
-      this.workshops.set(previews);
-    });
+    if (this.searchComponent()) {
+      this.searchComponent()?.search();
+    } else {
+      this.workshopService.getWorkshopsPreview().subscribe((previews) => {
+        this.workshops.set(previews);
+      });
+    }
   }
 
   showListResult(workshops: WorkshopPreview[]) {

@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal, viewChild } from '@angular/core';
 import { LucideAngularModule, Briefcase } from 'lucide-angular';
 import { EmployeeSearchComponent } from '../../components/employee-search/employee-search.component';
 import { EmployeeListComponent } from '../../components/employee-list/employee-list.component';
@@ -28,6 +28,7 @@ export class EmployeeComponent implements OnInit {
   private employeeService = inject(EmployeeService);
   private dialog = inject(Dialog);
 
+  searchComponent = viewChild(EmployeeSearchComponent);
   employees = signal<EmployeePreview[]>([]);
 
   ngOnInit() {
@@ -35,9 +36,13 @@ export class EmployeeComponent implements OnInit {
   }
 
   loadEmployees() {
-    this.employeeService.getEmployeesPreview().subscribe((data) => {
-      this.employees.set(data);
-    });
+    if (this.searchComponent()) {
+      this.searchComponent()?.search();
+    } else {
+      this.employeeService.getEmployeesPreview().subscribe((data) => {
+        this.employees.set(data);
+      });
+    }
   }
 
   showListResult(employees: EmployeePreview[]) {

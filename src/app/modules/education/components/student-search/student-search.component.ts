@@ -1,4 +1,4 @@
-import { Component, inject, output, signal } from '@angular/core';
+import { Component, inject, OnInit, output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { StudentFilters } from '../../types/student-filters.type';
@@ -8,6 +8,7 @@ import { StudentFilterDialog } from '../student-filter-dialog/student-filter-dia
 import { StudentService } from '../../services/student.service';
 import { StudentPreview } from '../../types/student-preview.type';
 import { ButtonDirective } from '../../../../shared/directives/button.directive';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-student-search',
@@ -22,7 +23,7 @@ import { ButtonDirective } from '../../../../shared/directives/button.directive'
   ],
   standalone: true,
 })
-export class StudentSearchComponent {
+export class StudentSearchComponent implements OnInit {
   searchCompleted = output<StudentPreview[]>();
 
   icons = {
@@ -32,6 +33,9 @@ export class StudentSearchComponent {
 
   dialog = inject(Dialog);
   studentService = inject(StudentService);
+  private router = inject(Router);
+  private route = inject(ActivatedRoute);
+
   nameSearchFilter = new FormControl('');
 
   filters = signal<StudentFilters>({
@@ -41,6 +45,27 @@ export class StudentSearchComponent {
     minAge: undefined,
     maxAge: undefined,
   });
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const studentName = params['studentName'] || '';
+      const guardianName = params['guardianName'] || '';
+      const status = params['status'] || '';
+      const minAge = params['minAge'] ? Number(params['minAge']) : undefined;
+      const maxAge = params['maxAge'] ? Number(params['maxAge']) : undefined;
+
+      this.filters.set({
+        studentName,
+        guardianName,
+        status,
+        minAge,
+        maxAge,
+      });
+
+      this.nameSearchFilter.setValue(studentName);
+      this.search(this.filters(), false);
+    });
+  }
 
   openDialog() {
     const dialogRef = this.dialog.open<StudentFilters | undefined>(StudentFilterDialog, {
@@ -68,7 +93,24 @@ export class StudentSearchComponent {
     this.search(this.filters());
   }
 
-  private search(filters: StudentFilters) {
+  private updateQueryParams(filters: StudentFilters) {
+    const queryParams: Record<string, string | number | null> = {};
+    if (filters.studentName) queryParams['studentName'] = filters.studentName;
+    if (filters.guardianName) queryParams['guardianName'] = filters.guardianName;
+    if (filters.status && filters.status !== 'all') queryParams['status'] = filters.status;
+    if (filters.minAge !== undefined) queryParams['minAge'] = filters.minAge;
+    if (filters.maxAge !== undefined) queryParams['maxAge'] = filters.maxAge;
+
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams,
+    });
+  }
+
+  search(filters: StudentFilters = this.filters(), syncUrl = true) {
+    if (syncUrl) {
+      this.updateQueryParams(filters);
+    }
     this.studentService.searchStudentsPreview(filters).subscribe((students: StudentPreview[]) => {
       this.searchCompleted.emit(students);
     });
@@ -83,7 +125,11 @@ export class StudentSearchComponent {
       minAge: undefined,
       maxAge: undefined,
     });
-    this.searchCompleted.emit([]);
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {},
+    });
+    this.search(this.filters(), false);
   }
 
   get activeFilterCount() {
