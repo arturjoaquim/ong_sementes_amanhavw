@@ -13,7 +13,7 @@
   </div>
 
   <app-workshop-list
-    [workshops]="workshops"
+    [workshops]="workshops()"
     (viewWorkshopDetail)="showWorkshopDetails($event)"
   ></app-workshop-list>
 </app-page-layout>

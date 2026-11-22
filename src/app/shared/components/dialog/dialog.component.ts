@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, ElementRef, inject, Input, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, inject, input, ViewChild } from '@angular/core';
 import { LucideAngularModule, X } from 'lucide-angular';
 import { DialogRef } from '@angular/cdk/dialog';
 
@@ -10,7 +10,7 @@ import { DialogRef } from '@angular/cdk/dialog';
   imports: [CommonModule, LucideAngularModule],
 })
 export class DialogComponent implements AfterViewInit {
-  @Input() contentClass = '';
+  contentClass = input<string>('');
   xIcon = X;
   dialogRef = inject(DialogRef);
   @ViewChild('dialogContent', { read: ElementRef }) dialogContent!: ElementRef;
@@ -27,31 +27,31 @@ export class DialogComponent implements AfterViewInit {
 @Component({
   selector: 'app-dialog-description',
   template: `
-    <div [ngClass]="[contentClass, 'text-muted-foreground text-sm']"><ng-content></ng-content></div>
+    <div [ngClass]="[contentClass(), 'text-muted-foreground text-sm']"><ng-content></ng-content></div>
   `,
   standalone: true,
   imports: [CommonModule],
 })
 export class DialogDescriptionComponent {
-  @Input() contentClass = '';
+  contentClass = input<string>('');
 }
 
 @Component({
   selector: 'app-dialog-header',
-  template: `<div [ngClass]="[contentClass, 'flex flex-col gap-2 text-center sm:text-left']">
+  template: `<div [ngClass]="[contentClass(), 'flex flex-col gap-2 text-center sm:text-left']">
     <ng-content></ng-content>
   </div> `,
   standalone: true,
   imports: [CommonModule],
 })
 export class DialogHeaderComponent {
-  @Input() contentClass = '';
+  contentClass = input<string>('');
 }
 
 @Component({
   selector: 'app-dialog-title',
   template: `
-    <div [ngClass]="[contentClass, 'text-lg leading-none font-semibold']">
+    <div [ngClass]="[contentClass(), 'text-lg leading-none font-semibold']">
       <ng-content></ng-content>
     </div>
   `,
@@ -59,5 +59,5 @@ export class DialogHeaderComponent {
   imports: [CommonModule],
 })
 export class DialogTitleComponent {
-  @Input() contentClass = '';
+  contentClass = input<string>('');
 }

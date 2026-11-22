@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { StudentFilters } from '../../types/student-filters.type';
@@ -23,7 +23,7 @@ import { ButtonDirective } from '../../../../shared/directives/button.directive'
   standalone: true,
 })
 export class StudentSearchComponent {
-  @Output() searchCompleted = new EventEmitter<StudentPreview[]>();
+  searchCompleted = output<StudentPreview[]>();
 
   icons = {
     search: Search,
@@ -47,7 +47,7 @@ export class StudentSearchComponent {
       data: { filters: this.filters() },
     });
 
-    dialogRef.closed.subscribe((result) => {
+    dialogRef.closed.subscribe((result: StudentFilters | undefined) => {
       if (result) {
         this.filters.set(result);
         this.nameSearchFilter.setValue(result.studentName || '');
@@ -69,7 +69,7 @@ export class StudentSearchComponent {
   }
 
   private search(filters: StudentFilters) {
-    this.studentService.searchStudentsPreview(filters).subscribe((students) => {
+    this.studentService.searchStudentsPreview(filters).subscribe((students: StudentPreview[]) => {
       this.searchCompleted.emit(students);
     });
   }

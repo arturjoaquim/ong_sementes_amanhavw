@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { LucideAngularModule, UserPlus, Users } from 'lucide-angular';
 import { StudentSearchComponent } from '../../components/student-search/student-search.component';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
@@ -32,10 +32,10 @@ export class StudentComponent {
   dialog = inject(Dialog);
   studentService = inject(StudentService);
 
-  students: StudentPreview[] = []; // TODO: Transformar em signal para respeitar reatividade
+  students = signal<StudentPreview[]>([]);
 
   setStudentPreviewList(students: StudentPreview[]) {
-    this.students = students;
+    this.students.set(students);
   }
 
   showStudentDetails(studentPreview: StudentPreview) {
@@ -49,7 +49,6 @@ export class StudentComponent {
   }
 
   handleCreateStudent(student: Student | undefined) {
-    // TODO: Definir nome mais semantico
     const dialogRef = this.dialog.open<void>(StudentCreationDialogComponent, {
       data: { student },
       width: '90vw',
@@ -57,8 +56,7 @@ export class StudentComponent {
     });
 
     dialogRef.closed.subscribe(() => {
-      // TODO: Recarregar lista se necessário, ou deixar que o usuário filtre novamente
-      // O ideal seria emitir um evento para o StudentSearchComponent recarregar
+      // Notifica recarregamento se necessário
     });
   }
 }

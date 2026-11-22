@@ -17,5 +17,5 @@
     </app-student-search>
   </div>
 
-  <app-student-list [students]="students" (viewStudentDetail)="showStudentDetails($event)" />
+  <app-student-list [students]="students()" (viewStudentDetail)="showStudentDetails($event)" />
 </app-page-layout>

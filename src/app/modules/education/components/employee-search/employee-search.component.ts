@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
+import { Component, inject, output, signal } from '@angular/core';
 import { Filter, LucideAngularModule, Search, Plus } from 'lucide-angular';
 import { BadgeComponent } from '../../../../shared/components/badge/badge.component';
 import { EmployeeFilters } from '../../types/employee-filters.type';
@@ -23,8 +23,8 @@ import { EmployeeFilterDialogComponent } from '../employee-filter-dialog/employe
   standalone: true,
 })
 export class EmployeeSearchComponent {
-  @Output() searchCompleted = new EventEmitter<EmployeePreview[]>();
-  @Output() createEmployee = new EventEmitter<void>();
+  searchCompleted = output<EmployeePreview[]>();
+  createEmployee = output<void>();
 
   icons = {
     search: Search,
@@ -70,10 +70,11 @@ export class EmployeeSearchComponent {
 
   private search(filters: EmployeeFilters) {
     this.employeeService.searchEmployees(filters).subscribe((employees) => {
-      // Filtragem básica no front se o back retornar tudo
       let filtered = employees;
       if (filters.nameSearch) {
-          filtered = filtered.filter(e => e.name.toLowerCase().includes(filters.nameSearch!.toLowerCase()));
+        filtered = filtered.filter((e) =>
+          e.name.toLowerCase().includes(filters.nameSearch!.toLowerCase()),
+        );
       }
       this.searchCompleted.emit(filtered);
     });

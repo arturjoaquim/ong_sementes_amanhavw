@@ -1,10 +1,10 @@
 <div class="card bg-white rounded-lg border border-border shadow-sm overflow-hidden">
   <p-table
-    [value]="items"
-    [columns]="columns"
-    [paginator]="paginator && items.length > rows"
-    [rows]="rows"
-    [rowsPerPageOptions]="rowsPerPageOptions"
+    [value]="items()"
+    [columns]="columns()"
+    [paginator]="paginator() && items().length > rows()"
+    [rows]="rows()"
+    [rowsPerPageOptions]="rowsPerPageOptions()"
     [tableStyle]="{ 'min-width': '50rem' }"
     styleClass="p-datatable-sm p-datatable-striped"
   >
@@ -51,7 +51,7 @@
 
     <ng-template #emptymessage>
       <tr>
-        <td [attr.colspan]="columns.length + (commandsTemplateRef ? 1 : 0)" class="text-center py-8 text-muted-foreground text-sm">
+        <td [attr.colspan]="columns().length + (commandsTemplateRef ? 1 : 0)" class="text-center py-8 text-muted-foreground text-sm">
           Nenhum registro encontrado.
         </td>
       </tr>

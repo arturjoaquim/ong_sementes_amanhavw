@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input } from '@angular/core';
 
 @Component({
   selector: 'app-card',
@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
   imports: [CommonModule],
 })
 export class CardComponent {
-  @Input() contentClass = '';
+  contentClass = input<string>('');
 }

@@ -1,4 +1,4 @@
-import { Directive, HostBinding, Input } from '@angular/core';
+import { computed, Directive, input } from '@angular/core';
 import { cva, VariantProps } from 'class-variance-authority';
 import { cn } from '../utils/cn.util';
 
@@ -32,15 +32,19 @@ const buttonVariants = cva(
 @Directive({
   selector: '[appButton]',
   standalone: true,
+  host: {
+    '[class]': 'computedClass()',
+  },
 })
-export class ButtonDirective implements VariantProps<typeof buttonVariants> {
-  @Input() variant: VariantProps<typeof buttonVariants>['variant'] = 'default';
-  @Input() size: VariantProps<typeof buttonVariants>['size'] = 'default';
-  @Input() class = '';
+export class ButtonDirective {
+  variant = input<VariantProps<typeof buttonVariants>['variant']>('default');
+  size = input<VariantProps<typeof buttonVariants>['size']>('default');
+  userClass = input<string>('', { alias: 'class' });
 
-  @HostBinding('class')
-  get computedClass() {
-    // Renomeado 'contentClass' para 'class' para ser mais intuitivo como um atributo HTML
-    return cn(buttonVariants({ variant: this.variant, size: this.size }), this.class);
-  }
+  computedClass = computed(() => {
+    return cn(
+      buttonVariants({ variant: this.variant(), size: this.size() }),
+      this.userClass()
+    );
+  });
 }

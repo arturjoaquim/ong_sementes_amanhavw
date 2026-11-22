@@ -1,4 +1,4 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { LucideAngularModule, Briefcase } from 'lucide-angular';
 import { WorkshopSearchComponent } from '../../components/workshop-search/workshop-search.component';
 import { WorkshopListComponent } from '../../components/workshop-list/workshop-list.component';
@@ -30,20 +30,20 @@ export class WorkshopComponent implements OnInit {
   dialog = inject(Dialog);
   workshopService = inject(WorkshopService);
 
-  workshops: WorkshopPreview[] = [];
+  workshops = signal<WorkshopPreview[]>([]);
 
   ngOnInit() {
-      this.loadWorkshops();
+    this.loadWorkshops();
   }
 
   loadWorkshops() {
-      this.workshopService.getWorkshopsPreview().subscribe(previews => {
-          this.workshops = previews;
-      });
+    this.workshopService.getWorkshopsPreview().subscribe((previews) => {
+      this.workshops.set(previews);
+    });
   }
 
   showListResult(workshops: WorkshopPreview[]) {
-    this.workshops = workshops;
+    this.workshops.set(workshops);
   }
 
   showWorkshopDetails(workshopPreview: WorkshopPreview) {
@@ -57,7 +57,7 @@ export class WorkshopComponent implements OnInit {
       },
       error: (err) => {
         console.error('Workshop not found details', err);
-      }
+      },
     });
   }
 
@@ -74,14 +74,14 @@ export class WorkshopComponent implements OnInit {
           this.workshopService.updateWorkshop(result);
         } else {
           this.workshopService.createWorkshop(result).subscribe({
-              next: () => {
-                  alert('Oficina criada com sucesso!');
-                  this.loadWorkshops();
-              },
-              error: (err) => {
-                  console.error('Erro ao criar oficina', err);
-                  alert('Erro ao criar oficina.');
-              }
+            next: () => {
+              alert('Oficina criada com sucesso!');
+              this.loadWorkshops();
+            },
+            error: (err) => {
+              console.error('Erro ao criar oficina', err);
+              alert('Erro ao criar oficina.');
+            },
           });
         }
       }
@@ -96,8 +96,8 @@ export class WorkshopComponent implements OnInit {
 
     dialogRef.closed.subscribe((result) => {
       if (result) {
-          alert('Sessão criada com sucesso!');
-          this.loadWorkshops(); // Recarrega para atualizar contagem de sessões
+        alert('Sessão criada com sucesso!');
+        this.loadWorkshops();
       }
     });
   }

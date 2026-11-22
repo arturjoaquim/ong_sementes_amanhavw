@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, input, output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { LucideAngularModule, Pencil } from 'lucide-angular';
 
@@ -11,7 +11,7 @@ import { LucideAngularModule, Pencil } from 'lucide-angular';
       <h4 class="text-base font-semibold text-gray-900">
         <ng-content></ng-content>
       </h4>
-      @if (showEditButton) {
+      @if (showEditButton()) {
         <button
           (click)="edit.emit()"
           class="flex items-center gap-1.5 text-sm text-blue-600 hover:text-blue-800 font-medium p-2 rounded-md hover:bg-blue-50 transition-colors -mr-2"
@@ -24,8 +24,8 @@ import { LucideAngularModule, Pencil } from 'lucide-angular';
   `,
 })
 export class SectionHeaderComponent {
-  @Input() showEditButton = true;
-  @Output() edit = new EventEmitter<void>();
+  showEditButton = input<boolean>(true);
+  edit = output<void>();
   icons = {
     pencil: Pencil,
   };
